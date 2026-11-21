@@ -828,6 +828,45 @@ def _author_symmetric_grip(stage, names, dt):
     return str(follower.GetPath())
 
 
+def _author_passive_rotary_couplings(stage, couplings, dt):
+    """Author bounded revolute followers on the same PhysX articulation."""
+    from pxr import PhysxSchema, Usd, UsdPhysics
+
+    names = set(couplings) | {c['joint'] for c in couplings.values()}
+    joints = {}
+    for prim in stage.Traverse(Usd.TraverseInstanceProxies()):
+        name = prim.GetName()
+        if name not in names or prim.IsInstanceProxy() or not prim.IsA(UsdPhysics.RevoluteJoint):
+            continue
+        if name in joints:
+            raise ValueError('Ambiguous rotary coupling joint: '+name)
+        joints[name] = UsdPhysics.RevoluteJoint(prim)
+    if joints.keys() != names:
+        raise ValueError('Missing rotary coupling joints: '+str(sorted(names - joints.keys())))
+    for name, coupling in couplings.items():
+        follower, leader = joints[name], joints[coupling['joint']]
+        axis = 'rot' + follower.GetAxisAttr().Get()
+        source_axis = 'rot' + leader.GetAxisAttr().Get()
+        if any(not math.isfinite(joint.GetLowerLimitAttr().Get()) or not math.isfinite(joint.GetUpperLimitAttr().Get())
+               for joint in (follower, leader)):
+            raise ValueError('PhysX rotary coupling requires finite joint limits: '+name)
+        drive = UsdPhysics.DriveAPI.Apply(follower.GetPrim(), 'angular')
+        drive.CreateStiffnessAttr().Set(0.)
+        drive.CreateDampingAttr().Set(0.)
+        drive.CreateMaxForceAttr().Set(0.)
+        mimic = PhysxSchema.PhysxMimicJointAPI.Apply(follower.GetPrim(), axis)
+        if not mimic:
+            raise RuntimeError('Could not apply the PhysX rotary mimic schema to '+name)
+        mimic.CreateReferenceJointRel().SetTargets([leader.GetPath()])
+        mimic.CreateReferenceJointAxisAttr().Set(source_axis)
+        mimic.CreateGearingAttr().Set(-float(coupling['multiplier']))
+        offset = math.degrees(-float(coupling['offset']))
+        mimic.CreateOffsetAttr().Set(offset)
+        mimic.CreateNaturalFrequencyAttr().Set(1. / dt)
+        mimic.CreateDampingRatioAttr().Set(1.)
+    return sorted(couplings)
+
+
 def _apply_articulation_effort_budget(robot, dof_names, joints, efforts, native_gravity=False):
     """Cap native drive + feedforward together on configured position joints.
 
@@ -1599,9 +1638,14 @@ def _run_stage(app, reader, cfg, state):
             _emit({"event": "log", "msg": "Roller contacts: %d collision prims at a 2 mm "
                    "contact offset; solver iterations %s" % (tuned, iterations)})
         joint_pd = cfg.get("joint_pd") or None
-        articulation_joints = cfg.get('articulation_joints', {})
+        passive_couplings = cfg.get('articulation_passive_couplings', {})
+        articulation_joints = {name: spec for name, spec in cfg.get('articulation_joints', {}).items()
+                               if name not in passive_couplings}
         if articulation_joints:
             _author_articulation_drives(stage_obj, articulation_joints)
+            if passive_couplings:
+                followers = _author_passive_rotary_couplings(stage_obj, passive_couplings, dt)
+                _emit({'event': 'log', 'msg': 'Passive rotary joint followers: '+str(followers)})
             if cfg.get('articulation_symmetric_grip'):
                 linked = _author_symmetric_grip(stage_obj, cfg['articulation_symmetric_grip'], dt)
                 _emit({'event': 'log', 'msg': 'Compliant symmetric grip: '+linked})
@@ -1667,7 +1711,7 @@ def _run_stage(app, reader, cfg, state):
             reader.targets_received_at = time.monotonic()
     else:
         joint_pd = None
-        articulation_joints = {}
+        articulation_joints, passive_couplings = {}, {}
         # Robot-free display: still step the world so the map renders; there
         # is simply no articulation to drive or report joints for.
         world.reset()
@@ -1819,7 +1863,7 @@ def _run_stage(app, reader, cfg, state):
                 for kind in ("velocity", "position"):
                     pairs = [(dof_names.index(name), float(value))
                              for name, value in (targets.get(kind) or {}).items()
-                             if name in dof_names]
+                             if name in dof_names and name not in passive_couplings]
                     if not pairs:
                         continue
                     idx = [i for i, _ in pairs]

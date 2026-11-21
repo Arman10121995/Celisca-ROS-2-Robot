@@ -761,6 +761,10 @@ class IsaacSpawner(Node):
             "gait_floor_reference":self.get_parameter('gait_floor_reference').value,
             "gait_terrain_helper":str(__import__('robot_lab_utils.gait_terrain',fromlist=['__file__']).__file__),
             "articulation_joints": self._articulation.contract.joints if self._articulation else {},
+            "articulation_passive_couplings": {
+                name: coupling for name, coupling in self._articulation.contract.couplings.items()
+                if coupling.get('mechanical') and coupling.get('passive')
+            } if self._articulation else {},
             "articulation_symmetric_grip": self._articulation.contract.symmetric_grip if self._articulation else (),
             "articulation_native_gravity": (self._articulation.contract.config.get(
                 'isaac_native_gravity_compensation', False) if self._articulation else False),

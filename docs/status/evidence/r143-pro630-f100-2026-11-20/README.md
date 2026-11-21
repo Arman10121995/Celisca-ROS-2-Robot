@@ -175,6 +175,18 @@ radius and DWB rates bounded for the payload workflow. The DWB footprint
 critic checks each sampled pose against the active polygon.
 [First Navigation trial](nav-gui-held-interlock.json) · [Nav2 footprint critic](https://docs.nav2.org/jazzy/configuration_and_development/configuration_guide/controller_plugins/dwb_controller/trajectory_critics/obstacle_footprint/).
 
+### Isaac joint authoring
+
+The Isaac bridge forwards passive mechanical couplings separately from
+powered joints. The runtime authors a PhysX mimic constraint on each
+follower's imported rotary axis, disables the imported follower drive and
+excludes followers from driven targets and effort commands. The installed
+Isaac 6.0.1 USD schema fixture verified five relationships across mixed
+joint axes, a single 0.8 Nm shaft drive and zero follower drive effort.
+Physical jaw travel, pad sensing and an installed Isaac F100 profile
+remain open. The fixture and exported stage are on SSD in the F100 run
+directory. [PhysX mimic joints](https://docs.omniverse.nvidia.com/kit/docs/omni_physics/latest/dev_guide/rigid_bodies_articulations/articulations.html#articulation-mimic-joints).
+
 ## Source and retained diagnostics
 
 The bare arm and its wheel/arm measurements use the existing source pin.

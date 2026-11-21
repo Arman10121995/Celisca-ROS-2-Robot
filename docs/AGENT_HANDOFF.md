@@ -4,9 +4,12 @@ November 21 Pro630/F100: normal MuJoCo Display run 11 completed the
 short-block GUI fetch through supported release and base clearance.
 Preserve the 445 mm place dock, calibrated shaft and follower armature,
 single effort budget, fresh bilateral pad checks and measured-jaw contact
-depth guard. Next, exercise the opt-in Navigation fetch and retain both
-costmap footprint acknowledgements and the Nav2 action outcomes. Keep
-PyBullet experimental work scoped to its own real linkage and pad data.
+depth guard. The first Navigation run lifted the block and reached both
+costmap acknowledgements, then stopped on the held-arm interlock. Preserve
+the simulator drive gate and the owned-action pause handling in the retry.
+Record the Nav2 outcome, release and clearance before promoting the mode.
+Keep PyBullet scoped to its own linkage and pad data. Isaac has passive
+rotary joint authoring verified at the USD schema level and needs live travel.
 [Completed fetch evidence](status/evidence/r143-pro630-f100-2026-11-20/README.md#complete-gui-fetch).
 
 November 20 Pro630/F100: preserve the separate same-family mounted variant,
