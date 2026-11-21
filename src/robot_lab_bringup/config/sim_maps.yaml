@@ -858,6 +858,19 @@ maps:
       path: maps/mobile_fetch_lab/maps/map.yaml
     spawn: {x: 0.0, y: 0.0, yaw: 0.0, z: 0.0}
     notes: Experimental F100 reach fixture with a 40 x 40 x 90 mm loose block 60 mm inside the pickup edge. Static occupancy matches the mobile fetch lab.
+  mobile_fetch_lab_can:
+    gazebo:
+      world_name: mobile_fetch_lab_can
+      world_package: robot_lab_maps
+      world_path: maps/mobile_fetch_lab_can/worlds/mobile_fetch_lab_can.world
+    mujoco:
+      xml_path: mjcf/mobile_fetch_lab_can.xml
+    map:
+      has_2d_map: true
+      package: robot_lab_maps
+      path: maps/mobile_fetch_lab/maps/map.yaml
+    spawn: {x: 0.0, y: 0.0, yaw: 0.0, z: 0.0}
+    notes: Experimental mobile fetch fixture with an upright 40 mm diameter, 150 mm tall, 100 g cylinder and a declared RGB-D binding. The saved grid covers the same tables and floor as the original fetch lab.
   arm_pick_place_lab:
     gazebo:
       world_name: arm_pick_place_lab

@@ -163,9 +163,9 @@ fetch** (script: `arm_pick_place_check.py --pose-source rgbd`).
 
 1. After the drive, TIAGo tilts its head to the profile's
    `pick_place.look` pose.
-2. Each new RGB-D frame is fitted as a known-size box of a declared colour.
-   The declaration is `rgbd_boxes.yaml` next to the world's `worlds/`
-   folder: the object name, size and an OpenCV HSV range.
+2. Each new RGB-D frame is fitted using the object's declared shape, size
+   and OpenCV HSV range. The lab reads `rgbd_targets.yaml` for boxes and
+   upright cylinders and still accepts `rgbd_boxes.yaml` for existing worlds.
 3. Three estimates within 1 cm of each other make the grasp pose.
 4. The place uses where the object sat in the hand at the grasp.
 
@@ -175,6 +175,14 @@ truth. A world without a binding for the object offers only **Simulator
 truth**. If no estimate comes within 30 s, the task stops, and the last
 camera frame is saved next to the receipt.
 [Measured runs](../status/evidence/r59-tiago-rgbd-fetch-2026-11-18/README.md).
+
+To exercise the cylinder fit, select **Mobile fetch lab → Upright cylinder
+for TIAGo**, choose `fetch_can`, and use the camera pose option. The estimator
+uses the observed circular lid and the declared height to recover the body
+center. Circular symmetry gives no observable yaw, so the estimate uses a
+canonical upright orientation. A clipped or incomplete lid is rejected.
+The cylinder fixture and estimator passed source checks. A physical camera
+fetch of the cylinder remains unmeasured.
 
 ## Add another arm
 

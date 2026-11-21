@@ -17,6 +17,7 @@ import subprocess
 import time
 
 from robot_lab_gui.launcher import SimulationLauncherGui
+from robot_lab_gui.urdf_arm_controls import POSE_SOURCE_LABELS
 
 
 def screenshot(path):
@@ -39,6 +40,10 @@ def pick_place(app, page, args, report, press, settle, until, pump, screenshot):
           'pick-and-place node sees the object')
     page.pick_object.set(args.pick_place[0])
     page.pick_support.set(args.pick_place[1])
+    if args.pose_source != 'truth':
+        if args.pick_place[0] not in page.pick_state.get('rgbd_objects', []):
+            raise ValueError('RGB-D target is unavailable for this robot and world')
+        page.pick_source.set(POSE_SOURCE_LABELS[args.pose_source])
     previous = json.dumps(page.pick_state.get('last_result'))
     until(lambda: page.pick_run_button.instate(['!disabled']), 60 if args.mode == 'nav' else 20,
           'Run pick / place enabled')
@@ -75,6 +80,8 @@ def main():
     parser.add_argument('--mode', default='display', choices=('display', 'nav'))
     parser.add_argument('--output', type=Path, required=True)
     parser.add_argument('--experimental', action='store_true', help='allow the selected profile’s experimental workflow')
+    parser.add_argument('--pose-source', choices=('truth', 'rgbd'), default='truth',
+                        help='object pose source used by --pick-place')
     task = parser.add_mutually_exclusive_group()
     task.add_argument('--pick-place', nargs=2, metavar=('OBJECT', 'SUPPORT'),
                         help='instead of the joint steps: Home, then Run pick / place of OBJECT onto SUPPORT '
@@ -84,6 +91,8 @@ def main():
     task.add_argument('--flange-offset', type=float, nargs=3, metavar=('DX', 'DY', 'DZ'),
                       help='plan and execute this offset in metres from the measured source flange')
     args = parser.parse_args()
+    if args.pose_source != 'truth' and not args.pick_place:
+        parser.error('--pose-source requires --pick-place')
     args.output.mkdir(parents=True, exist_ok=False)
     report = dict(robot=args.robot, simulator=args.simulator, map=args.map, mode=args.mode, steps=[], passed=False)
     app = SimulationLauncherGui()

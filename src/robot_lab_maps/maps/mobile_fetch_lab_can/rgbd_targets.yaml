@@ -1,0 +1,9 @@
+# The diffuse colour and dimensions belong to fetch_can in the world.
+schema: robot_lab.rgbd_primitives.v1
+objects:
+  - object: fetch_can
+    shape: cylinder
+    size_m: [0.04, 0.04, 0.15]
+    hsv_low: [0, 150, 40]
+    hsv_high: [10, 255, 255]
+    depth_noise_m: 0.001

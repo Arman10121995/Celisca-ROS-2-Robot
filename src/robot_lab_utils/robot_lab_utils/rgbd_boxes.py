@@ -1,4 +1,4 @@
-"""Known-size upright box targets from color pixels and aligned metric depth.
+"""Known-size upright targets from color pixels and aligned metric depth.
 
 No simulator object pose is an input. Appearance/size/upright assumptions are declared
 configuration, not semantic recognition or a general six-DOF pose estimator.
@@ -9,20 +9,27 @@ import numpy as np
 from scipy.spatial.transform import Rotation
 
 
-def bindings(document):
-    if not isinstance(document,dict) or document.get('schema')!='robot_lab.rgbd_boxes.v1':
+def bindings(document, *, allow_primitives=False):
+    schema = document.get('schema') if isinstance(document, dict) else None
+    primitives = allow_primitives and schema == 'robot_lab.rgbd_primitives.v1'
+    if schema != 'robot_lab.rgbd_boxes.v1' and not primitives:
         raise ValueError('Choose an rgbd_boxes.v1 configuration')
-    rows=document.get('boxes')
-    if not isinstance(rows,list) or not 1<=len(rows)<=16:raise ValueError('Configure 1–16 boxes')
+    rows=document.get('objects' if primitives else 'boxes')
+    if not isinstance(rows,list) or not 1<=len(rows)<=16:raise ValueError('Configure 1–16 RGB-D targets')
     result={}
     for row in rows:
         if not isinstance(row,dict):raise ValueError('Each box needs a binding')
+        shape = row.get('shape') if primitives else 'box'
+        if shape not in ('box', 'cylinder'):
+            raise ValueError('Choose a box or an upright cylinder')
         name=row.get('object');size=np.asarray(row.get('size_m'),dtype=float)
         low=np.asarray(row.get('hsv_low'),dtype=float);high=np.asarray(row.get('hsv_high'),dtype=float)
         if not isinstance(name,str) or not 1<=len(name)<=200 or name in result:
             raise ValueError('Each box needs a unique named object')
         if size.shape!=(3,) or not np.all(np.isfinite(size)) or np.any(size<.01) or np.any(size>1.):
             raise ValueError('Known box dimensions must be 0.01–1 m')
+        if shape == 'cylinder' and not np.isclose(size[0], size[1], rtol=0., atol=1e-6):
+            raise ValueError('Use [diameter, diameter, height] for an upright cylinder')
         if (low.shape!=(3,) or high.shape!=(3,) or not np.all(np.isfinite([low,high]))
                 or np.any(low<0) or np.any(high>[179,255,255]) or np.any(high<low)
                 or np.any(low!=np.floor(low)) or np.any(high!=np.floor(high))):
@@ -35,10 +42,18 @@ def bindings(document):
                 raise ValueError('Named box color ranges must not overlap')
         result[name]=dict(object=name,size_m=size.tolist(),hsv_low=low.astype(int).tolist(),
                           hsv_high=high.astype(int).tolist(),depth_noise_m=noise)
+        if primitives:
+            result[name]['shape'] = shape
     return result
 
 
 def estimate_box(rgb,depth,k,distortion,world_from_camera,binding):
+    if binding.get('shape', 'box') != 'box':
+        raise ValueError('Expected a box binding')
+    return estimate_primitive(rgb, depth, k, distortion, world_from_camera, binding)
+
+
+def estimate_primitive(rgb,depth,k,distortion,world_from_camera,binding):
     import cv2
     rgb=np.asarray(rgb);depth=np.asarray(depth);k=np.asarray(k,dtype=float)
     world=np.asarray(world_from_camera,dtype=float);distortion=np.asarray(distortion,dtype=float)
@@ -77,9 +92,46 @@ def estimate_box(rgb,depth,k,distortion,world_from_camera,binding):
     center=top.mean(axis=0);_,singular,vectors=np.linalg.svd(top-center,full_matrices=False)
     if singular[1]<.002 or singular[2]>.18*singular[1] or abs(vectors[-1,2])<.995:
         raise ValueError('A complete upright planar top face is required')
+    known = np.asarray(binding['size_m'], dtype=float)
+    hull = cv2.convexHull(top[:, :2].astype(np.float32))
+    if binding.get('shape', 'box') == 'cylinder':
+        centre, diameter = _fit_cylinder_lid(hull, known[0])
+        observed = np.array([diameter, diameter])
+        yaw, symmetry = 0., None  # rotations of a circular lid are indistinguishable
+        shape, description = 'cylinder', 'Known-size upright colored cylinder'
+    else:
+        centre, observed, yaw, symmetry = _fit_box_top(top, hull, known)
+        shape, description = 'box', 'Known-size upright colored box'
+    position = [float(centre[0]), float(centre[1]), float(np.median(top[:, 2]) - known[2] / 2)]
+    pixel_bound = float(np.max(values) / min(k[0, 0], k[1, 1]))
+    bound = 3 * noise + 2 * pixel_bound + float(np.max(np.abs(observed-known[:2]))) / 2 + float(np.std(top[:, 2]))
+    if not math.isfinite(bound) or bound > .02:
+        raise ValueError('Declared target uncertainty exceeds 2 cm')
+    return dict(object=binding['object'],type=shape,size=known.tolist(),position=position,
+        orientation_wxyz=Rotation.from_euler('z',yaw).as_quat()[[3,0,1,2]].tolist(),
+        pose_reference=f'collision_{shape}_center',position_std_bound_m=bound,
+        observed_top_size_m=observed.tolist(),top_points=len(top),yaw_symmetry_order=symmetry,
+        scope=description+'; declared depth/pixel bound, not calibrated covariance')
+
+
+def _fit_cylinder_lid(hull, known_diameter):
+    import cv2
+
+    centre, radius = cv2.minEnclosingCircle(hull)
+    diameter = 2 * radius
+    expected_area = math.pi * (known_diameter / 2) ** 2
+    if abs(diameter - known_diameter) > max(.003, .12 * known_diameter):
+        raise ValueError('Visible lid does not match the known cylinder diameter')
+    if cv2.contourArea(hull) < .80 * expected_area:
+        raise ValueError('Cylinder lid is incomplete or occluded')
+    return centre, diameter
+
+
+def _fit_box_top(top, hull, known):
+    import cv2
+
     rectangle=cv2.minAreaRect(top[:,:2].astype(np.float32))
-    hull=cv2.convexHull(top[:,:2].astype(np.float32))
-    measured=np.asarray(rectangle[1]);known=np.asarray(binding['size_m'],dtype=float)
+    measured=np.asarray(rectangle[1])
     if np.min(measured)<=0:raise ValueError('Degenerate top-face rectangle')
     sides=cv2.boxPoints(rectangle).astype(float)
     edge=sides[1]-sides[0];other=sides[2]-sides[1]
@@ -93,12 +145,4 @@ def estimate_box(rgb,depth,k,distortion,world_from_camera,binding):
     # the canonical representative instead of claiming observable face labels.
     square=abs(known[0]-known[1])<1e-6;period=math.pi/2 if square else math.pi
     yaw=(math.atan2(edge[1],edge[0])+period/2)%period-period/2
-    position=[float(rectangle[0][0]),float(rectangle[0][1]),float(np.median(top[:,2])-known[2]/2)]
-    pixel_bound=float(np.max(values)/min(k[0,0],k[1,1]))
-    bound=3*noise+2*pixel_bound+float(np.max(np.abs(observed-known[:2])))/2+float(np.std(top[:,2]))
-    if not math.isfinite(bound) or bound>.02:raise ValueError('Declared target uncertainty exceeds 2 cm')
-    return dict(object=binding['object'],type='box',size=known.tolist(),position=position,
-        orientation_wxyz=Rotation.from_euler('z',yaw).as_quat()[[3,0,1,2]].tolist(),
-        pose_reference='collision_box_center',position_std_bound_m=bound,
-        observed_top_size_m=observed.tolist(),top_points=len(top),yaw_symmetry_order=4 if square else 2,
-        scope='Known-size upright colored box; declared depth/pixel bound, not calibrated covariance')
+    return rectangle[0], observed, yaw, 4 if square else 2

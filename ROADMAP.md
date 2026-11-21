@@ -652,7 +652,10 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
     MuJoCo (estimate error 1.5 mm, 167.7 s) and PyBullet (5.1 mm, 142.5 s,
     after its camera mirror learned to draw loose objects and SDF colours).
     [Receipt](docs/status/evidence/r59-tiago-rgbd-fetch-2026-11-18/README.md);
-  - general recognition/pose for unconfigured, non-box or occluded objects,
+  - 2026-11-21: declared upright-cylinder RGB-D lid fitting and a TIAGo
+    fetch map variant are implemented. Projected-image tests cover center
+    estimation and partial lid rejection. The live cylinder mission remains open.
+  - general recognition/pose for unconfigured, other shapes or occluded objects,
     source-specific grasp strategies and further
     source-specific object pipelines;
   - generalize the existing native interlock and measured footprint-consumption gate to other mobile-manipulator adapters.

@@ -264,6 +264,7 @@ maps:
     members:
       - {id: mobile_fetch_lab, label: Tall block for TIAGo}
       - {id: mobile_fetch_lab_f100, label: Short block for F100}
+      - {id: mobile_fetch_lab_can, label: Upright cylinder for TIAGo}
   - id: mobile_manipulation_lab
     name: Mobile manipulation lab
     complete: true

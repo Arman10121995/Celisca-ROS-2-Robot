@@ -272,16 +272,24 @@ class PickPlace(Node):
         return boxes, sizes
 
     def _rgbd_bindings(self):
-        """The world's declared RGB-D boxes (rgbd_boxes.v1), or {}."""
+        """Read the world's declared RGB-D targets, retaining legacy box files."""
         path = self.get_parameter('rgbd_bindings').value
         world = self.get_parameter('world_path').value
         if not path and world:
-            path = str(Path(world).resolve().parent.parent / 'rgbd_boxes.yaml')
+            directory = Path(world).resolve().parent.parent
+            target_path = directory / 'rgbd_targets.yaml'
+            path = str(target_path if target_path.is_file() else directory / 'rgbd_boxes.yaml')
         if not path or not os.path.isfile(path):
             return {}
         import yaml
         from robot_lab_utils.rgbd_boxes import bindings
-        return bindings(yaml.safe_load(Path(path).read_text()))
+        targets = bindings(yaml.safe_load(Path(path).read_text()), allow_primitives=True)
+        for name, target in targets.items():
+            if ('shape' in target and (name not in self.object_sizes
+                    or target['shape'] != self.object_shapes.get(name, 'box')
+                    or not np.allclose(target['size_m'], self.object_sizes[name], rtol=0., atol=1e-6))):
+                raise ValueError('RGB-D binding does not match the declared world geometry for '+name)
+        return targets
 
     def _on_truth(self, message):
         self.truth = json.loads(message.data)
@@ -606,7 +614,7 @@ class PickPlace(Node):
 
     def _rgbd_estimate(self, name):
         """One estimate of the object's pose (world) from the latest RGB-D frames."""
-        from robot_lab_utils.rgbd_boxes import estimate_box
+        from robot_lab_utils.rgbd_boxes import estimate_primitive
         from robot_lab_utils.rgbd_object_pose import pixels, stamp
         from scipy.spatial.transform import Rotation
         rgb, depth, info = (self.camera[k][0] for k in ('rgb', 'depth', 'info'))
@@ -625,8 +633,8 @@ class PickPlace(Node):
         world_from_base = np.eye(4)
         world_from_base[:3, :3] = Rotation.from_euler('z', yaw).as_matrix()
         world_from_base[:3, 3] = [x, y, z]
-        result = estimate_box(pixels(rgb), pixels(depth, True), np.asarray(info.k).reshape(3, 3), info.d,
-                              world_from_base @ base_from_camera, self.rgbd_bindings[name])
+        result = estimate_primitive(pixels(rgb), pixels(depth, True), np.asarray(info.k).reshape(3, 3), info.d,
+                                    world_from_base @ base_from_camera, self.rgbd_bindings[name])
         result['camera_frame'] = rgb.header.frame_id
         return result
 

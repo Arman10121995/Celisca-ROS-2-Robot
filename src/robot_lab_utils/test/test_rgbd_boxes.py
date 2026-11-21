@@ -6,7 +6,7 @@ import numpy as np
 import pytest
 from scipy.spatial.transform import Rotation
 
-from robot_lab_utils.rgbd_boxes import bindings,estimate_box
+from robot_lab_utils.rgbd_boxes import bindings,estimate_box,estimate_primitive
 from robot_lab_utils.object_estimates import ObjectEstimates
 
 
@@ -60,6 +60,31 @@ def test_binding_rejects_duplicate_names_bad_color_and_nonfinite_dimensions():
     with pytest.raises(ValueError):bindings(doc)
     doc=configuration();other=copy.deepcopy(doc['boxes'][0]);other['object']='other';doc['boxes'].append(other)
     with pytest.raises(ValueError,match='overlap'):bindings(doc)
+
+
+def test_upright_cylinder_uses_its_lid_centre_and_rejects_partial_view():
+    doc = dict(schema='robot_lab.rgbd_primitives.v1', objects=[dict(
+        configuration()['boxes'][0], object='can', shape='cylinder', size_m=[.04,.04,.15])])
+    with pytest.raises(ValueError):
+        bindings(doc)
+    binding = bindings(doc, allow_primitives=True)['can']
+    rgb, depth, k, world = projected_face()
+    rgb.fill(80)
+    depth.fill(2.)
+    y, x = np.indices(depth.shape)
+    z = world[2,3] - .15
+    lid = (((x-k[0,2])*z/k[0,0]-.025)**2 + (-(y-k[1,2])*z/k[1,1]-.01)**2) <= .02**2
+    rgb[lid] = [255,115,13]
+    depth[lid] = z
+
+    result = estimate_primitive(rgb, depth, k, [], world, binding)
+    np.testing.assert_allclose(result['position'], [.025,.01,.075], atol=.002)
+    assert result['orientation_wxyz'] == [1.,0.,0.,0.]
+    assert result['yaw_symmetry_order'] is None and result['pose_reference'] == 'collision_cylinder_center'
+
+    rgb[:, 343:] = 80
+    with pytest.raises(ValueError):
+        estimate_primitive(rgb, depth, k, [], world, binding)
 
 
 def test_rgbd_cache_cannot_replace_marker_targets_or_override_identity_and_reference():

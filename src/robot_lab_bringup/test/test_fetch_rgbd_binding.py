@@ -46,3 +46,20 @@ def test_no_other_world_model_falls_in_the_colour_range():
     for name, (_size, colour) in _world_boxes().items():
         if name != 'fetch_block':
             assert not _inside(_opencv_hsv(colour), declared), name
+
+
+def test_cylinder_fixture_reuses_static_world_and_declares_the_loose_lid_target():
+    directory = MAP.with_name('mobile_fetch_lab_can')
+    world = ET.parse(directory / 'worlds' / 'mobile_fetch_lab_can.world').getroot()
+    original = ET.parse(MAP / 'worlds' / 'mobile_fetch_lab.world').getroot()
+    assert [ET.tostring(m) for m in world.iter('model') if m.findtext('static') == 'true'] == [
+        ET.tostring(m) for m in original.iter('model') if m.findtext('static') == 'true']
+    loose, = [m for m in world.iter('model') if m.findtext('static') == 'false']
+    target, = bindings(yaml.safe_load((directory / 'rgbd_targets.yaml').read_text()),
+                       allow_primitives=True).values()
+    cylinder = loose.find('link/visual/geometry/cylinder')
+    diameter = 2 * float(cylinder.findtext('radius'))
+    colour = [float(v) for v in loose.findtext('link/visual/material/diffuse').split()[:3]]
+    assert target['object'] == loose.get('name')
+    assert target['shape'] == 'cylinder' and target['size_m'] == [diameter, diameter, float(cylinder.findtext('length'))]
+    assert _inside(_opencv_hsv(colour), target)
