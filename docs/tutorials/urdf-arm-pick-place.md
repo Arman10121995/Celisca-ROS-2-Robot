@@ -36,6 +36,26 @@ python3 scripts/run_with_launch.py --log run.log --launch \
   -- python3 scripts/arm_pick_place_check.py --object pickup_cube --support place_table
 ```
 
+## Pick the cube with the workcell camera
+
+Select the URDF arm and hand variant of Franka Panda, **MuJoCo**,
+**Display**, and the **Cube** variant of the fixed-arm pick-and-place lab.
+Enable experimental robot workflows if the robot selector requires it.
+After Launch, select `pickup_cube` and `place_table` in the arm panel,
+choose **RGB-D camera** as the pose source, and request pick and place.
+
+The overhead workcell camera publishes synchronized colour, depth and
+calibration. The executor checks three fresh estimates against each other
+before it plans the grasp. It uses physical object feedback to judge lift
+and release. The fixture recognizes the authored red 40 mm cube.
+
+To add a stationary camera to another MuJoCo fixed-arm workcell, set
+`workcell_rgbd_pose` on the map entry in `sim_maps.yaml`. Give the camera's
+world XYZ position in metres and WXYZ orientation of its ROS optical frame.
+Add `rgbd_targets.yaml` alongside `worlds/` in the map directory with the
+object identity, collision dimensions and measured HSV range. Keep the
+object visible from the arm's start pose.
+
 ## What it does
 
 `urdf_pick_place.py` plans with `robot_lab_mujoco/arm_pick_place.py`, using a

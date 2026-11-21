@@ -487,8 +487,13 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
     outside this planner. Explicit distance checks cover the mocap
     payload against static scenery. Compiled scene tests and a replay of
     the recorded F100 pickup and placement pass.
-  - compound/mesh geometry, perception pose sources for
-    fixed arms and additional gripper-specific pipelines;
+  - 2026-11-22: the MuJoCo fixed-arm workcell publishes a calibrated
+    overhead RGB-D camera. The existing pick-and-place panel can plan a
+    Panda cube grasp from three fresh camera estimates. An offscreen
+    fixture resolved the cube centre within 1.1 mm; a complete camera-led
+    physical mission remains to be measured.
+  - compound/mesh geometry, other fixed-arm perception backends and
+    additional gripper-specific pipelines;
   - coupled mechanisms beyond gear-coupled fingers (mimic chains and
     four-bar joints);
   - Done 2026-11-17: Isaac and Gazebo pick and place for the URDF Panda.

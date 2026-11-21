@@ -1,0 +1,9 @@
+# Match the collision size and red finish of pickup_cube in the SDF fixture.
+schema: robot_lab.rgbd_primitives.v1
+objects:
+  - object: pickup_cube
+    shape: box
+    size_m: [0.04, 0.04, 0.04]
+    hsv_low: [0, 75, 35]
+    hsv_high: [15, 255, 255]
+    depth_noise_m: 0.001

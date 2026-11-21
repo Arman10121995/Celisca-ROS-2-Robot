@@ -193,6 +193,28 @@ def test_direct_mobile_legs_check_primitive_obstacles_and_keep_nav2_transit(pick
         node._start_phase(dict(phases=[dict(kind='drive', name='clear')], phase_index=0))
 
 
+def test_fixed_arm_starts_with_camera_and_plans_from_its_estimate(pick_place, monkeypatch):
+    node = object.__new__(pick_place.PickPlace)
+    monkeypatch.setattr(pick_place, '_now', lambda: 10.)
+    node.mobile, node.look, node.config = None, {}, {}
+    node.truth, node.truth_at = {'cube': [.5, -.25, .32, 1., 0., 0., 0.]}, 10.
+    node.supports = {'drop': object()}
+    node.rgbd_enabled = True
+    node.rgbd_bindings = {'cube': object()}
+    node.spec = SimpleNamespace(arm_joints=('arm',), finger_joints=('jaw',))
+    node._feedback_blocker = lambda: None
+    node.measured = lambda: {'arm': 0., 'jaw': 0.}
+    node._plan_arm = Mock()
+    task = node._plan({'object': 'cube', 'support': 'drop', 'pose_source': 'rgbd'})
+    look, arm = task['phases']
+    assert look['kind'] == 'look' and look['targets'] == {}
+    node._plan_arm.assert_not_called()
+    task['perceived'] = {'position': [.501, -.25, .32], 'orientation_wxyz': [1., 0., 0., 0.]}
+    assert node._object_pose(task, arm) == [.501, -.25, .32, 1., 0., 0., 0.]
+    node._next_phase(task)
+    node._plan_arm.assert_called_once_with(task, arm)
+
+
 def test_stop_waits_for_late_nav2_acceptance_and_terminal_cancel(pick_place):
     node = object.__new__(pick_place.PickPlace)
     nav = dict(future=Future(), result=None)

@@ -1143,6 +1143,17 @@ def _add_camera_to_base(mjcf_text, name, offset, fovy_degrees, urdf=None, link=N
     return ET.tostring(root, encoding="unicode")
 
 
+def _add_workcell_camera(mjcf_text, optical_pose, fovy_degrees):
+    """Place a static world camera from the fixture's calibrated optical pose."""
+    root = ET.fromstring(mjcf_text)
+    position, orientation = compose((optical_pose[:3], optical_pose[3:]),
+                                    ((0., 0., 0.), (0., 1., 0., 0.)))
+    ET.SubElement(root.find('worldbody'), 'camera', name=_CAMERA_NAME, mode='fixed',
+                  pos=' '.join(map(str, position)), quat=' '.join(map(str, orientation)),
+                  fovy=str(fovy_degrees))
+    return ET.tostring(root, encoding='unicode')
+
+
 def _body_frame_velocity(model, data, body_id):
     """(angular, linear) velocity of a body's frame origin, in that frame.
 
@@ -1565,6 +1576,13 @@ class MuJoCoSpawner(Node):
         # Gazebo sensor's intrinsics; 0 Hz disables it.  Rendering needs an
         # OpenGL context (GLFW with a display here).
         self.declare_parameter("camera_rate", 5.0)
+        self.declare_parameter('workcell_rgbd_pose', '')
+        self._workcell_camera = None
+        if camera_pose := self.get_parameter('workcell_rgbd_pose').value:
+            pose = np.asarray(json.loads(camera_pose), dtype=float)
+            if pose.shape != (7,) or not np.isfinite(pose).all() or not np.isclose(np.linalg.norm(pose[3:]), 1.):
+                raise ValueError('Workcell camera needs an XYZ position and a unit WXYZ optical quaternion')
+            self._workcell_camera = tuple(pose)
         self.declare_parameter("camera_link_name", camera_model.OAKD["link"])
         self.declare_parameter("camera_optical_frame",
                                camera_model.OAKD["optical_frame"])
@@ -1924,7 +1942,7 @@ class MuJoCoSpawner(Node):
                     robot_mjcf = _add_mechanical_couplings(robot_mjcf, articulation_contract)
                 camera_offset = offset_from_root(
                     urdf, self.get_parameter("camera_link_name").value)
-                if camera_offset is not None \
+                if self._workcell_camera is None and camera_offset is not None \
                         and self.get_parameter("camera_rate").value > 0:
                     robot_mjcf = _add_camera_to_base(
                         robot_mjcf, _CAMERA_NAME, camera_offset,
@@ -1947,6 +1965,11 @@ class MuJoCoSpawner(Node):
                 world_xml, robot_mjcf, logger=self.get_logger())
         else:
             world_mjcf = robot_mjcf
+
+        if self._workcell_camera is not None:
+            world_mjcf = _add_workcell_camera(world_mjcf, self._workcell_camera,
+                math.degrees(camera_model.vertical_fov(self.get_parameter('camera_horizontal_fov').value,
+                    self.get_parameter('camera_width').value, self.get_parameter('camera_height').value)))
 
         # --- build model ---
         # Diagnostics: the exact scene this bridge compiles, for offline
@@ -3110,6 +3133,20 @@ class MuJoCoSpawner(Node):
             "far": float(self.get_parameter("camera_far").value),
             "renderer": None,
         }
+        if self._workcell_camera is not None:
+            from tf2_ros import StaticTransformBroadcaster
+
+            camera['frame'] = camera_model.WORKCELL_RGBD_FRAME
+            position, orientation = self._workcell_camera[:3], self._workcell_camera[3:]
+            optical = TransformStamped()
+            optical.header.frame_id = 'world'
+            optical.child_frame_id = camera['frame']
+            optical.transform.translation = Vector3(x=position[0], y=position[1], z=position[2])
+            w, x, y, z = orientation
+            optical.transform.rotation = Quaternion(w=w, x=x, y=y, z=z)
+            self._workcell_camera_tf = StaticTransformBroadcaster(self)
+            self._workcell_camera_tf.sendTransform(optical)
+            link = camera['frame']
         # Clip planes are global in MuJoCo, as fractions of the model extent.
         extent = max(float(self._model.stat.extent), 1e-6)
         self._model.vis.map.znear = camera["near"] / extent

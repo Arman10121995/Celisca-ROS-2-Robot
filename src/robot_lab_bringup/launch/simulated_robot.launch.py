@@ -1231,6 +1231,11 @@ def _build_simulation_actions(context):
         if _launch_value(context, "sensor_faults").strip():
             display_args["sensor_faults"] = _launch_value(context, "sensor_faults").strip()
         display_args.update(drive_args)
+        workcell_pose = map_config.get('workcell_rgbd_pose') if (
+            simulator == 'mujoco' and not robot_free and robot_config.get('articulation')
+            and robot_config.get('pick_place') and not robot_config['pick_place'].get('mobile')) else None
+        if workcell_pose:
+            display_args['workcell_rgbd_pose'] = json.dumps(workcell_pose)
         planning = _launch_value(context, 'arm_planning').strip().lower()
         if planning == 'auto':
             planning = robot_config.get('arm_planning', 'none')
@@ -1290,6 +1295,7 @@ def _build_simulation_actions(context):
                 parameters=[{'use_sim_time': _as_bool(use_sim_time, True), 'model_path': model_path,
                              'articulation_config': json.dumps(robot_config['articulation'], sort_keys=True),
                              'pick_place_config': json.dumps(robot_config['pick_place'], sort_keys=True),
+                             'workcell_rgbd': bool(workcell_pose),
                              'world_path': world_path or '', 'base_x': float(spawn_x), 'base_y': float(spawn_y),
                              'base_z': float(spawn_z), 'base_yaw': float(spawn_yaw)}]))
         # Owned articulation for Gazebo only (line ~1046, provisioned): Gazebo has

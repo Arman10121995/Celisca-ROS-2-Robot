@@ -31,6 +31,7 @@ OAKD = {
 # Scalar-first rotation from the camera link (x forward, y left, z up) to an
 # OpenGL-style camera frame (x right, y up, looking along -z).
 LINK_TO_OPENGL_CAMERA = (0.5, 0.5, -0.5, -0.5)
+WORKCELL_RGBD_FRAME = "workcell_rgbd_optical_frame"
 
 
 def vertical_fov(horizontal_fov, width, height):

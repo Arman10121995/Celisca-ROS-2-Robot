@@ -156,7 +156,7 @@ class PickPlace(Node):
         super().__init__('urdf_pick_place')
         for name, default in (('model_path', ''), ('articulation_config', ''), ('pick_place_config', ''),
                               ('world_path', ''), ('rgbd_bindings', ''), ('base_x', 0.0), ('base_y', 0.0), ('base_z', 0.0),
-                              ('base_yaw', 0.0)):
+                              ('base_yaw', 0.0), ('workcell_rgbd', False)):
             self.declare_parameter(name, default)
         self.config = json.loads(self.get_parameter('pick_place_config').value)
         articulation = json.loads(self.get_parameter('articulation_config').value)
@@ -221,8 +221,10 @@ class PickPlace(Node):
         self.base_frame = None
         self.look = dict(self.config.get('look') or {})
         self.rgbd_bindings = self._rgbd_bindings()
+        self.workcell_rgbd = not self.mobile and self.get_parameter('workcell_rgbd').value
+        self.rgbd_enabled = bool(self.rgbd_bindings and (self.workcell_rgbd or (self.mobile and self.look)))
         self.camera = {}
-        if self.mobile and self.look and self.rgbd_bindings:
+        if self.rgbd_enabled:
             from rclpy.qos import qos_profile_sensor_data
             from robot_lab_utils.camera_model import OAKD
             from sensor_msgs.msg import CameraInfo, Image
@@ -416,7 +418,7 @@ class PickPlace(Node):
             schema='robot_lab.pick_place_state.v1',
             phase='stopping' if self.stopping_nav else task.get('phase', 'idle'), stage=task.get('stage'),
             message=self.message, objects=sorted(self.truth), supports=sorted(self.supports),
-            mobile=bool(self.mobile), pose_sources=['truth'] + (['rgbd'] if self.mobile and self.look and self.rgbd_bindings else []),
+            mobile=bool(self.mobile), pose_sources=['truth'] + (['rgbd'] if self.rgbd_enabled else []),
             nav2_available=bool(self.mobile and self.nav_client.server_is_ready()),
             rgbd_objects=sorted(self.rgbd_bindings), pose_source=task.get('pose_source'), drive_phase=(task.get('phases') or [{}])[task.get('phase_index', 0)].get('name')
             if task else None,
@@ -470,11 +472,11 @@ class PickPlace(Node):
         if pose_source not in POSE_SOURCES:
             raise ValueError('pose_source must be one of %s' % (POSE_SOURCES,))
         if pose_source == 'rgbd':
-            if not (self.mobile and self.look):
-                raise ValueError('RGB-D object poses need a mobile profile with a pick_place.look head pose')
+            if not self.rgbd_enabled:
+                raise ValueError('RGB-D object poses require a configured camera and fixture targets')
             if name not in self.rgbd_bindings:
                 raise ValueError('object %r has no RGB-D binding in the world configuration' % name)
-            missing = [n for n in self.look if n not in measured]
+            missing = [n for n in self.look if self.mobile and n not in measured]
             if missing:
                 raise ValueError('no measurement for look joints %s' % missing)
         task = dict(phase='executing', request=request, object=name, support=support_name, lift=lift,
@@ -484,7 +486,11 @@ class PickPlace(Node):
                                    drive_ticks_with_articulation_active=0, drive_ticks=0))
         if not self.mobile:
             task['phases'] = [dict(kind='arm', name='pick_place')]
-            self._plan_arm(task, task['phases'][0])
+            if pose_source == 'rgbd':
+                task['phases'].insert(0, dict(kind='look', name='look'))
+                task['plan']['pose_sources'] = dict(grasp='rgbd: workcell camera estimate',
+                    place='rgbd: planned grasp and declared support', judged_by='truth')
+            self._start_phase(task)
             return task
         table = self._table_under(name)
         if table is None:
@@ -587,7 +593,8 @@ class PickPlace(Node):
             self._plan_arm(task, phase)
             return
         if phase['kind'] == 'look':
-            phase.update(targets={n: float(v) for n, v in self.look.items()}, estimates=[], rejected=[],
+            targets = {n: float(v) for n, v in self.look.items()} if self.mobile else {}
+            phase.update(targets=targets, estimates=[], rejected=[],
                          settled=None, frames_used=0)
             return
         pose = self.base_pose
@@ -615,7 +622,7 @@ class PickPlace(Node):
         return np.array([math.cos(yaw) * dx + math.sin(yaw) * dy, -math.sin(yaw) * dx + math.cos(yaw) * dy, point[2] - z])
 
     def _look(self, task, phase):
-        """Point the head at the table, then fit the object in consecutive RGB-D frames."""
+        """Wait for a still camera and fit the object in consecutive RGB-D frames."""
         if _now() - phase['started'] > LOOK_TIMEOUT:
             reason = phase['rejected'][-1] if phase['rejected'] else 'no fresh RGB-D frames'
             self._save_look_frame(task)
@@ -676,6 +683,7 @@ class PickPlace(Node):
 
     def _rgbd_estimate(self, name):
         """One estimate of the object's pose (world) from the latest RGB-D frames."""
+        from robot_lab_utils.camera_model import WORKCELL_RGBD_FRAME
         from robot_lab_utils.rgbd_boxes import estimate_primitive
         from robot_lab_utils.rgbd_object_pose import pixels, stamp
         from scipy.spatial.transform import Rotation
@@ -684,17 +692,23 @@ class PickPlace(Node):
             raise ValueError('RGB, depth and calibration are not from one sample')
         if not rgb.header.frame_id or len({rgb.header.frame_id, depth.header.frame_id, info.header.frame_id}) != 1:
             raise ValueError('RGB and depth must share one optical frame')
-        if not self.base_frame or self.base_pose is None or _now() - self.base_at > STATE_STALE:
-            raise ValueError('no fresh base pose')
-        # The base and head are still here, so the latest transform is the image's.
-        t = self.tf.lookup_transform(self.base_frame, rgb.header.frame_id, rclpy.time.Time()).transform
+        world_from_base = np.eye(4)
+        if self.workcell_rgbd:
+            if rgb.header.frame_id != WORKCELL_RGBD_FRAME:
+                raise ValueError('RGB-D frame does not match the workcell camera')
+            base_frame = 'world'
+        else:
+            if not self.base_frame or self.base_pose is None or _now() - self.base_at > STATE_STALE:
+                raise ValueError('no fresh base pose')
+            base_frame = self.base_frame
+            x, y, z, yaw = self.base_pose
+            world_from_base[:3, :3] = Rotation.from_euler('z', yaw).as_matrix()
+            world_from_base[:3, 3] = [x, y, z]
+        # The camera and its carrier are still here, so the latest transform is the image's.
+        t = self.tf.lookup_transform(base_frame, rgb.header.frame_id, rclpy.time.Time()).transform
         base_from_camera = np.eye(4)
         base_from_camera[:3, :3] = Rotation.from_quat([t.rotation.x, t.rotation.y, t.rotation.z, t.rotation.w]).as_matrix()
         base_from_camera[:3, 3] = [t.translation.x, t.translation.y, t.translation.z]
-        x, y, z, yaw = self.base_pose
-        world_from_base = np.eye(4)
-        world_from_base[:3, :3] = Rotation.from_euler('z', yaw).as_matrix()
-        world_from_base[:3, 3] = [x, y, z]
         result = estimate_primitive(pixels(rgb), pixels(depth, True), np.asarray(info.k).reshape(3, 3), info.d,
                                     world_from_base @ base_from_camera, self.rgbd_bindings[name])
         result['camera_frame'] = rgb.header.frame_id
@@ -707,7 +721,7 @@ class PickPlace(Node):
             if _now() - self.truth_at > STATE_STALE:
                 raise ValueError('object truth stale')
             return list(self.truth[name])
-        if phase['name'] == 'pick':
+        if phase['name'] in ('pick', 'pick_place'):
             return list(task['perceived']['position']) + list(task['perceived']['orientation_wxyz'])
         # Place: where the grasp-time offset puts the object on the measured tool.
         from scipy.spatial.transform import Rotation
