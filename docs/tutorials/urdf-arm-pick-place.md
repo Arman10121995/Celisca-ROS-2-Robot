@@ -74,6 +74,11 @@ places offset box or cylinder colliders beneath it. It publishes the model
 pose on `/simulation/free_bodies`. The Isaac Sim 6.0.1 stage check covered
 collider transforms, mass and friction material bindings. Physical
 pick-and-place with offset objects across backends remains to be measured.
+Mobile fetch checks its direct approach, docking and retreat against the
+top-down footprints of authored static boxes, spheres and cylinders. These
+checks include walls and posts that are unavailable as drop supports. Nav2
+owns the longer transit and uses its own costmaps. The direct checks cover
+primitive collision geometry, with mesh and terrain clearance still pending.
 
 **Checks.** Each stage must pass before the next one starts:
 

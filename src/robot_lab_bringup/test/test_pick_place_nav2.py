@@ -79,6 +79,9 @@ def test_pick_place_uses_authored_collision_pose_from_measured_model_pose(pick_p
     assert sorted(box.name.split('/')[-1] for box in node.arm_obstacles) == ['pillar', 'ramp', 'table', 'table', 'wall']
     pillar, = [geometry for geometry in node.arm_obstacles if geometry.shape == 'cylinder']
     assert pillar.size == [.4, .4, 1.]
+    assert sorted(box.name for box in node.drive_obstacles) == ['pillar', 'ramp', 'table', 'table', 'wall']
+    ramp, = [box for box in node.drive_obstacles if box.name == 'ramp']
+    assert ramp.size[:2] == pytest.approx([.3, .3*math.cos(.3)+.1*math.sin(.3)])
     s = math.sqrt(.5)
     node._on_truth(SimpleNamespace(data=json.dumps({'block': [2., 1., .5, s, 0., 0., s],
                                                   'ball': [0., 0., 1., 1., 0., 0., 0.]})))
@@ -145,7 +148,7 @@ def test_holonomic_dock_corrects_the_measured_pose_after_settling(pick_place, mo
     node = object.__new__(pick_place.PickPlace)
     node.base_pose = (.8686, .01, -.002, -.0531)
     node.base_at, node.base_twist, node.state = 10., (0., 0.), {}
-    node.supports, node.mobile = {}, {'holonomic_docking': True, 'base_radius': .37}
+    node.drive_obstacles, node.mobile = [], {'holonomic_docking': True, 'base_radius': .37}
     node.dock_tolerance = .01
     node._twist, node._next_phase = Mock(), Mock()
     monkeypatch.setattr(pick_place, '_now', lambda: 10.)
@@ -167,6 +170,27 @@ def test_holonomic_dock_corrects_the_measured_pose_after_settling(pick_place, mo
     node._drive(task, phase)
     node._next_phase.assert_called_once_with(task)
     assert task['log'][0]['dock_recaptures'] == 1
+
+
+def test_direct_mobile_legs_check_primitive_obstacles_and_keep_nav2_transit(pick_place):
+    from robot_lab_mujoco.arm_pick_place import Box
+
+    node = object.__new__(pick_place.PickPlace)
+    node.mobile = dict(pick_place.MOBILE_DEFAULTS)
+    # This wall blocks the transit to the run-up pose. Nav2 can route around it.
+    node.drive_obstacles = [Box('hall wall', (1., 0., .8), (1., 0., 0., 0.), (.1, .3, 1.6))]
+    start = (0., 0., 0., 0.)
+    with pytest.raises(ValueError, match='clear of hall wall'):
+        node._route({'transit': 'straight'}, (3., 0., 0.), start, 0., .35)
+    assert node._route({'transit': 'nav2'}, (3., 0., 0.), start, 0., .35)[0]['nav2']
+
+    node.drive_obstacles.append(Box('dock post', (2.9, 0., .5), (1., 0., 0., 0.), (.1, .1, 1.)))
+    with pytest.raises(ValueError, match='clear of dock post'):
+        node._route({'transit': 'nav2'}, (3., 0., 0.), start, 0., .35)
+
+    node.base_pose = (1.6, 0., 0., 0.)
+    with pytest.raises(ValueError, match='Retreat blocked by hall wall'):
+        node._start_phase(dict(phases=[dict(kind='drive', name='clear')], phase_index=0))
 
 
 def test_stop_waits_for_late_nav2_acceptance_and_terminal_cancel(pick_place):

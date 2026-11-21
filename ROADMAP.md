@@ -677,6 +677,11 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
   - general recognition/pose for unconfigured, other shapes or occluded objects,
     source-specific grasp strategies and further
     source-specific object pipelines;
+  - 2026-11-21: the URDF fetch executor checks direct approaches, docking
+    corrections and retreats against the projected footprints of authored
+    static boxes, spheres and cylinders. Nav2 still owns the long transit.
+    Source regressions cover a wall, a docking post and a blocked retreat.
+    Mesh and terrain clearance on direct legs remains open.
   - generalize the existing native interlock and measured footprint-consumption gate to other mobile-manipulator adapters.
     2026-11-20: TIAGo fetch requires both costmaps to echo the loaded shape
     before Nav2 dispatch and retains the enlarged footprint through docking

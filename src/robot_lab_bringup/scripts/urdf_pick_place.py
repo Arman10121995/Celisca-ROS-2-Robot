@@ -252,11 +252,12 @@ class PickPlace(Node):
 
     # --- inputs ---------------------------------------------------------------
     def _world_boxes(self):
-        """Keep arm collision obstacles separate from selectable level supports."""
-        from robot_lab_mujoco.arm_pick_place import Box
+        """Keep physical obstacles separate from selectable level supports."""
+        from robot_lab_mujoco.arm_pick_place import Box, yaw_of
         from robot_lab_utils.sdf_world import extract_dynamic_bodies, extract_static_shapes
         path = self.get_parameter('world_path').value
         self.arm_obstacles = []
+        self.drive_obstacles = []
         if not path or not os.path.isfile(path):
             return {}, {}
         sizes = {}
@@ -291,6 +292,11 @@ class PickPlace(Node):
             level = kind == 'box' and obstacle.rotation()[2, 2] >= math.cos(math.radians(.5))
             if level and max(size[:2]) >= 2. and obstacle.top <= .03:
                 continue  # Ground slab supporting the fixed base in the private model.
+            yaw = yaw_of(obstacle.quaternion)
+            c, s = math.cos(yaw), math.sin(yaw)
+            footprint = [2*obstacle.half_extent(axis) for axis in ((c, s, 0.), (-s, c, 0.))]
+            self.drive_obstacles.append(Box(name, obstacle.position, (math.cos(yaw/2), 0., 0., math.sin(yaw/2)),
+                                            (*footprint, size[2])))
             if level and max(size[:2]) < 2. and size[2] < 1.2:
                 previous = boxes.get(name)
                 if previous is None or obstacle.top > previous.top:
@@ -552,7 +558,7 @@ class PickPlace(Node):
                       dict(x=x, y=y, yaw=yaw)]
         points.append(pre)
         points.append((x, y))
-        boxes = list(self.supports.values())
+        boxes = self.drive_obstacles
         # Legs between turns keep ``clearance`` (the carried arm's sweep). The
         # straight back-off and the last leg in run along the arm, which stays
         # over the table, so they keep the base's own clearance.
@@ -593,8 +599,13 @@ class PickPlace(Node):
             phase['waypoints'] = self._route(task, goal, pose, self.mobile['back_off'], self.mobile['carry_radius'])
             phase['reference'] = self._in_base(self.truth[task['object']][:3]).tolist()
         else:
+            from robot_lab_mujoco.arm_pick_place import segment_clearance
+
             out = (pose[0] - self.mobile['back_off'] * math.cos(pose[3]),
                    pose[1] - self.mobile['back_off'] * math.sin(pose[3]))
+            distance, obstacle = segment_clearance(self.drive_obstacles, pose, out)
+            if distance < self.mobile['base_radius']:
+                raise ValueError('Retreat blocked by %s' % obstacle)
             phase['waypoints'] = [dict(x=out[0], y=out[1], reverse=True)]
         phase['waypoint'] = 0
 
@@ -990,7 +1001,7 @@ class PickPlace(Node):
         if precision and distance <= HOLONOMIC_DOCK_CAPTURE_M:
             from robot_lab_mujoco.arm_pick_place import segment_clearance
 
-            clearance, obstacle = segment_clearance(list(self.supports.values()), (x, y), (target['x'], target['y']))
+            clearance, obstacle = segment_clearance(self.drive_obstacles, (x, y), (target['x'], target['y']))
             if clearance < self.mobile['base_radius']:
                 return self._finish('failed', f'Precision docking blocked by {obstacle}')
             yaw_error = _wrap(target['yaw'] - yaw)
