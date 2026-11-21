@@ -17,7 +17,8 @@ def test_metric_depth_decoding_preserves_endian_and_row_padding():
     with pytest.raises(ValueError,match='stride'):pixels(message,True)
 
 
-def test_ros_rgb_depth_calibration_and_tf_produce_pose_then_clear_on_frame_mismatch(tmp_path,monkeypatch):
+@pytest.mark.parametrize('shape', ['box', 'cylinder'])
+def test_ros_rgb_depth_calibration_and_tf_produce_pose_then_clear_on_frame_mismatch(tmp_path,monkeypatch,shape):
     import rclpy
     from rclpy.parameter import Parameter
     from rclpy.executors import SingleThreadedExecutor
@@ -27,8 +28,12 @@ def test_ros_rgb_depth_calibration_and_tf_produce_pose_then_clear_on_frame_misma
     from geometry_msgs.msg import TransformStamped
     from tf2_ros import StaticTransformBroadcaster
     from robot_lab_utils.rgbd_object_pose import RGBDObjects
-    config=dict(schema='robot_lab.rgbd_boxes.v1',boxes=[dict(object='box',size_m=[.06,.04,.06],
-        hsv_low=[5,100,60],hsv_high=[30,255,255],depth_noise_m=.001)])
+    target = dict(object=shape, size_m=[.06,.04,.06] if shape == 'box' else [.06]*3,
+                  hsv_low=[5,100,60], hsv_high=[30,255,255], depth_noise_m=.001)
+    if shape == 'box':
+        config = dict(schema='robot_lab.rgbd_boxes.v1', boxes=[target])
+    else:
+        config = dict(schema='robot_lab.rgbd_primitives.v1', objects=[dict(target, shape=shape)])
     path=tmp_path/'boxes.yaml';path.write_text(yaml.safe_dump(config))
     initialized=not rclpy.ok()
     if initialized:rclpy.init()
@@ -53,12 +58,14 @@ def test_ros_rgb_depth_calibration_and_tf_produce_pose_then_clear_on_frame_misma
     # Perspective ray intersection with an unmarked top face; synthetic input,
     # actual ROS serialization, subscriptions, time matching and TF lookup.
     yy,xx=np.mgrid[:480,:640];z=.74
-    inside=(np.abs((xx-320)/550*z-.02)<=.03)&(np.abs(-(yy-240)/550*z-.01)<=.02)
+    x = (xx-320)/550*z-.02
+    y = -(yy-240)/550*z-.01
+    inside = (np.abs(x) <= .03) & (np.abs(y) <= .02) if shape == 'box' else x*x + y*y <= .03**2
     color=np.full((480,640,3),80,dtype=np.uint8);color[inside]=[255,115,13]
     distance=np.full((480,640),2.,dtype='<f4');distance[inside]=z
     identity=dict(plant_id='rgbd_fixture',source_sha256='fixture_source',scene_id='fixture_scene')
     def publish(mismatch=False):
-        context_pub.publish(String(data=json.dumps(dict(identity,object_candidates=['box'],physical_pose=['ignored']))))
+        context_pub.publish(String(data=json.dumps(dict(identity,object_candidates=[shape],physical_pose=['ignored']))))
         info=CameraInfo();info.header.frame_id='rgbd_fixture_optical';info.header.stamp=probe.get_clock().now().to_msg()
         info.width=640;info.height=480;info.k=[550.,0.,320.,0.,550.,240.,0.,0.,1.];info.d=[0.]*5;info.distortion_model='plumb_bob'
         rgb=Image();rgb.header=info.header;rgb.width=640;rgb.height=480;rgb.step=1920;rgb.encoding='rgb8';rgb.data=color.tobytes()
@@ -74,8 +81,14 @@ def test_ros_rgb_depth_calibration_and_tf_produce_pose_then_clear_on_frame_misma
         valid=[r for r in results if r['targets']]
         assert valid,[(r.get('reason'),r.get('rejected')) for r in results]
         result=valid[-1];assert all(result[k]==v for k,v in identity.items())
-        np.testing.assert_allclose(result['targets']['box']['position'],[.02,.01,.03],atol=.002)
-        assert result['pose_source']=='rgbd_box_top'
+        from robot_lab_utils.object_estimates import ObjectEstimates
+        source = 'rgbd_box_top' if shape == 'box' else 'rgbd_primitive_top'
+        assert result['pose_source'] == source
+        estimates = ObjectEstimates(source)
+        estimates.receive(result, identity, result['stamp_s'])
+        pose = estimates.get(shape, identity, result['stamp_s'])
+        np.testing.assert_allclose(pose['position'], [.02,.01,.03], atol=.002)
+        assert pose['pose_reference'] == f'collision_{shape}_center'
         assert len(lookup_stamps)>=2 and lookup_stamps[0]==lookup_stamps[1]
         before=len(results);deadline=time.monotonic()+3.
         while time.monotonic()<deadline and not any('aligned' in r.get('reason','') for r in results[before:]):publish(True)

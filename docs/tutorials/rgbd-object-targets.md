@@ -1,4 +1,4 @@
-# Unmarked RGB-D box targets
+# Unmarked RGB-D object targets
 
 ## Run
 
@@ -17,6 +17,15 @@ object reach targets**. Wait for the selected method to list a fresh target.
 Feedback explains missing, ambiguous or rejected observations. Add a reach
 or local pick recipe, inspect its steps, then explicitly **Run task**. Editing
 the target method or building a recipe sends no movement.
+
+For the experimental cylinder scene, select **Mobile manipulation lab →
+Upright RGB-D cylinder**. Select `environment_pickup_cylinder` and
+**RGB-D upright objects** in the task builder. The fixture uses the same
+benches and spawn, with a free 35 g cylinder, 35 mm across and 60 mm tall.
+Keep the full circular lid in view. A physical cylinder pick and transport
+run is pending. To install this variant on another checkout, run
+`python3 scripts/provision_mobile_manipulation_scene.py --cylinder` after
+sourcing the workspace and `scripts/ssd_env.sh`.
 
 For the pinned original Stretch at this fixture's default spawn, tested head
 targets are `head_pan = -1.576 rad` and `head_tilt = -0.923 rad`. Wait for the
@@ -55,7 +64,7 @@ flowchart TD
   Pair --> Fit[Unique color and upright top face]
   Binding[Declared size and color] --> Fit
   TF[Image-time camera transform] --> Fit
-  Fit --> Estimate[Box center and symmetric yaw]
+  Fit --> Estimate[Collision center and symmetry-aware orientation]
   Estimate --> Guard[Source scene plant freshness and geometry checks]
   Guard --> Reach[Existing source IK and collision planner]
   Reach --> Run[Explicit task execution]
@@ -64,7 +73,12 @@ flowchart TD
 The ROS node consumes `/oakd/rgb/image_raw`, `/oakd/depth/image_raw`,
 `/oakd/rgb/camera_info`, image-time TF into `native_world` and the task's
 identity/object-name list. It ignores simulator object poses in the context.
-Output is `/robot_lab/object_estimates`, with `pose_source: rgbd_box_top`.
+Output is `/robot_lab/object_estimates`. The original box configuration uses
+`rgbd_box_top`. A map declaring `robot_lab.rgbd_primitives.v1` uses
+`rgbd_primitive_top` for boxes and upright cylinders. A circular lid gives
+the collision centre and a canonical upright orientation. Its yaw is
+unobservable. The configured diameter and height must match the single
+compiled cylinder collision geometry before planning a reach.
 
 RGB and depth must share an optical frame, calibration, dimensions and sample
 time within 20 ms. Depth is `32FC1` optical-Z metres or `16UC1` millimetres.

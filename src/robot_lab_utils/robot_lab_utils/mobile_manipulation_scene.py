@@ -1,13 +1,15 @@
-"""Declared bench/cube task fixture, separate from vendor robot mechanics."""
+"""Declared bench task fixture, separate from vendor robot mechanics."""
 import xml.etree.ElementTree as ET
 
 NAME='mobile_manipulation_lab'
 BENCHES=[('pickup_bench',[0.,-.62,.25],[.5,.32,.5]),
          ('delivery_bench',[1.2,-.62,.25],[.5,.32,.5])]
 OBJECT=('pickup_cube',[0.,-.62,.515],[.03,.03,.03])
+CYLINDER=('pickup_cylinder',[0.,-.62,.53],[.035,.035,.06])
 
 
-def sdf(world_name=NAME):
+def sdf(world_name=NAME, *, cylinder=False):
+    target = CYLINDER if cylinder else OBJECT
     root=ET.Element('sdf',version='1.7');world=ET.SubElement(root,'world',name=world_name)
     ET.SubElement(world,'gravity').text='0 0 -9.81'
     physics=ET.SubElement(world,'physics',name='lab',type='ignored')
@@ -17,26 +19,40 @@ def sdf(world_name=NAME):
     ET.SubElement(world,'plugin',filename='ignition-gazebo-sensors-system',name='ignition::gazebo::systems::Sensors')
     ET.SubElement(world,'plugin',filename='ignition-gazebo-scene-broadcaster-system',name='ignition::gazebo::systems::SceneBroadcaster')
     ET.SubElement(world,'plugin',filename='ignition-gazebo-user-commands-system',name='ignition::gazebo::systems::UserCommands')
-    fixtures=[('floor',[1.,0.,-.05],[6.,4.,.1]),*BENCHES,OBJECT]
+    fixtures=[('floor',[1.,0.,-.05],[6.,4.,.1]),*BENCHES,target]
     for name,position,size in fixtures:
+        dynamic = name == target[0]
         model=ET.SubElement(world,'model',name=name)
-        ET.SubElement(model,'static').text='false' if name==OBJECT[0] else 'true'
+        ET.SubElement(model,'static').text='false' if dynamic else 'true'
         ET.SubElement(model,'pose').text=' '.join(map(str,[*position,0,0,0]))
         link=ET.SubElement(model,'link',name='body')
-        if name==OBJECT[0]:
+        if dynamic:
             inertial=ET.SubElement(link,'inertial');ET.SubElement(inertial,'mass').text='.035'
             tensor=ET.SubElement(inertial,'inertia')
-            for key in ('ixx','iyy','izz'):ET.SubElement(tensor,key).text=str(.035*.03**2/6)
+            if cylinder:
+                radius, height = size[0] / 2, size[2]
+                radial = .035 * (3 * radius**2 + height**2) / 12
+                axial = .035 * radius**2 / 2
+            else:
+                radial = axial = .035 * .03**2 / 6
+            for key, value in zip(('ixx', 'iyy', 'izz'), (radial, radial, axial)):
+                ET.SubElement(tensor, key).text = str(value)
             for key in ('ixy','ixz','iyz'):ET.SubElement(tensor,key).text='0'
         for kind in ('visual','collision'):
             element=ET.SubElement(link,kind,name=kind)
-            box=ET.SubElement(ET.SubElement(element,'geometry'),'box')
-            ET.SubElement(box,'size').text=' '.join(map(str,size))
+            geometry = ET.SubElement(element, 'geometry')
+            if dynamic and cylinder:
+                shape = ET.SubElement(geometry, 'cylinder')
+                ET.SubElement(shape, 'radius').text = str(size[0] / 2)
+                ET.SubElement(shape, 'length').text = str(size[2])
+            else:
+                box = ET.SubElement(geometry, 'box')
+                ET.SubElement(box, 'size').text = ' '.join(map(str, size))
             if kind=='collision':
                 ode=ET.SubElement(ET.SubElement(ET.SubElement(element,'surface'),'friction'),'ode')
                 ET.SubElement(ode,'mu').text='.8';ET.SubElement(ode,'mu2').text='.8'
             else:
-                ET.SubElement(ET.SubElement(element,'material'),'diffuse').text=('1 .45 .05 1' if name==OBJECT[0] else '.4 .45 .5 1')
+                ET.SubElement(ET.SubElement(element,'material'),'diffuse').text=('1 .45 .05 1' if dynamic else '.4 .45 .5 1')
     light=ET.SubElement(world,'light',name='sun',type='directional')
     ET.SubElement(light,'direction').text='-.3 -.3 -1'
     ET.SubElement(light,'diffuse').text='.8 .8 .8 1'
@@ -44,7 +60,8 @@ def sdf(world_name=NAME):
     return ET.tostring(root,encoding='unicode')
 
 
-def mjcf(marker_texture=None,world_name=NAME):
+def mjcf(marker_texture=None,world_name=NAME, *, cylinder=False):
+    target = CYLINDER if cylinder else OBJECT
     root=ET.Element('mujoco',model=world_name)
     if marker_texture:
         asset=ET.SubElement(root,'asset')
@@ -57,14 +74,18 @@ def mjcf(marker_texture=None,world_name=NAME):
             texcoord='0 1 1 1 1 0 0 0 0 1 1 1 1 0 0 0',face='4 5 6 4 6 7 0 2 1 0 3 2 0 1 5 0 5 4 1 2 6 1 6 5 2 3 7 2 7 6 3 0 4 3 4 7')
     world=ET.SubElement(root,'worldbody')
     ET.SubElement(world,'light',pos='0 0 3',dir='0 0 -1')
-    for name,position,size in [('floor',[1.,0.,-.05],[6.,4.,.1]),*BENCHES,OBJECT]:
+    for name,position,size in [('floor',[1.,0.,-.05],[6.,4.,.1]),*BENCHES,target]:
+        dynamic = name == target[0]
         body=ET.SubElement(world,'body',name=name,pos=' '.join(map(str,position)))
-        if name==OBJECT[0]:ET.SubElement(body,'freejoint',name=name+'_free')
-        attributes=dict(type='box',name=name+'_collision',size=' '.join(str(v/2) for v in size),
-                        friction='.8 .005 .0001',rgba='1 .45 .05 1' if name==OBJECT[0] else '.4 .45 .5 1')
-        if name==OBJECT[0]:attributes['mass']='.035'
+        if dynamic:
+            ET.SubElement(body, 'freejoint', name=name+'_free')
+        shape, dimensions = ('cylinder', (size[0], size[2])) if dynamic and cylinder else ('box', size)
+        attributes=dict(type=shape,name=name+'_collision',size=' '.join(str(v/2) for v in dimensions),
+                        friction='.8 .005 .0001',rgba='1 .45 .05 1' if dynamic else '.4 .45 .5 1')
+        if dynamic:
+            attributes['mass'] = '.035'
         ET.SubElement(body,'geom',**attributes)
-        if name==OBJECT[0] and marker_texture:
+        if dynamic and marker_texture:
             ET.SubElement(body,'geom',name='pickup_marker_visual',type='mesh',mesh='pickup_marker_mesh',
                 material='pickup_marker_material',pos='0 0 .01505',mass='0',contype='0',conaffinity='0',group='2')
     ET.indent(root)

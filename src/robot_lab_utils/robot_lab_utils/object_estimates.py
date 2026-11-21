@@ -5,9 +5,14 @@ import time
 import numpy as np
 
 
+RGBD_BOX_SOURCE = 'rgbd_box_top'
+RGBD_PRIMITIVE_SOURCE = 'rgbd_primitive_top'
+CAMERA_POSE_SOURCES = ('aruco_pnp', RGBD_BOX_SOURCE, RGBD_PRIMITIVE_SOURCE)
+
+
 class ObjectEstimates:
     def __init__(self,pose_source='aruco_pnp'):
-        if pose_source not in ('aruco_pnp','rgbd_box_top'):raise ValueError('Unknown camera pose source')
+        if pose_source not in CAMERA_POSE_SOURCES:raise ValueError('Unknown camera pose source')
         self.pose_source=pose_source;self.targets={};self.received=-math.inf;self.identity=None
         self.reason='No observation received; check map bindings and camera'
 
@@ -29,12 +34,16 @@ class ObjectEstimates:
                 raise ValueError('Invalid named perception pose')
             error=float(item['position_std_bound_m'])
             if not math.isfinite(error) or not 0<=error<=.02:raise ValueError('Uncertain perception target')
-            if self.pose_source=='rgbd_box_top' and item.get('pose_reference')!='collision_box_center':
-                raise ValueError('RGB-D box targets must name their collision-box centre reference')
-            if self.pose_source=='rgbd_box_top':
-                size=np.asarray(item.get('size'),dtype=float)
-                if item.get('type')!='box' or size.shape!=(3,) or not np.all(np.isfinite(size)) or np.any(size<=0):
-                    raise ValueError('RGB-D targets require finite physical box dimensions')
+            if self.pose_source != 'aruco_pnp':
+                shape = item.get('type')
+                allowed = ('box',) if self.pose_source == RGBD_BOX_SOURCE else ('box', 'cylinder')
+                if shape not in allowed or item.get('pose_reference') != f'collision_{shape}_center':
+                    raise ValueError('RGB-D pose reference must match its physical shape')
+                size = np.asarray(item.get('size'), dtype=float)
+                if size.shape != (3,) or not np.all(np.isfinite(size)) or np.any(size <= 0):
+                    raise ValueError('RGB-D targets require finite physical dimensions')
+                if shape == 'cylinder' and not np.isclose(size[0], size[1], rtol=0., atol=1e-6):
+                    raise ValueError('Use [diameter, diameter, height] for a cylinder estimate')
         self.targets=copy.deepcopy(targets);self.received=time.monotonic();self.stamp=stamp;self.identity=dict(identity)
         rejected=record.get('rejected',{})
         self.reason=str(record.get('reason') or ('; '.join(str(k)+': '+str(v) for k,v in rejected.items())

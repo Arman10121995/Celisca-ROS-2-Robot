@@ -63,10 +63,16 @@ def test_real_widget_builds_source_bound_recipe_without_dispatch():
         panel.pose_source.set('RGB-D colored boxes');panel.add_pick()
         assert panel.steps[21]['pose_source']==panel.steps[22]['pose_source']=='rgbd_box_top'
         assert panel.steps[24]['pose_source']=='native_truth'
+        panel.steps.clear()
+        panel.pose_source.set('RGB-D upright objects');panel.add_pick()
+        assert panel.steps[1]['pose_source'] == panel.steps[2]['pose_source'] == 'rgbd_primitive_top'
+        assert panel.steps[4]['pose_source'] == 'native_truth'
         panel.ready=lambda:True
-        panel.state.update(perception_sources={'aruco_pnp':['cube']},
+        panel.state.update(perception_sources={'aruco_pnp':['cube'], 'rgbd_primitive_top':['can']},
                            perception_errors={'rgbd_box_top':'ambiguous color'})
         panel.update_perception_status()
+        assert panel.perception_status.get() == 'Camera targets: can'
+        panel.pose_source.set('RGB-D colored boxes');panel.update_perception_status()
         assert 'ambiguous color' in panel.perception_status.get()
         panel.pose_source.set('Camera fiducials');panel.update_perception_status()
         assert panel.perception_status.get()=='Camera targets: cube'

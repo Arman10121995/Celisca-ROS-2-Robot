@@ -1322,7 +1322,7 @@ def _build_simulation_actions(context):
                 name='fiducial_object_pose',output='screen',parameters=[{'use_sim_time':True,'bindings':marker_config}]))
         if rgbd_config and rgbd_config!='none':
             if not native_mobile:raise ValueError('RGB-D object targets currently require native mobile controls')
-            if not Path(rgbd_config).is_file():raise ValueError('RGB-D box binding file is unavailable: '+rgbd_config)
+            if not Path(rgbd_config).is_file():raise ValueError('RGB-D object binding file is unavailable: '+rgbd_config)
             actions.append(Node(package='robot_lab_utils',executable='rgbd_object_pose.py',
                 name='rgbd_object_pose',output='screen',parameters=[{'use_sim_time':True,'bindings':rgbd_config}]))
         native_task = _launch_value(context, 'native_task')

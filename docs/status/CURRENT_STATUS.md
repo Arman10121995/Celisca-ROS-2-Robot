@@ -1,5 +1,12 @@
 # Current Robot Lab status
 
+November 21 Codex: native Stretch can build camera-based reaches for a
+declared upright cylinder in the installed Mobile manipulation lab variant.
+The executor checks the live camera receipt against the compiled collision
+shape and dimensions before planning. Camera transport and recipe tests
+pass. A live cylinder pickup, transport and supported release remain open.
+[Camera tutorial](../tutorials/rgbd-object-targets.md).
+
 November 21 Codex: the Pro630/F100 completed a normal MuJoCo Display GUI
 fetch on `mobile_fetch_lab_f100`. It lifted the 40 g block 46.3 mm, carried
 it to the drop table, released it with 0.1 mm support height error, and

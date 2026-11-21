@@ -272,6 +272,7 @@ maps:
     members:
       - {id: mobile_manipulation_lab, label: Marker cube, role: variant}
       - {id: mobile_manipulation_lab_unmarked, label: Unmarked RGB-D cube, role: variant}
+      - {id: mobile_manipulation_lab_cylinder, label: Upright RGB-D cylinder, role: variant}
   - id: surface_harbor
     name: Surface harbor
     members: [{id: surface_harbor, label: Docks, pilings and surface markers}]

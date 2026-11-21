@@ -78,6 +78,57 @@ def test_source_bounds_and_nonlinear_coupling_are_never_silently_replaced(plant)
         ControlKinematics(model,data,channels,model.njnt-1)
 
 
+def test_rgbd_cylinder_uses_camera_position_and_checks_compiled_collision(monkeypatch):
+    from types import SimpleNamespace
+    from robot_lab_mujoco import native_mobile_reach
+    from robot_lab_mujoco.native_mobile_tasks import NativeMobileTasks
+    from robot_lab_utils.object_estimates import ObjectEstimates, RGBD_PRIMITIVE_SOURCE
+
+    model = mj.MjModel.from_xml_string(XML.replace('type="sphere" size=".01" mass=".01"',
+                                                  'type="cylinder" size=".0175 .03" mass=".035"'))
+    data = mj.MjData(model)
+    mj.mj_forward(model, data)
+    object_id = mj.mj_name2id(model, mj.mjtObj.mjOBJ_BODY, 'object')
+    task = NativeMobileTasks.__new__(NativeMobileTasks)
+    task.node = SimpleNamespace(model=model, data=data, mujoco=mj, robot_bodies=object_id, robot_joints=model.njnt-1)
+    task.arm = SimpleNamespace(plant_id='plant', source_sha256='source', channels=[],
+                               measured_controls=lambda: np.array([]))
+    task.scene_id = 'scene'
+    task.mobile = SimpleNamespace(joints=[])
+    task.gripped_body = task.payload_body = task.reach_worker = None
+    task.generation = 1
+    task.record = lambda **kwargs: None
+    task.enter = lambda *args: None
+    camera = ObjectEstimates(RGBD_PRIMITIVE_SOURCE)
+    task.perception_estimates = {RGBD_PRIMITIVE_SOURCE: camera}
+    target = dict(object='object', position=[.27, .02, .39], orientation_wxyz=[1., 0., 0., 0.],
+                  observation_id='image', position_std_bound_m=.004, type='cylinder',
+                  pose_reference='collision_cylinder_center', size=[.035, .035, .06])
+    identity = task.estimate_identity()
+    record = dict(schema='robot_lab.object_estimates.v1', **identity, frame='native_world',
+                  stamp_s=data.time, pose_source=RGBD_PRIMITIVE_SOURCE, targets={'object': target})
+    step = dict(object='object', left_body='left', right_body='right', pose_source=RGBD_PRIMITIVE_SOURCE,
+                offset=[0., 0., .08])
+    planned = []
+    monkeypatch.setattr(native_mobile_reach, 'plan_reach',
+                        lambda node, snapshot, channels, initial, step, *args: planned.append(step) or {})
+
+    target['size'] = [.04, .04, .06]
+    camera.receive(record, identity, data.time)
+    with pytest.raises(ValueError, match='dimensions'):
+        task.begin_reach(step)
+    target['size'] = [.035, .035, .06]
+    camera.receive(record, identity, data.time)
+    task.gripped_body = object_id
+    with pytest.raises(ValueError, match='unheld object'):
+        task.begin_reach(step)
+    task.gripped_body = None
+    task.begin_reach(step)
+    task.reach_worker.join(timeout=2.)
+    assert len(planned) == 1
+    np.testing.assert_allclose(planned[0]['target_xyz'], [.27, .02, .47])
+
+
 def test_planner_honours_deadline(plant):
     model,data,channels=plant
     ik=ControlKinematics(model,data,channels,model.njnt-1)

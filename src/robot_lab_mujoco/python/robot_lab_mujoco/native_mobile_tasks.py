@@ -26,6 +26,7 @@ from std_srvs.srv import Trigger
 
 from robot_lab_utils.mobile_task import validate_task
 from robot_lab_utils.object_custody import ObjectCustody
+from robot_lab_utils.object_estimates import CAMERA_POSE_SOURCES, ObjectEstimates
 
 
 class NativeMobileTasks:
@@ -64,9 +65,8 @@ class NativeMobileTasks:
                     'hfield_data', 'body_pos', 'body_quat'):
             digest.update(np.ascontiguousarray(getattr(node.model, key)).tobytes())
         self.scene_id = digest.hexdigest()
-        from robot_lab_utils.object_estimates import ObjectEstimates
-        self.object_estimates=ObjectEstimates()
-        self.perception_estimates={'aruco_pnp':self.object_estimates,'rgbd_box_top':ObjectEstimates('rgbd_box_top')}
+        self.perception_estimates = {source: ObjectEstimates(source) for source in CAMERA_POSE_SOURCES}
+        self.object_estimates = self.perception_estimates['aruco_pnp']
         self.perception_error='No camera object observations yet'
         node.create_subscription(String,'/robot_lab/object_estimates',self.receive_estimates,10)
         self.state = dict(state='idle', reason='', task_id='', step=0, total=0)
@@ -275,20 +275,30 @@ class NativeMobileTasks:
 
     def begin_reach(self, step):
         source=step.get('pose_source','native_truth')
-        if source in ('aruco_pnp','rgbd_box_top'):
+        if source in CAMERA_POSE_SOURCES:
             observed=self.perception_estimates[source].get(step['object'],self.estimate_identity(),float(self.node.data.time))
             obj,_=self.object_bodies(step);model=self.node.model;mj=self.node.mujoco
             if obj in (self.gripped_body,self.payload_body):
                 raise ValueError('Camera object-relative targets require an unheld object; use an explicit carry/lift target')
             geoms=[g for g in range(model.ngeom) if model.geom_bodyid[g]==obj
                    and (model.geom_contype[g] or model.geom_conaffinity[g])]
-            if (len(geoms)!=1 or int(model.geom_type[geoms[0]])!=int(mj.mjtGeom.mjGEOM_BOX)
-                    or observed.get('type')!='box' or not np.allclose(observed.get('size'),2*model.geom_size[geoms[0]],rtol=0,atol=1e-6)):
-                raise ValueError('Camera binding must match the selected source box geometry')
+            if len(geoms) != 1:
+                raise ValueError('Camera binding requires one physical collision geometry')
+            geom, = geoms
+            shape = observed.get('type')
+            size = model.geom_size[geom]
+            if shape == 'box' and model.geom_type[geom] == mj.mjtGeom.mjGEOM_BOX:
+                dimensions = 2 * size
+            elif shape == 'cylinder' and model.geom_type[geom] == mj.mjtGeom.mjGEOM_CYLINDER:
+                dimensions = 2 * size[[0, 0, 1]]
+            else:
+                raise ValueError('Camera binding shape must match the selected source collision geometry')
+            if not np.allclose(observed['size'], dimensions, rtol=0., atol=1e-6):
+                raise ValueError('Camera binding dimensions must match the selected source collision geometry')
             from scipy.spatial.transform import Rotation
             rotation=Rotation.from_quat(np.asarray(observed['orientation_wxyz'])[[1,2,3,0]])
             step=copy.deepcopy(step)
-            offset=rotation.apply(model.geom_pos[geoms[0]]) if source=='aruco_pnp' else np.zeros(3)
+            offset=rotation.apply(model.geom_pos[geom]) if source=='aruco_pnp' else np.zeros(3)
             step['target_xyz']=(np.asarray(observed['position'])+offset
                                 +np.asarray(step.get('offset',[0.,0.,0.]))).tolist()
             self.record(perception_target=observed,pose_source=source)

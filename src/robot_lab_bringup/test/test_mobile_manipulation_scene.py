@@ -1,7 +1,7 @@
 """Fixture geometry/occupancy consistency; separate from robot mission acceptance."""
 import xml.etree.ElementTree as ET
 
-from robot_lab_utils.mobile_manipulation_scene import BENCHES,OBJECT,sdf,mjcf,occupancy
+from robot_lab_utils.mobile_manipulation_scene import BENCHES,OBJECT,CYLINDER,sdf,mjcf,occupancy
 
 
 def test_sdf_and_native_have_the_same_free_cube_and_static_benches():
@@ -31,3 +31,24 @@ def test_unmarked_variant_has_no_print_and_preserves_physical_geometry():
     assert unmarked.get('model')=='mobile_manipulation_lab_unmarked'
     assert unmarked.find('asset') is None
     assert ET.tostring(original.find('worldbody'))==ET.tostring(unmarked.find('worldbody'))
+
+
+def test_upright_cylinder_keeps_the_same_benches_and_native_free_geometry():
+    name, position, size = CYLINDER
+    world = ET.fromstring(sdf(cylinder=True)).find('world')
+    model = world.find(f"model[@name='{name}']")
+    assert model.findtext('static') == 'false'
+    collision = model.find('link/collision/geometry/cylinder')
+    assert float(collision.findtext('radius')) * 2 == size[0]
+    assert float(collision.findtext('length')) == size[2]
+    assert position[2] - size[2] / 2 == .5
+
+    native = ET.fromstring(mjcf(cylinder=True)).find('worldbody')
+    body = native.find(f"body[@name='{name}']")
+    assert body.find('freejoint') is not None
+    assert body.find('geom').get('type') == 'cylinder'
+    assert [2 * float(v) for v in body.find('geom').get('size').split()] == [size[0], size[2]]
+    original = ET.fromstring(mjcf()).find('worldbody')
+    for bench, _, _ in BENCHES:
+        query = f"body[@name='{bench}']"
+        assert ET.tostring(native.find(query)) == ET.tostring(original.find(query))

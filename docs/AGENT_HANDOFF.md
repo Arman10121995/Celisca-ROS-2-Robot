@@ -1,5 +1,13 @@
 # Agent Handoff Protocol
 
+November 21 Stretch camera targets: the Mobile manipulation lab family
+now has an upright-cylinder variant. The native task GUI can build an
+unheld reach from a matching camera observation. Preserve the existing
+fiducial and RGB-D box source IDs, the primitive estimate's separate cache,
+compiled geometry matching, and the instrumented custody and release gates.
+Live Stretch cylinder detection and physical missions remain pending.
+[Camera tutorial](tutorials/rgbd-object-targets.md).
+
 November 21 Pro630/F100: normal MuJoCo Display run 11 completed the
 short-block GUI fetch through supported release and base clearance.
 Preserve the 445 mm place dock, calibrated shaft and follower armature,

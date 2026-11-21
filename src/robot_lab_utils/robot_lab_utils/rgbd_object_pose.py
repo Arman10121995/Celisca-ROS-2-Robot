@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Aligned RGB/depth/calibration/TF to source-bound unmarked box targets."""
+"""Aligned RGB/depth/calibration/TF to source-bound unmarked upright targets."""
 import hashlib
 import json
 import math
@@ -17,7 +17,8 @@ from std_msgs.msg import String
 from tf2_ros import Buffer,TransformListener,TransformException
 from scipy.spatial.transform import Rotation
 
-from robot_lab_utils.rgbd_boxes import bindings,estimate_box
+from robot_lab_utils.object_estimates import RGBD_BOX_SOURCE, RGBD_PRIMITIVE_SOURCE
+from robot_lab_utils.rgbd_boxes import bindings, estimate_primitive
 
 
 def stamp(message):return message.header.stamp.sec+message.header.stamp.nanosec*1e-9
@@ -51,7 +52,12 @@ class RGBDObjects(Node):
                 output_topic='/robot_lab/object_estimates').items():self.declare_parameter(name,value)
         import yaml
         path=Path(self.get_parameter('bindings').value)
-        self.boxes=bindings(yaml.safe_load(path.read_text()));self.bindings_sha256=hashlib.sha256(path.read_bytes()).hexdigest()
+        contents = path.read_bytes()
+        document = yaml.safe_load(contents)
+        self.bindings = bindings(document, allow_primitives=True)
+        self.pose_source = (RGBD_PRIMITIVE_SOURCE if document['schema'] == 'robot_lab.rgbd_primitives.v1'
+                            else RGBD_BOX_SOURCE)
+        self.bindings_sha256 = hashlib.sha256(contents).hexdigest()
         self.task_context={};self.names=set();self.context_at=-math.inf;self.frames={};self.last_frame=-math.inf
         self.tf=Buffer();self.listener=TransformListener(self.tf,self)
         self.output=self.create_publisher(String,self.get_parameter('output_topic').value,10)
@@ -88,8 +94,8 @@ class RGBDObjects(Node):
         paired=self.frames;prior_last=self.last_frame
         self.frames={};self.last_frame=wall
         output=dict(schema='robot_lab.object_estimates.v1',**self.task_context,frame='native_world',
-            pose_source='rgbd_box_top',stamp_s=stamp(rgb),targets={},bindings_sha256=self.bindings_sha256,
-            camera_frame=rgb.header.frame_id,scope='Aligned RGB-D known-size upright color boxes; no simulator object pose input')
+            pose_source=self.pose_source,stamp_s=stamp(rgb),targets={},bindings_sha256=self.bindings_sha256,
+            camera_frame=rgb.header.frame_id,scope='Aligned RGB-D known-size upright color targets; no simulator object pose input')
         try:
             if not -.05<=self.get_clock().now().nanoseconds*1e-9-stamp(rgb)<=.5:
                 raise ValueError('Stale/future RGB-D sample')
@@ -104,10 +110,10 @@ class RGBDObjects(Node):
             p,q=transform.translation,transform.rotation
             world=np.eye(4);world[:3,:3]=Rotation.from_quat([q.x,q.y,q.z,q.w]).as_matrix();world[:3,3]=[p.x,p.y,p.z]
             digest=hashlib.sha256(bytes(rgb.data)+bytes(depth.data)+str(stamp(rgb)).encode()+self.bindings_sha256.encode()).hexdigest()
-            for name,binding in self.boxes.items():
+            for name,binding in self.bindings.items():
                 if name not in self.names:continue
                 try:
-                    result=estimate_box(color,distance,np.asarray(info.k).reshape(3,3),info.d,world,binding)
+                    result=estimate_primitive(color,distance,np.asarray(info.k).reshape(3,3),info.d,world,binding)
                     result['observation_id']=hashlib.sha256((digest+name).encode()).hexdigest()
                     output['targets'][name]=result
                 except (ValueError,cv2.error,np.linalg.LinAlgError) as exc:output.setdefault('rejected',{})[name]=str(exc)

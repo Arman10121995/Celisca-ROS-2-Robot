@@ -655,6 +655,11 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
   - 2026-11-21: declared upright-cylinder RGB-D lid fitting and a TIAGo
     fetch map variant are implemented. Projected-image tests cover center
     estimation and partial lid rejection. The live cylinder mission remains open.
+  - 2026-11-21: the native Stretch task builder and MuJoCo executor now
+    also accept declared upright-cylinder camera targets. The installed
+    Mobile manipulation lab variant retains the two benches and occupancy
+    grid. The compiled collision shape and dimensions must match the estimate.
+    Source-camera pickup, transport and supported release remain unmeasured.
   - general recognition/pose for unconfigured, other shapes or occluded objects,
     source-specific grasp strategies and further
     source-specific object pipelines;

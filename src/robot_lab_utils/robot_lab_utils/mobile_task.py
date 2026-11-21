@@ -2,6 +2,8 @@
 import copy
 import math
 
+from robot_lab_utils.object_estimates import CAMERA_POSE_SOURCES
+
 
 SCHEMA = 'robot_lab.native_mobile_task.v1'
 
@@ -60,9 +62,9 @@ def validate_task(document, source_sha256, scene_id, channels, allow_navigation)
             if len({step[key] for key in ('object', 'left_body', 'right_body')}) != 3:
                 raise ValueError('Object and opposing gripper bodies must be distinct.')
             if step['kind']=='reach_object':
-                if step.get('pose_source','native_truth') not in ('native_truth','aruco_pnp','rgbd_box_top'):
-                    raise ValueError('Choose native geometry, camera markers or RGB-D boxes')
-                if step.get('pose_source') in ('aruco_pnp','rgbd_box_top') and 'target_xyz' in step:
+                if step.get('pose_source','native_truth') not in ('native_truth', *CAMERA_POSE_SOURCES):
+                    raise ValueError('Choose native geometry, camera markers or RGB-D upright targets')
+                if step.get('pose_source') in CAMERA_POSE_SOURCES and 'target_xyz' in step:
                     raise ValueError('Camera-relative object reach cannot also override world XYZ')
                 offset = step.get('offset', [0., 0., 0.])
                 if not isinstance(offset, list) or len(offset)!=3:

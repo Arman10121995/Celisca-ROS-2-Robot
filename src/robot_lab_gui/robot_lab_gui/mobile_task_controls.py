@@ -9,6 +9,15 @@ from tkinter import filedialog, ttk
 import uuid
 
 from robot_lab_utils.mobile_task import SCHEMA, validate_task
+from robot_lab_utils.object_estimates import RGBD_BOX_SOURCE, RGBD_PRIMITIVE_SOURCE
+
+
+POSE_SOURCES = {
+    'Simulator geometry': 'native_truth',
+    'Camera fiducials': 'aruco_pnp',
+    'RGB-D colored boxes': RGBD_BOX_SOURCE,
+    'RGB-D upright objects': RGBD_PRIMITIVE_SOURCE,
+}
 
 
 class MobileTaskControls(ttk.LabelFrame):
@@ -117,7 +126,7 @@ class MobileTaskControls(ttk.LabelFrame):
         self.pose_source=tk.StringVar(value='Simulator geometry')
         ttk.Label(self,text='Unheld object reach targets').grid(row=25,column=0,columnspan=2,sticky='w')
         self.pose_source_selector=ttk.Combobox(self,textvariable=self.pose_source,state='readonly',
-            values=('Simulator geometry','Camera fiducials','RGB-D colored boxes'))
+            values=tuple(POSE_SOURCES))
         self.pose_source_selector.grid(row=26,column=0,columnspan=2,sticky='ew')
         self.perception_status=tk.StringVar(value='Camera targets require matching map bindings and live calibrated images.')
         ttk.Label(self,textvariable=self.perception_status,wraplength=300).grid(row=27,column=0,columnspan=2,sticky='w')
@@ -141,7 +150,7 @@ class MobileTaskControls(ttk.LabelFrame):
         if kind=='reach_object':
             if 'target_xyz' not in values and 'pose_source' not in values:
                 source=getattr(self,'pose_source',None)
-                values['pose_source']={'Camera fiducials':'aruco_pnp','RGB-D colored boxes':'rgbd_box_top'}.get(
+                values['pose_source']=POSE_SOURCES.get(
                     source.get() if source is not None else '', 'native_truth')
             mode=self.orientation_mode.get()
             if mode=='Keep measured pad':values['keep_orientation']=True
@@ -267,10 +276,10 @@ class MobileTaskControls(ttk.LabelFrame):
     def update_perception_status(self):
         if not self.ready():
             self.perception_status.set('Waiting for fresh native task feedback.');return
-        method={'Camera fiducials':'aruco_pnp','RGB-D colored boxes':'rgbd_box_top'}.get(self.pose_source.get())
+        method = POSE_SOURCES.get(self.pose_source.get(), 'native_truth')
         visible=self.state.get('perception_sources',{}).get(method,[])
         error=self.state.get('perception_errors',{}).get(method) or self.state.get('perception_error') or 'check bindings and camera view'
-        self.perception_status.set('Using simulator geometry for unheld reaches.' if method is None else
+        self.perception_status.set('Using simulator geometry for unheld reaches.' if method == 'native_truth' else
             ('Camera targets: '+', '.join(visible)) if visible else 'No fresh camera target · '+error)
 
     def add_navigation(self):
