@@ -124,7 +124,7 @@ Work top to bottom. Each line links to its task.
 | Order | Task | Remaining implementation (short) | State |
 |---|---|---|---|
 | I0 | [R14.2](#r142--elephant-robotics-myagv-pro) myAGV Pro | Done: Gazebo source variant plus portable roller variant driving in MuJoCo, PyBullet and Isaac; Nav2 measured in Gazebo and PyBullet | implemented |
-| I0a | [R14.3](#r143--elephant-myagv-pro-mobile-manipulator) Elephant mobile manipulator | Bare Pro630 drive and joints measured on MuJoCo/PyBullet/Isaac. F100 GUI openings, loaded pickup and straight carry measured in MuJoCo. Supported placement, Nav2 transit and additional backends remain | partial |
+| I0a | [R14.3](#r143--elephant-myagv-pro-mobile-manipulator) Elephant mobile manipulator | Bare Pro630 drive and joints measured on MuJoCo/PyBullet/Isaac. F100 GUI openings, loaded pickup and straight carry measured in MuJoCo. Experimental Nav2 fetch wired. Supported placement, Nav2 mission evidence and additional backends remain | partial |
 | I0b | [R14.4](#r144--contributor-integration-course) Integration guide chapters | Done 2026-11-13: beginner course part 2 (chapters 9–12) in docs/learn and the GUI docs library; clean-host walkthrough remains | implemented |
 | I1 | [R13.2](#r132--vacuum-carpets-and-mopping) Vacuum carpets and mopping | Done 2026-11-10 (Gazebo mop + rug run passes) | implemented |
 | I2 | [R13.3](#r133--vacuum-camera-obstacle-recognition) Vacuum camera obstacles | Done-when met (ideal and learned). 11-17 retrain 3 installed (fewer pet/cable false positives, pet recall 54 → 60 %); learned zone job passes again (0 contacts, 0.286 m). Sock false positives remain; repeats/held-out room are V1 | implemented |
@@ -1348,8 +1348,9 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
     (Gazebo's JointPositionController gains from each variant's SDF). With them the 40 Nm vehicle crosses the
     0.18 m step (3/3 per backend), climbs the five-step flight to its ledge stop (2/2) and goes up and over it
     (2/2) under the automatic flippers. As on Gazebo, fixed flippers rear and the 4 Nm flippers are back-driven
-    ([receipt](docs/status/evidence/r107-tracks-backends-2026-11-21/README.md)). The amphibious form, Isaac
-    tracks and angled steps off Gazebo remain;
+    ([receipt](docs/status/evidence/r107-tracks-backends-2026-11-21/README.md)). Angled steps there pass at 15° and
+    30° (up and down), but at 45° the vehicle is deflected along the face and does not climb (Gazebo climbs). The
+    amphibious form, Isaac tracks and the 45° ported climb remain;
   - angled descents beyond 15° for the tracked vehicle (one track drops first and the 0.35 rad roll hold stops it).
     **Angled approaches done 2026-11-20:** the 0.18 m step is climbed at 15°, 30° and 45° off square and descended
     at 15° (2/2) in a new `terrain_step_wide` ([receipt](docs/status/evidence/r107-tracked-angled-2026-11-20/README.md)).
@@ -1730,8 +1731,12 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
   checks, the normal GUI lifted the block 46.3 mm unsupported and carried
   it to the drop table in MuJoCo Display. Place planning failed at the
   measured arrival pose. [Evidence](docs/status/evidence/r143-pro630-f100-2026-11-20/README.md#loaded-custody-and-transport-november-21).
+- **Experimental Nav2 fetch:** MuJoCo Nav is selectable with experimental
+  workflows enabled. The GUI waits for the transit action and requests it
+  explicitly. The loaded leg still requires both costmaps to acknowledge the
+  payload footprint. The end-to-end Nav mission remains unmeasured.
 - **Remaining implementation:** complete supported placement and clearance,
-  enable Nav2 transport and port the physical linkage to additional backends.
+  qualify a loaded Nav2 mission and port the physical linkage to additional backends.
 - **How to do it:** preserve the vendor flange and follower transforms, one
   shaft effort budget and the real measured linkage. Build on the existing
   source planner and R5.9 grasp/release contract.

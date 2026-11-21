@@ -51,7 +51,7 @@ a guide, imported model or numerical example does not qualify every mission.
 | [Concurrent experiments](concurrent-experiments.md) | Real bounded subprocess queue, actual telemetry and owned cancel/reset; mission qualification remains separate |
 | [Surface vessel](surface-vessel.md) | Complete native catamaran, latched Marine controls, harbor map acquisition and planar route/settling |
 | [Wheeled snake](wheeled-snake.md) | Complete passive-wheel snake, native Drive, actual 2D/3D acquisition and installed/acquired-map Nav2 endpoints; terrain/backends remain |
-| [Tracked vehicle](tracked-vehicle.md) | Native contact-surface belts and fixed/actuated flipper variants; Tracks controls, real joint settling/Drive and separate navigation scope |
+| [Tracked vehicle](tracked-vehicle.md) | Gazebo, MuJoCo and PyBullet belts; fixed, 4 Nm and 40 Nm flipper variants; automatic flippers on steps, flights and angled faces; Nav2 and SLAM |
 | [PX4 X500](px4_x500.md) | Gazebo Harmonic flight, manual Drive/altitude, hold/goals/land in named worlds; wider flight-world/planning matrix remains |
 | [Mapped drone routes](mapped-drone-planning.md) | RTAB-Map + registered depth supplements static planning; async execution rechecks, stale/blockage Hold, actual flight acceptance pending |
 | [Go2 policy](go2.md) | Bounded MuJoCo policy trials and their recorded failures; terrain/recovery/navigation remain unqualified |

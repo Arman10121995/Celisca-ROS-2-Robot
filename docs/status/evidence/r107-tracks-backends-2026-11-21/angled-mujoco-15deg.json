@@ -1,0 +1,24 @@
+{
+  "case": "angled-mujoco-15deg",
+  "samples": 6594,
+  "duration_s": 51.8,
+  "max_z": 0.206,
+  "max_z_x": 0.101,
+  "end": [
+    4.497,
+    -3.153,
+    -0.0
+  ],
+  "max_roll": 0.164,
+  "max_pitch": 0.39,
+  "state_sequence": [
+    "travel",
+    "descend",
+    "travel",
+    "approach",
+    "climb",
+    "travel",
+    "descend",
+    "travel"
+  ]
+}

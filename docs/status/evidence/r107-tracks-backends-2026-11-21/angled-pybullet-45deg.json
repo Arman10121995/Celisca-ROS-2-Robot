@@ -1,0 +1,32 @@
+{
+  "case": "angled-pybullet-45deg",
+  "samples": 13892,
+  "duration_s": 90.0,
+  "max_z": 0.092,
+  "max_z_x": -2.5,
+  "end": [
+    0.113,
+    6.298,
+    0.001
+  ],
+  "max_roll": 0.0,
+  "max_pitch": 0.044,
+  "state_sequence": [
+    "descend",
+    "travel",
+    "approach",
+    "travel",
+    "approach",
+    "travel",
+    "approach",
+    "travel",
+    "approach",
+    "travel",
+    "approach",
+    "travel",
+    "approach",
+    "travel",
+    "approach",
+    "travel"
+  ]
+}

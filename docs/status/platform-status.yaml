@@ -1981,7 +1981,8 @@ tasks:
           of its odometry and under 0.5 mm drift; operator loss stops; nav_obstacle SLAM 100 % of occupied cells within
           0.1 m; obstacle-route Nav2 goal 2/2 per backend (0.011-0.034 m). Then the flipper servos (SDF gains) -
           40 Nm vehicle crosses the 0.18 m step 3/3, climbs the five-step flight 2/2 and goes up and over 2/2 per
-          backend; fixed flippers rear and 4 Nm flippers are back-driven, as on Gazebo.
+          backend; fixed flippers rear and 4 Nm flippers are back-driven, as on Gazebo. Wide step - 15 and 30 deg pass up
+          and down on both; 45 deg not passed (deflected along the face; Gazebo climbs).
           docs/status/evidence/r107-tracks-backends-2026-11-21/README.md
         qualification_review: '2026-10-27 documentation review: retain the implemented code, tests and named
           mission certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene
@@ -2342,7 +2343,8 @@ tasks:
         live_fetch_20261120: 'Normal GUI MuJoCo Display on mobile_fetch_lab_f100 docked, approached, and closed. The loose block slid approximately 38 mm across the pads and the node stopped before lift on zero bilateral load. The 0.10 rad/s metered candidate reached closure through the normal GUI. A competing simulator trial started and this run stopped cleanly before loaded lift.'
         gui_shutdown_20261120: 'End session still stops its owned process when the ROS context closes before neutral can publish. Two focused cleanup tests pass.'
         loaded_custody_20261121: 'Normal GUI MuJoCo Display on mobile_fetch_lab_f100 lifted the 40 g block 46.3 mm unsupported and carried it to the drop table. Hold drift was 0.4 mm. Maximum carry drift was 19.1 mm. Place planning stopped at no IK above the support. The isolated CAD bench established a tuned effective transmission inertia within the existing shaft effort limit.'
-        next_action: 'Finish place planning and measured release and clearance. Then link Nav2 transport and port the mechanical coupling to additional backends. Preserve the original Pro630 drive and joint receipts from MuJoCo, PyBullet and Isaac.'
+        nav_fetch_20261121: 'The opt-in MuJoCo Nav selection explicitly requests the Nav2 action through the Fetch panel and waits for it to become available. The loaded leg retains its two-costmap acknowledgement gate. Physical Nav2 fetch remains unmeasured.'
+        next_action: 'Finish place planning and measured release and clearance. Then qualify a loaded Nav2 mission and port the mechanical coupling to additional backends. Preserve the original Pro630 drive and joint receipts from MuJoCo, PyBullet and Isaac.'
         evidence: [docs/status/evidence/myagv-pro-2026-11-12/README.md, docs/status/evidence/r143-pro630-f100-2026-11-20/README.md, docs/tutorials/myagv-pro.md]
       R14.4:
         acceptance_ref: ROADMAP.md R14.4

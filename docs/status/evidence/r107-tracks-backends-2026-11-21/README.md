@@ -171,6 +171,20 @@ fixed do not.
 | MuJoCo 1, 2 | passed: 5 up, 5 down, on the floor | 92.8, 92.8 s | −4.35, −4.37 | 0.09, 0.07 rad |
 | PyBullet 1, 2 | passed | 94.2, 94.0 s | −3.68, −4.22 | 0.09, 0.12 rad |
 
+**Angled approaches** (`terrain_step_wide`, the 11-20 spawns, 90 s, the drive stops at x 4.5):
+
+| Angle off square | Gazebo 11-20 | MuJoCo | PyBullet |
+|---|---|---|---|
+| 15° | up and down to the floor, 2/2 | **passed** (51.8 s, roll 0.16 rad) | **passed** (51.8 s, roll 0.18 rad) |
+| 30° | climbs; stops on the roll hold at the far edge | **passed**: rolled past the hold (0.40 rad) on the climb, recovered and descended (72.4 s) | **passed**: roll 0.33 rad, under the hold (56.1 s) |
+| 45° | climbs; stops on the roll hold at the far edge | **not passed**: never climbs; deflected along the face to y 6.3 | **not passed**: the same deflection, to y 6.3 |
+
+At 45° the ported belts do not pull the hull up the face. It turns
+along the face instead, so the behaviour differs from Gazebo in both
+directions: further at 30°, short at 45°. Gazebo's belts are effectively
+no-slip along the belt (mu 150), while the ported law bounds them at 1.0.
+That is the first suspect; it was not tuned.
+
 **Regression on fixed-flipper `lab_tracked` after the cap:**
 - Turn: truth 1.840 / odom 1.832 rad on MuJoCo, 1.755 / 1.745 on PyBullet,
   under 0.5 mm of drift.
@@ -185,8 +199,7 @@ open loop in these probes, with no heading hold.
 ## Limits
 
 - No Isaac track plant yet.
-- No angled-step runs (`terrain_step_wide`) yet on the ported plants; its
-  MJCF exists.
+- 45° step approaches do not climb on the ported plants (Gazebo climbs).
 - Belt friction is 1.0 along the belt (Gazebo uses 150, effectively no
   slip) and 0.7 across. One flat route world and one empty world were
   measured. Real-time factors are 0.8–0.9.
@@ -203,6 +216,7 @@ LAB_EXTENSION_RUN=<dir> python3 docs/status/evidence/r107-tracks-backends-2026-1
 docs/status/evidence/r107-tracks-backends-2026-11-21/stairs_case.sh mujoco lab_tracked_strong_flippers <dir> auto
 python3 docs/status/evidence/r107-tracks-backends-2026-11-21/stairs_crossing.py <dir>
 docs/status/evidence/r107-tracks-backends-2026-11-21/course_case.sh pybullet terrain_stairs_over -7.3 -4.0 0.0 <dir> 180 6.0
+docs/status/evidence/r107-tracks-backends-2026-11-21/course_case.sh mujoco terrain_step_wide -3.0 -5.73 0.5236 <dir> 90 4.5   # 30°
 ```
 
 Traces are on SSD under `robot_lab_runtime/tracks-backends-20261121`
