@@ -255,11 +255,13 @@ class PickPlace(Node):
     # --- inputs ---------------------------------------------------------------
     def _world_boxes(self):
         """Keep physical obstacles separate from selectable level supports."""
-        from robot_lab_mujoco.arm_pick_place import Box, yaw_of
-        from robot_lab_utils.sdf_world import extract_dynamic_bodies, extract_static_shapes
+        from ament_index_python.packages import PackageNotFoundError, get_package_share_directory
+        from robot_lab_mujoco.arm_pick_place import Box, MeshObstacle, yaw_of
+        from robot_lab_utils.sdf_world import extract_dynamic_bodies, extract_static_shapes, uri_resolver
         path = self.get_parameter('world_path').value
         self.arm_obstacles = []
         self.drive_obstacles = []
+        self.scene_error = ''
         if not path or not os.path.isfile(path):
             return {}, {}
         sizes = {}
@@ -276,21 +278,35 @@ class PickPlace(Node):
             else:
                 continue
             self.object_collision_frames[name] = (shape['position'], shape['orientation'])
-        shapes, _ = extract_static_shapes(path, lambda uri, base: '', collision_only=True, exclude_dynamic=True)
+        try:
+            model_dirs = (str(Path(get_package_share_directory('robot_lab_maps')) / 'models'),)
+        except PackageNotFoundError:
+            model_dirs = ()
+        resolve = uri_resolver(model_dirs=model_dirs, package_share=get_package_share_directory)
+        shapes, skipped = extract_static_shapes(path, resolve, collision_only=True, exclude_dynamic=True)
+        self.scene_error = next((note for note in skipped if note.startswith('unresolved mesh ')), '')
         boxes = {}
         for index, shape in enumerate(shapes):
             kind = shape['type']
             size = shape.get('size', [])
+            name = shape['model']
             if kind == 'sphere':
                 size = [2 * size[0]] * 3
             elif kind == 'cylinder':
                 size = [2 * size[0], 2 * size[0], size[1]]
-            elif kind != 'box':
+            elif kind not in ('box', 'mesh'):
                 continue
-            if not all(math.isfinite(value) and value > 0. for value in size):
-                continue
-            name = shape['model']
-            obstacle = Box(name, shape['position'], shape['orientation'], size, kind)
+            if kind == 'mesh':
+                try:
+                    obstacle = MeshObstacle.from_sdf(name, shape)
+                except (OSError, ValueError, RuntimeError) as exc:
+                    self.scene_error = 'Could not build collision hull for %s: %s' % (name, str(exc).splitlines()[0])
+                    continue
+                size = obstacle.size
+            else:
+                if not all(math.isfinite(value) and value > 0. for value in size):
+                    continue
+                obstacle = Box(name, shape['position'], shape['orientation'], size, kind)
             level = kind == 'box' and obstacle.rotation()[2, 2] >= math.cos(math.radians(.5))
             obstacle.floor = level and max(size[:2]) >= 2. and obstacle.top <= .03
             if not obstacle.floor:
@@ -403,6 +419,8 @@ class PickPlace(Node):
 
     def _feedback_blocker(self):
         now = _now()
+        if self.scene_error:
+            return self.scene_error
         if not self.state.get('initialized') or self.state.get('fault') or now-self.state_at > STATE_STALE:
             return 'Waiting for fresh articulation feedback'
         if self.spec.pad_geoms and 'grip_contacts' not in self.state:

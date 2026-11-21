@@ -92,6 +92,30 @@ def test_pick_place_uses_authored_collision_pose_from_measured_model_pose(pick_p
     assert not node.truth
 
 
+def test_world_loads_scaled_mesh_parts_as_obstacles_and_reports_missing_meshes(pick_place, tmp_path):
+    pytest.importorskip('trimesh')
+    node = object.__new__(pick_place.PickPlace)
+    node.object_shapes, node.object_collision_frames = {}, {}
+    mesh = tmp_path/'tetra.obj'
+    mesh.write_text('v 0 0 0\nv 1 0 0\nv 0 1 0\nv 0 0 1\nf 1 3 2\nf 1 2 4\nf 1 4 3\nf 2 3 4\n')
+    world = tmp_path/'lab.world'
+    world.write_text('''<sdf version="1.7"><world name="lab">
+      <model name="fixture"><static>true</static><link name="link">
+        <collision name="side"><pose>1 2 0.4 0 0 1.5707963267948966</pose><geometry>
+          <mesh><uri>tetra.obj</uri><scale>0.2 0.4 0.6</scale></mesh>
+        </geometry></collision>
+        <collision name="missing"><geometry><mesh><uri>missing.obj</uri></mesh></geometry></collision>
+      </link></model></world></sdf>''')
+    node.get_parameter = lambda name: SimpleNamespace(value=str(world))
+    supports, _ = node._world_boxes()
+    assert not supports and node.scene_error == 'unresolved mesh missing.obj'
+    obstacle, = node.arm_obstacles
+    assert obstacle.shape == 'mesh'
+    assert obstacle.size == pytest.approx([.2, .4, .6])
+    assert obstacle.position == pytest.approx([.8, 2.1, .7])
+    assert node.drive_obstacles[0].size[:2] == pytest.approx([.2, .4])
+
+
 def test_pad_settling_needs_independent_bilateral_load_and_stable_payload(pick_place, monkeypatch):
     node = object.__new__(pick_place.PickPlace)
     node.task = {'object': 'block'}

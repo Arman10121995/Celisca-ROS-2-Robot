@@ -488,7 +488,13 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
     the recorded F100 pickup and placement pass.
   - 2026-11-22: wide level floor boxes stay in the private planner for
     moving arm links and the carried object. Frozen chassis contact is
-    allowed. Meshes and heightfields remain outside this planner.
+    allowed.
+  - 2026-11-22: supported static SDF collision meshes enter the private
+    planner as per-collider convex hulls. Direct mobile legs check their
+    projected bounds. Compiled tests cover scaled and rotated mesh parts,
+    moving-arm contact, payload containment and missing mesh diagnostics.
+    Concave decomposition, dynamic compound payloads and heightfields
+    remain open. [MuJoCo mesh geometry](https://mujoco.readthedocs.io/en/stable/XMLreference.html#asset-mesh).
   - 2026-11-22: the MuJoCo fixed-arm workcell publishes a calibrated
     overhead RGB-D camera. The existing pick-and-place panel can plan a
     Panda cube grasp from three fresh camera estimates. The normal GUI
@@ -496,7 +502,7 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
     The estimate was 1.1 mm from simulator truth. The arm lifted the cube
     96.2 mm, then released and retreated with the cube on the destination.
     [GUI receipt](docs/status/evidence/r57-urdf-arm-pick-place-2026-11-17/mujoco-gui-workcell-rgbd-2026-11-22.json).
-  - compound/mesh geometry, other fixed-arm perception backends and
+  - compound payload geometry, other fixed-arm perception backends and
     additional gripper-specific pipelines;
   - coupled mechanisms beyond gear-coupled fingers (mimic chains and
     four-bar joints);
@@ -690,7 +696,8 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
     corrections and retreats against the projected footprints of authored
     static boxes, spheres and cylinders. Nav2 still owns the long transit.
     Source regressions cover a wall, a docking post and a blocked retreat.
-    Mesh and terrain clearance on direct legs remains open.
+    Static convex mesh hulls now contribute projected clearance. Terrain
+    clearance on direct legs remains open.
   - generalize the existing native interlock and measured footprint-consumption gate to other mobile-manipulator adapters.
     2026-11-20: TIAGo fetch requires both costmaps to echo the loaded shape
     before Nav2 dispatch and retains the enlarged footprint through docking

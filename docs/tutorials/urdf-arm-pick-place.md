@@ -87,7 +87,12 @@ spheres and multi-part tables. For each model, the support selector uses
 the highest eligible level box. The private model welds the robot base to
 its measured pose. Wide level floor boxes remain obstacles for moving
 links and the payload. Frozen chassis contact with the floor is allowed.
-Mesh and heightfield collision planning remain open.
+Each supported static collision mesh contributes its convex hull in the
+authored pose and scale. Author separate collision parts for passages or
+recesses that need to remain open. A missing mesh or a mesh without a
+volume blocks the task with a diagnostic. Heightfield and dynamic compound
+payload planning remain open.
+[MuJoCo mesh geometry](https://mujoco.readthedocs.io/en/stable/XMLreference.html#asset-mesh).
 
 The carried payload is a mocap body in the planning model. The planner
 queries its distance to each static obstacle because the ordinary contact
@@ -101,8 +106,9 @@ pick-and-place with offset objects across backends remains to be measured.
 Mobile fetch checks its direct approach, docking and retreat against the
 top-down footprints of authored static boxes, spheres and cylinders. These
 checks include walls and posts that are unavailable as drop supports. Nav2
-owns the longer transit and uses its own costmaps. The direct checks cover
-primitive collision geometry, with mesh and terrain clearance still pending.
+owns the longer transit and uses its own costmaps. Direct legs also check
+the conservative top-down bounds of the mesh hulls. Terrain clearance
+remains pending.
 
 **Checks.** Each stage must pass before the next one starts:
 

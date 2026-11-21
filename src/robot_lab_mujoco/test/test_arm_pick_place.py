@@ -200,6 +200,30 @@ def test_floor_allows_frozen_chassis_but_rejects_moving_arm_and_payload_penetrat
     assert any({a, b} == {'object', 'obstacle_floor'} for a, b, _ in scene.collisions())
 
 
+def test_authored_mesh_obstacle_checks_the_payload_with_native_geometry(tmp_path):
+    trimesh = pytest.importorskip('trimesh')
+    from robot_lab_mujoco.arm_pick_place import MeshObstacle
+
+    mesh_path = tmp_path/'hull.stl'
+    trimesh.creation.box(extents=[.12, .16, .2]).export(mesh_path)
+    obstacle = MeshObstacle.from_sdf('fixture', dict(mesh=str(mesh_path), scale=[1., 1., 1.],
+                                                       position=[.4, 0., .2], orientation=[1., 0., 0., 0.]))
+    spec = ArmSpec.from_config(dict(arm_joints=['arm'], finger_joints=[], tool_body='tool',
+                                   tcp_offset=[0., 0., 0.], finger_open=.04, finger_closed=0., max_object_width=.1))
+    xml = '''<mujoco><worldbody><body name="tool" pos="0 0 0.2">
+        <joint name="arm" type="slide" axis="1 0 0"/><geom type="sphere" size=".03"/>
+    </body></worldbody></mujoco>'''
+    obj = Box('pickup', [.7, 0., .2], [1., 0., 0., 0.], [.04, .04, .04])
+    scene = ArmScene(xml, spec, [obstacle], obj)
+    assert scene.model.geom('obstacle_fixture').type[0] == mujoco.mjtGeom.mjGEOM_MESH
+    assert not scene.collisions()
+    scene.set_joints({'arm': .39})
+    assert any('obstacle_fixture' in (a, b) for a, b, _ in scene.collisions())
+    scene.set_joints({'arm': 0.})
+    scene.move_object([.4, 0, .2], [1., 0., 0., 0.])
+    assert any({a, b} == {'object', 'obstacle_fixture'} for a, b, _ in scene.collisions())
+
+
 def test_mobile_scene_welds_the_base_and_holds_unplanned_joints():
     try:
         from robot_lab_utils.installed_assets import installed_profiles

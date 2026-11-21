@@ -132,6 +132,41 @@ class Box:
         return abs(bottom - support.top) <= height_tolerance and support.supports(self, tolerance=.001)
 
 
+@dataclass
+class MeshObstacle(Box):
+    """One authored collision mesh represented by its enclosing convex hull."""
+
+    vertices: tuple = ()
+    planes: tuple = ()
+
+    @classmethod
+    def from_sdf(cls, name, shape):
+        from scipy.spatial import ConvexHull
+        from robot_lab_utils.mesh_assets import _load_indexed_mesh
+
+        vertices, _ = _load_indexed_mesh(shape['mesh'])
+        vertices = np.asarray(vertices, dtype=float) * np.asarray(shape['scale'], dtype=float)
+        low, high = vertices.min(axis=0), vertices.max(axis=0)
+        bounds_center = (low + high) / 2
+        orientation = shape['orientation']
+        rotation = Rotation.from_quat(np.asarray(orientation)[[1, 2, 3, 0]])
+        position = np.asarray(shape['position']) + rotation.apply(bounds_center)
+        hull = ConvexHull(vertices)
+        local_vertices = tuple(map(tuple, vertices[hull.vertices] - bounds_center))
+        planes = hull.equations.copy()
+        planes[:, 3] += planes[:, :3] @ bounds_center
+        return cls(name, position, orientation, high-low, shape='mesh',
+                   vertices=local_vertices, planes=tuple(map(tuple, planes)))
+
+    def half_extent(self, direction):
+        return float(np.max(np.abs(np.asarray(self.vertices) @ (self.rotation().T @ direction))))
+
+    def contained_depth(self, point):
+        local = self.rotation().T @ (point - self.position)
+        planes = np.asarray(self.planes)
+        return min(0., float(np.max(planes[:, :3] @ local + planes[:, 3])))
+
+
 def yaw_of(quaternion):
     w, x, y, z = quaternion
     return math.atan2(2 * (w * z + x * y), 1 - 2 * (y * y + z * z))
@@ -179,10 +214,20 @@ class ArmScene:
                 world.remove(child)
                 wrapper.append(child)
             world.append(wrapper)
-        for box in obstacles:
+        for index, box in enumerate(obstacles):
+            if isinstance(box, MeshObstacle):
+                asset = root.find('asset')
+                if asset is None:
+                    asset = ET.SubElement(root, 'asset')
+                mesh_name = 'pick_place_obstacle_mesh_%d' % index
+                ET.SubElement(asset, 'mesh', name=mesh_name,
+                              vertex=' '.join('%.10g' % value for vertex in box.vertices for value in vertex))
+                attributes = dict(type='mesh', mesh=mesh_name)
+            else:
+                attributes = box.mjcf_geometry()
             ET.SubElement(world, 'geom', name='obstacle_' + box.name,
                           pos='%g %g %g' % tuple(box.position), quat='%g %g %g %g' % tuple(box.quaternion),
-                          **box.mjcf_geometry())
+                          **attributes)
         holder = ET.SubElement(world, 'body', name='pick_place_object', mocap='true',
                                pos='%g %g %g' % tuple(obj.position), quat='%g %g %g %g' % tuple(obj.quaternion))
         # The margin makes MuJoCo report near-misses within the clearance.
@@ -327,11 +372,14 @@ class ArmScene:
             if geom in allowed_supports:
                 continue
             distance = self.mj.mj_geomDistance(m, d, self.object_geom, geom, CONTACT_MARGIN_M, None)
-            if distance == 0.:
-                # Coincident convex shapes can yield zero from the distance
-                # solver. Overlapping inscribed spheres establish penetration.
+            obstacle = self.obstacles[name]
+            if isinstance(obstacle, MeshObstacle) and distance >= 0.:
+                # Check complete containment independently of surface contact.
+                distance = obstacle.contained_depth(d.geom_xpos[self.object_geom])
+            elif distance == 0.:
+                # A coincident convex pair can yield zero from the distance query.
                 separation = np.linalg.norm(d.geom_xpos[self.object_geom] - d.geom_xpos[geom])
-                distance = separation - self.payload_radius - min(self.obstacles[name].size) / 2
+                distance = separation - self.payload_radius - min(obstacle.size) / 2
             if distance <= -CONTACT_MARGIN_M:
                 found.append(('object', 'obstacle_' + name, round(float(distance), 4)))
         for i in range(d.ncon):
