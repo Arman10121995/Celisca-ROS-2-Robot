@@ -1301,8 +1301,39 @@ def _off_ground_plane(verts, tris, shape, tolerance=0.005):
     return [tri for tri, flat in zip(tris, on_plane) if not flat], int(on_plane.sum())
 
 
+def _author_offset_free_body(stage, path, body, material):
+    """Author one rigid model frame and a separately transformed collider."""
+    from pxr import Gf, UsdGeom, UsdPhysics, UsdShade
+
+    def add_pose(prim, position, orientation):
+        prim.AddTranslateOp().Set(Gf.Vec3d(*position))
+        w, x, y, z = orientation
+        prim.AddOrientOp().Set(Gf.Quatf(w, Gf.Vec3f(x, y, z)))
+
+    model = UsdGeom.Xform.Define(stage, path)
+    add_pose(model, body['position'], body['orientation'])
+    UsdPhysics.RigidBodyAPI.Apply(model.GetPrim())
+    UsdPhysics.MassAPI.Apply(model.GetPrim()).CreateMassAttr(float(body['mass']))
+    shape = body['shape']
+    if shape['type'] == 'cylinder':
+        collider = UsdGeom.Cylinder.Define(stage, path + '/collision')
+        collider.CreateRadiusAttr(float(shape['size'][0]))
+        collider.CreateHeightAttr(float(shape['size'][1]))
+        collider.CreateAxisAttr('Z')
+    else:
+        collider = UsdGeom.Cube.Define(stage, path + '/collision')
+        collider.CreateSizeAttr(1.)
+    add_pose(collider, shape['position'], shape['orientation'])
+    if shape['type'] == 'box':
+        collider.AddScaleOp().Set(Gf.Vec3f(*shape['size']))
+    collider.CreateDisplayColorAttr([Gf.Vec3f(.85, .2, .15)])
+    UsdPhysics.CollisionAPI.Apply(collider.GetPrim())
+    UsdShade.MaterialBindingAPI.Apply(collider.GetPrim()).Bind(
+        material, UsdShade.Tokens.strongerThanDescendants, 'physics')
+
+
 def _add_free_bodies(world, bodies):
-    """Loose centred boxes and cylinders from ``sdf_world.extract_dynamic_bodies``.
+    """Loose boxes and cylinders from ``sdf_world.extract_dynamic_bodies``.
 
     Each keeps its world-file pose, mass and friction. Returns {name: prim object}.
     """
@@ -1311,6 +1342,9 @@ def _add_free_bodies(world, bodies):
     import numpy as np
     from isaacsim.core.api.materials import PhysicsMaterial
     from isaacsim.core.api.objects import DynamicCuboid, DynamicCylinder
+    from isaacsim.core.prims import SingleRigidPrim
+    from isaacsim.core.utils.stage import get_current_stage
+    from pxr import UsdShade
 
     created = {}
     for body in bodies:
@@ -1320,10 +1354,6 @@ def _add_free_bodies(world, bodies):
                    % (body.get("name"), shape.get("type"))})
             continue
         name = re.sub(r"[^A-Za-z0-9_]", "_", str(body["name"]))
-        if (not np.allclose(shape['position'], (0., 0., 0.))
-                or not np.allclose(shape['orientation'], (1., 0., 0., 0.))):
-            _emit({'event': 'log', 'msg': 'Free body collision must align with its model frame: '+name})
-            continue
         mu = float(body["mu"]) if body.get("mu") is not None else 1.0
         material = PhysicsMaterial(prim_path="/World/PhysicsMaterials/free_" + name,
                                    static_friction=mu, dynamic_friction=mu, restitution=0.0)
@@ -1331,7 +1361,13 @@ def _add_free_bodies(world, bodies):
                       position=[float(v) for v in body['position']],
                       orientation=[float(v) for v in body['orientation']],   # w, x, y, z
                       mass=float(body['mass']), color=np.array([.85, .2, .15]), physics_material=material)
-        if shape['type'] == 'cylinder':
+        if (not np.allclose(shape['position'], (0., 0., 0.))
+                or not np.allclose(shape['orientation'], (1., 0., 0., 0.))):
+            stage = get_current_stage()
+            _author_offset_free_body(stage, params['prim_path'], body,
+                                     UsdShade.Material(stage.GetPrimAtPath(material.prim_path)))
+            obj = SingleRigidPrim(prim_path=params['prim_path'], name=params['name'], reset_xform_properties=False)
+        elif shape['type'] == 'cylinder':
             radius, length = (float(v) for v in shape['size'][:2])
             obj = DynamicCylinder(radius=radius, height=length, **params)
         else:

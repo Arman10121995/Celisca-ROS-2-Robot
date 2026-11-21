@@ -476,9 +476,10 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
   - 2026-11-21: URDF pick/place composes measured poses with the SDF
     link and collision frames for loose boxes and cylinders. The planner
     and release checks use the resulting collision centre. Drop supports
-    require level collision boxes. Isaac's primitive importer is limited
-    to collisions aligned with the model frame. Live offset-object
-    missions remain pending.
+    require level collision boxes. Isaac authors offset colliders under a
+    separate rigid model frame. On Isaac Sim 6.0.1, a stage fixture confirmed
+    the translated and rotated collider pose, mass and material binding
+    for both shapes. Live offset-object missions remain pending.
   - 2026-11-21: the private arm scene keeps collision boxes, spheres and
     cylinders, including large walls and multiple primitive colliders in
     a model. The drop selector uses the highest eligible level box for

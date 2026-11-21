@@ -69,8 +69,11 @@ The carried payload is a mocap body in the planning model. The planner
 queries its distance to each static obstacle because the ordinary contact
 search skips pairs of bodies without dynamic degrees of freedom.
 [MuJoCo collision detection](https://mujoco.readthedocs.io/en/latest/computation.html#collision-detection).
-Isaac's loose-body importer requires the collider to align with the model
-frame. Offset-object missions on the other backends are pending.
+Isaac's loose-body importer keeps the model frame as the rigid body and
+places offset box or cylinder colliders beneath it. It publishes the model
+pose on `/simulation/free_bodies`. The Isaac Sim 6.0.1 stage check covered
+collider transforms, mass and friction material bindings. Physical
+pick-and-place with offset objects across backends remains to be measured.
 
 **Checks.** Each stage must pass before the next one starts:
 
