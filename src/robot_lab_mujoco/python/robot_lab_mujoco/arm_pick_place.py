@@ -36,6 +36,7 @@ JOINT_STEP_RAD = 0.02       # collision samples along joint-space segments
 POSITION_TOLERANCE_M = 0.002
 ANGLE_TOLERANCE_RAD = 0.02
 CONTACT_MARGIN_M = 0.002    # penetration below which a contact counts (dist < -margin)
+CONTACT_DEPTH_EPSILON_M = 0.0001  # numeric tolerance when replaying the same held pair
 # Routes that may not touch the object (the approach to the pre-grasp) keep
 # every robot part this far from it. With penetration alone, TIAGo's 9 cm
 # fingertips swept past the block within millimetres, and Isaac's tracking
@@ -214,12 +215,16 @@ class ArmScene:
             return False
         self.moving_geoms = {g for g in robot_geoms if moved(int(m.geom_bodyid[g]))}
         self.finger_geoms = {g for g in robot_geoms if int(m.geom_bodyid[g]) in finger_bodies}
+        self.grasp_jaw_geoms = set()
         if spec.pad_geoms:
             pads = {mujoco.mj_name2id(m, mujoco.mjtObj.mjOBJ_GEOM, name) for name in spec.pad_geoms}
             if len(pads) != 2 or not pads <= self.finger_geoms:
                 raise ValueError('The compiled grasp scene needs both declared jaw pads')
             self.finger_geoms = pads
+            pad_bodies = {int(m.geom_bodyid[g]) for g in pads}
+            self.grasp_jaw_geoms = {g for g in robot_geoms if int(m.geom_bodyid[g]) in pad_bodies} - pads
         self.attached = None        # object pose in the TCP frame while held
+        self.held_jaw_depths = {}
         # Joints the plan never moves (a mobile manipulator's torso and head)
         # stay at their measured values.
         for name, value in (held or {}).items():
@@ -266,16 +271,30 @@ class ArmScene:
         self._place_object(np.asarray(position, dtype=float), rotation.reshape(3, 3))
         self.mj.mj_forward(self.model, self.data)
 
-    def attach(self):
-        """Hold the object at its current pose relative to the TCP."""
+    def attach(self, *, measured_grasp=False):
+        """Hold the object at its current pose relative to the TCP.
+
+        A measured grasp may already touch the rigid jaw behind a pad. Keep
+        that contact at its observed depth while moving the attached object.
+        New or deeper contacts and contacts with other links still block.
+        """
         position, rotation = self.tcp()
         obj_rotation = np.zeros(9)
         self.mj.mju_quat2Mat(obj_rotation, self.data.mocap_quat[self.object_mocap])
         self.attached = (rotation.T @ (self.data.mocap_pos[self.object_mocap] - position),
                          rotation.T @ obj_rotation.reshape(3, 3))
+        self.held_jaw_depths.clear()
+        if measured_grasp and self.grasp_jaw_geoms:
+            for contact in self.data.contact:
+                pair = {int(contact.geom1), int(contact.geom2)}
+                jaws = pair & self.grasp_jaw_geoms
+                if self.object_geom in pair and jaws and contact.dist < -CONTACT_MARGIN_M:
+                    jaw = jaws.pop()
+                    self.held_jaw_depths[jaw] = min(self.held_jaw_depths.get(jaw, 0.), float(contact.dist))
 
     def detach(self):
         self.attached = None
+        self.held_jaw_depths.clear()
 
     # --- collision -------------------------------------------------------------
     def collisions(self, allow_fingers=False, allow_supports=(), object_clearance=True):
@@ -293,6 +312,10 @@ class ArmScene:
             if self.object_geom in pair:
                 other = (pair - {self.object_geom}).pop() if len(pair) > 1 else self.object_geom
                 if allow_fingers and other in self.finger_geoms:
+                    continue
+                resting_depth = self.held_jaw_depths.get(other)
+                if (allow_fingers and resting_depth is not None
+                        and c.dist >= resting_depth - CONTACT_DEPTH_EPSILON_M):
                     continue
                 if other in allowed_supports:
                     continue

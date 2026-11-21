@@ -601,5 +601,256 @@
       },
       "sample_count": 287
     }
+  },
+  {
+    "run": 8,
+    "launch_returncode": 0,
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=display map_name:=mobile_fetch_lab_f100 robot_model:=asset_elephant_myagv_pro_pro630_f100 simulator:=mujoco gui:=false perception:=none allow_experimental_assets:=true",
+    "result": {
+      "schema": "robot_lab.pick_place_result.v1",
+      "outcome": "failed",
+      "passed": false,
+      "message": "place not planned: collision on a joint move: [('object', 'pro630_gripper_right1_finger_contact', -0.0067)]; search: Source collision at planning start; choose another approach. Loaded footprint retained. Restart the simulation before another fetch.",
+      "request": {
+        "object": "fetch_block",
+        "support": "drop_table",
+        "lift": 0.05,
+        "pose_source": "truth"
+      },
+      "object": "fetch_block",
+      "support": "drop_table",
+      "object_start": [
+        1.359999999598624,
+        -4.804198624116962e-10,
+        0.5448922445797842
+      ],
+      "plan": {
+        "transit": "straight",
+        "pick_base": [
+          0.89,
+          -0.0,
+          0.0
+        ],
+        "place_base": [
+          0.45,
+          1.515,
+          1.571
+        ],
+        "place_xy": [
+          0.45,
+          1.96
+        ],
+        "grasp_width_m": 0.04,
+        "pick_base_measured": [
+          0.8837,
+          -0.0002,
+          -0.0038,
+          0.0001
+        ],
+        "place_base_measured": [
+          0.4494,
+          1.5074,
+          -0.0037,
+          1.5694
+        ]
+      },
+      "stages": [
+        {
+          "phase": "to_object_arrived",
+          "final_pose": [
+            0.8837,
+            -0.0002,
+            -0.0038,
+            0.0001
+          ]
+        },
+        {
+          "phase": "to_object",
+          "seconds": 12.08
+        },
+        {
+          "stage": "open",
+          "seconds": 2.42,
+          "object_truth": [
+            1.36,
+            -0.0,
+            0.5449
+          ],
+          "tcp_estimate": [
+            0.8832,
+            0.2851,
+            1.071
+          ],
+          "passed": true
+        },
+        {
+          "stage": "above_object",
+          "seconds": 8.05,
+          "object_truth": [
+            1.36,
+            -0.0,
+            0.5449
+          ],
+          "tcp_estimate": [
+            1.3594,
+            -0.0002,
+            0.6047
+          ],
+          "passed": true
+        },
+        {
+          "stage": "down_to_grasp",
+          "seconds": 1.1,
+          "object_truth": [
+            1.3602,
+            -0.0,
+            0.5445
+          ],
+          "tcp_estimate": [
+            1.3612,
+            -0.0003,
+            0.5745
+          ],
+          "passed": true
+        },
+        {
+          "stage": "close",
+          "seconds": 7.9,
+          "object_truth": [
+            1.3643,
+            0.0001,
+            0.5454
+          ],
+          "tcp_estimate": [
+            1.3602,
+            -0.0,
+            0.5761
+          ],
+          "finger_positions": [
+            0.3450711561339794,
+            0.34507087788467977,
+            0.3450676622105874,
+            0.3450720242811225,
+            0.3450708653872353,
+            0.3450705532381864
+          ],
+          "passed": true,
+          "pad_normal_force_n": {
+            "left": 3.7765168706274115,
+            "right": 2.267297931981841
+          },
+          "reason": ""
+        },
+        {
+          "stage": "lift",
+          "seconds": 3.33,
+          "object_truth": [
+            1.3657,
+            0.0007,
+            0.5912
+          ],
+          "tcp_estimate": [
+            1.3586,
+            -0.0,
+            0.6234
+          ],
+          "passed": true,
+          "rise_m": 0.0463,
+          "hold_drift_m": 0.0004,
+          "reason": "",
+          "pad_normal_force_n": {
+            "left": 2.425446137006025,
+            "right": 2.4493484557180767
+          }
+        },
+        {
+          "phase": "pick",
+          "seconds": 23.79
+        },
+        {
+          "phase": "carry_arrived",
+          "final_pose": [
+            0.4494,
+            1.5074,
+            -0.0037,
+            1.5694
+          ],
+          "max_carry_drift_m": 0.0177
+        },
+        {
+          "phase": "carry",
+          "seconds": 77.82
+        }
+      ],
+      "mobile": true,
+      "interlock": {
+        "max_base_speed_in_arm_phases": 0.0017582909683339716,
+        "max_base_turn_in_arm_phases": 0.0016733165126147694,
+        "drive_ticks_with_articulation_active": 234,
+        "drive_ticks": 831
+      },
+      "transit": "straight",
+      "pose_source": "truth",
+      "perceived": null,
+      "phase": "place",
+      "seconds": 114.47,
+      "plant_id": "520a12ffbc864d0a81b760f93f8230f7",
+      "model_sha256": "bf9ef87b82586316cb4ff59956cd87179c1f681bd352f46777468aebd2bb082d",
+      "finished": "2026-11-21T12:32:35",
+      "receipt": "/workspace/molar/robot_lab_runtime/pick-place/20261121T123235_fetch_block.json",
+      "last_sample": {
+        "t": 113.38,
+        "stage": "carry",
+        "object": [
+          0.4497,
+          1.9878,
+          0.5844,
+          0.7062,
+          -0.0017,
+          0.0052,
+          0.708
+        ],
+        "fingers": [
+          0.3361,
+          0.3361,
+          0.3361,
+          0.3361,
+          0.3361,
+          0.3361
+        ],
+        "finger_references": [
+          0.3121,
+          0.3361,
+          0.3361,
+          0.3361,
+          0.3361,
+          0.3361
+        ],
+        "pad_normal_force_n": {
+          "left": 2.4230518120703244,
+          "right": 2.4265440851626208
+        },
+        "arm_joints": {
+          "pro630_joint1_to_base": -0.18596,
+          "pro630_joint2_to_joint1": 0.89526,
+          "pro630_joint3_to_joint2": -0.24218,
+          "pro630_joint4_to_joint3": 0.9181,
+          "pro630_joint5_to_joint4": -1.57057,
+          "pro630_joint6_to_joint5": 2.14933
+        },
+        "base": [
+          0.4495,
+          1.5072,
+          -0.0037,
+          1.5693
+        ],
+        "object_in_base": [
+          0.4806,
+          0.0005,
+          0.5881
+        ]
+      },
+      "sample_count": 209
+    }
   }
 ]

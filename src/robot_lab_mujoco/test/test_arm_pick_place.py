@@ -82,6 +82,33 @@ def test_synchronised_targets_respect_the_rate():
     assert math.isclose(out[33]['a'], 1.0)          # 1 rad at 0.03 per step: reached at step 34
 
 
+def test_measured_grasp_keeps_only_existing_jaw_contact():
+    model = """<mujoco><worldbody><body name="tool">
+      <joint name="arm" type="hinge"/>
+      <geom name="housing" type="box" pos="0 .1 0" size=".02 .02 .02"/>
+      <body pos="-.03 0 0"><joint name="left" type="slide" axis="1 0 0"/>
+        <geom name="jaw" type="box" size=".02 .02 .02"/>
+        <geom name="left_pad" type="box" pos="0 -.03 0" size=".01 .01 .01"/>
+      </body>
+      <body pos=".09 0 0"><joint name="right" type="slide" axis="1 0 0"/>
+        <geom name="right_pad" type="box" size=".01 .01 .01"/>
+      </body>
+    </body></worldbody></mujoco>"""
+    spec = ArmSpec(['arm'], ['left', 'right'], 'tool', pad_geoms=('left_pad', 'right_pad'))
+    payload = Box('payload', (0, 0, 0), (1, 0, 0, 0), (.03, .03, .03))
+    scene = ArmScene(model, spec, [], payload)
+    assert set(scene.collisions(allow_fingers=True)[0][:2]) == {'object', 'jaw'}
+    scene.attach(measured_grasp=True)
+    assert scene.collisions(allow_fingers=True) == []
+    scene.move_object((-.008, 0, 0), payload.quaternion)
+    assert set(scene.collisions(allow_fingers=True)[0][:2]) == {'object', 'jaw'}
+    scene.move_object((0, .1, 0), payload.quaternion)
+    assert set(scene.collisions(allow_fingers=True)[0][:2]) == {'object', 'housing'}
+    scene.detach()
+    scene.move_object(payload.position, payload.quaternion)
+    assert set(scene.collisions(allow_fingers=True)[0][:2]) == {'object', 'jaw'}
+
+
 # --- mobile manipulation (R5.9) ------------------------------------------------
 FETCH_WORLD = WORLD.parents[2] / 'mobile_fetch_lab/worlds/mobile_fetch_lab.world'
 

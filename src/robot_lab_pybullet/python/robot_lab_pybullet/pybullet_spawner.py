@@ -1085,6 +1085,11 @@ class PyBulletSpawner(Node):
         if articulation_config:
             from robot_lab_utils.urdf_articulation import ArticulationROS
             self._articulation = ArticulationROS(self, articulation_config, urdf, str(model))
+            named_pads = self._articulation.contract.config.get('grip_contact_geoms')
+            if named_pads:
+                from robot_lab_pybullet.grip_contacts import GripContacts
+                pads = GripContacts(p, self._robot_id, self._link_idx, urdf, named_pads)
+                self._articulation.grip_contacts = lambda: pads.measure(self._free_bodies, self._sim_t)
             if set(self._articulation.contract.joints) & set(self._drive.wheel_joints):
                 raise ValueError('Articulation cannot own drive wheels')
             # Joints whose range excludes 0 start at their home (contract).

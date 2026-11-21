@@ -99,6 +99,22 @@ launch exited cleanly. This run establishes loaded pickup and carry on
 this fixture. Supported release remains open.
 [GUI measurements, exact commands and terminal samples](gui-fetch-custody-2026-11-21.json).
 
+The next GUI run shortened the place standoff from 470 to 445 mm. The
+same block lifted 46.3 mm and reached that dock. The solver found IK over
+the table, then rejected a contact with the rigid jaw behind the right pad.
+Replaying its observed arm, jaw and object poses reproduced the collision.
+The new planner uses the measured jaw geometry and preserves the initial
+contact depth only for that held object against the pad-bearing links. Any
+new or deeper contact still rejects a path. The private replay then planned
+all four place stages, including retreat. This establishes placement
+feasibility from that sample. [Planner replay](loaded-place-replay.txt).
+
+PyBullet now has a matching normal-force reader for named URDF pads. It
+transforms Bullet's link-level contact points into the source collision
+geometry so a contact on the same link outside the pad stays excluded.
+This implementation has a focused regression test. The F100 profile
+remains MuJoCo-only while the loaded Bullet linkage awaits measurement.
+
 ## Source and retained diagnostics
 
 The bare arm and its wheel/arm measurements use the existing source pin.

@@ -689,8 +689,10 @@ class PickPlace(Node):
         else:
             fingers = {n: float(measured[n]) for n in self.spec.finger_joints}
             task['plan']['place_base_measured'] = [round(v, 4) for v in base]
+            if self.spec.pad_geoms and not self._pad_check(name)['passed']:
+                raise ValueError('Both pads must retain the object before planning placement')
             scene.set_joints(dict(start, **fingers))
-            scene.attach()
+            scene.attach(measured_grasp=bool(self.spec.pad_geoms))
             planned = plan_place(scene, start, obj, support, place_xy=task['plan']['place_xy'],
                                  grasp_width=task['plan']['grasp_width_m'], measured_fingers=fingers, **options)
             task['plan'].update(place_centre=planned['place_centre'], place_orientation=planned['place_orientation'])
