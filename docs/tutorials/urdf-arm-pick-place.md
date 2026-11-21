@@ -175,6 +175,8 @@ fetch** (script: `arm_pick_place_check.py --pose-source rgbd`).
 2. Each new RGB-D frame is fitted using the object's declared shape, size
    and OpenCV HSV range. The lab reads `rgbd_targets.yaml` for boxes and
    upright cylinders and still accepts `rgbd_boxes.yaml` for existing worlds.
+   Both formats must name a loose object with matching collision dimensions
+   and shape in the selected world.
 3. Three estimates within 1 cm of each other make the grasp pose.
 4. The place uses where the object sat in the hand at the grasp.
 

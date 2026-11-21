@@ -292,9 +292,8 @@ class PickPlace(Node):
         from robot_lab_utils.rgbd_boxes import bindings
         targets = bindings(yaml.safe_load(Path(path).read_text()), allow_primitives=True)
         for name, target in targets.items():
-            if ('shape' in target and (name not in self.object_sizes
-                    or target['shape'] != self.object_shapes.get(name, 'box')
-                    or not np.allclose(target['size_m'], self.object_sizes[name], rtol=0., atol=1e-6))):
+            if (name not in self.object_sizes or target.get('shape', 'box') != self.object_shapes.get(name, 'box')
+                    or not np.allclose(target['size_m'], self.object_sizes[name], rtol=0., atol=1e-6)):
                 raise ValueError('RGB-D binding does not match the declared world geometry for '+name)
         return targets
 

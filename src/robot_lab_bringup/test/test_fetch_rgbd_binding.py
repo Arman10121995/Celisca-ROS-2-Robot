@@ -1,8 +1,11 @@
 """mobile_fetch_lab's declared RGB-D box matches its world (R5.9 camera object poses)."""
 import colorsys
+import importlib.util
 import xml.etree.ElementTree as ET
 from pathlib import Path
+from types import SimpleNamespace
 
+import pytest
 import yaml
 
 from robot_lab_utils.rgbd_boxes import bindings
@@ -63,3 +66,28 @@ def test_cylinder_fixture_reuses_static_world_and_declares_the_loose_lid_target(
     assert target['object'] == loose.get('name')
     assert target['shape'] == 'cylinder' and target['size_m'] == [diameter, diameter, float(cylinder.findtext('length'))]
     assert _inside(_opencv_hsv(colour), target)
+
+
+@pytest.mark.parametrize('variant,object_name,size,shape', [
+    ('mobile_fetch_lab', 'fetch_block', [.04, .04, .15], 'box'),
+    ('mobile_fetch_lab_can', 'fetch_can', [.04, .04, .15], 'cylinder'),
+])
+def test_live_perception_bindings_require_matching_collision_shape_and_dimensions(variant, object_name, size, shape):
+    pytest.importorskip('rclpy')
+    script = MAP.parents[1].parent / 'robot_lab_bringup' / 'scripts' / 'urdf_pick_place.py'
+    spec = importlib.util.spec_from_file_location('pick_place_for_rgbd_binding', script)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    node = object.__new__(module.PickPlace)
+    world = MAP.with_name(variant) / 'worlds' / (variant + '.world')
+    node.get_parameter = lambda name: SimpleNamespace(value=str(world) if name == 'world_path' else '')
+    node.object_sizes = {object_name: size}
+    node.object_shapes = {object_name: shape}
+    assert object_name in node._rgbd_bindings()
+    node.object_sizes[object_name] = [.04, .04, .17]
+    with pytest.raises(ValueError, match='world geometry'):
+        node._rgbd_bindings()
+    node.object_sizes[object_name] = size
+    node.object_shapes[object_name] = 'cylinder' if shape == 'box' else 'box'
+    with pytest.raises(ValueError, match='world geometry'):
+        node._rgbd_bindings()
