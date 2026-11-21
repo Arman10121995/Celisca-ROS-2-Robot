@@ -13643,3 +13643,323 @@ records:
     not checked (--max-yaw-error-deg 0, the October car protocol); seed 1. Details in docs/status/evidence/v3-car-matrix-2026-11-21.'
   limitations:
   - One seed per cell; repeats of cells measured since October
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ackermann
+  date: '2026-11-21'
+  revision: 283b4d0d (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/gazebo_ackermann_nav_obstacle.json
+  sha256: 1e20f6577f682f0bd01135962174d58e618d8f56a2963e8b8f5b5257ab205d17
+  source_hashes: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json
+  source_hashes_sha256: 0d465c01f4f52c68e8b3e0fc35a6d06e610e51af1771706698ce1fb109e963fb
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and
+    15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: crab
+  date: '2026-11-21'
+  revision: 283b4d0d (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/gazebo_crab_nav_obstacle.json
+  sha256: a1d355efd6b12dcad9dcab2dd8dbb689519a540196136432b64aab2baf9d41df
+  source_hashes: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json
+  source_hashes_sha256: 0d465c01f4f52c68e8b3e0fc35a6d06e610e51af1771706698ce1fb109e963fb
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and
+    15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: in_phase
+  date: '2026-11-21'
+  revision: 283b4d0d (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/gazebo_in_phase_nav_obstacle.json
+  sha256: 853563d9005689fafbe64bc34a6c94732ecb22c5afbc19bb956bebd4d7a9e9c6
+  source_hashes: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json
+  source_hashes_sha256: 0d465c01f4f52c68e8b3e0fc35a6d06e610e51af1771706698ce1fb109e963fb
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and
+    15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: mecanum_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: 283b4d0d (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/gazebo_mecanum_nav_obstacle.json
+  sha256: c86a9ba705b6d16aa18dd650052075d0ef1a86045215d37d917460322b2cb41a
+  source_hashes: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json
+  source_hashes_sha256: 0d465c01f4f52c68e8b3e0fc35a6d06e610e51af1771706698ce1fb109e963fb
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and
+    15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: gazebo
+  task_type: navigation_mission
+  steering_mode: pivot
+  date: '2026-11-21'
+  revision: 283b4d0d (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/gazebo_pivot_nav_obstacle.json
+  sha256: 9eaef0dc48cecff8a7ab4b1e2a4fd0401d1593f279f9cfb60da0072f8668979d
+  source_hashes: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json
+  source_hashes_sha256: 0d465c01f4f52c68e8b3e0fc35a6d06e610e51af1771706698ce1fb109e963fb
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and
+    15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ackermann
+  date: '2026-11-21'
+  revision: 283b4d0d (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/isaac_ackermann_nav_obstacle.json
+  sha256: 7cdc185fd1a85c7cdbc8310fb35f13d0fa0e7055e97e853c267f90387dc45190
+  source_hashes: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json
+  source_hashes_sha256: 0d465c01f4f52c68e8b3e0fc35a6d06e610e51af1771706698ce1fb109e963fb
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and
+    15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: crab
+  date: '2026-11-21'
+  revision: 283b4d0d (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/isaac_crab_nav_obstacle.json
+  sha256: 8e2cba219294fa491244ff68618e6e8479481cc9a20ecc0d2d9472b7611c7bdd
+  source_hashes: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json
+  source_hashes_sha256: 0d465c01f4f52c68e8b3e0fc35a6d06e610e51af1771706698ce1fb109e963fb
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and
+    15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: in_phase
+  date: '2026-11-21'
+  revision: 283b4d0d (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/isaac_in_phase_nav_obstacle.json
+  sha256: c0a04efc759c769e48525efdec80691f66493e94795719697a66a4c9b8e01ae3
+  source_hashes: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json
+  source_hashes_sha256: 0d465c01f4f52c68e8b3e0fc35a6d06e610e51af1771706698ce1fb109e963fb
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and
+    15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: mecanum_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: 283b4d0d (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/isaac_mecanum_nav_obstacle.json
+  sha256: 163a9b39a94bf93cd760b04c959bd12159d47c6f3043d7d9e3ca4b2300c9b453
+  source_hashes: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json
+  source_hashes_sha256: 0d465c01f4f52c68e8b3e0fc35a6d06e610e51af1771706698ce1fb109e963fb
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and
+    15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: isaac
+  task_type: navigation_mission
+  steering_mode: pivot
+  date: '2026-11-21'
+  revision: 283b4d0d (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/isaac_pivot_nav_obstacle.json
+  sha256: 6ea9a3a3e8048def6d4ee706536c217cc9a5f5d1a78a63d8de4b4388647df7e6
+  source_hashes: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json
+  source_hashes_sha256: 0d465c01f4f52c68e8b3e0fc35a6d06e610e51af1771706698ce1fb109e963fb
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and
+    15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ackermann
+  date: '2026-11-21'
+  revision: 283b4d0d (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/mujoco_ackermann_nav_obstacle.json
+  sha256: 930169783995d469465848473a60597c1c41d6b62bdc7a9dd978d3ce84352335
+  source_hashes: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json
+  source_hashes_sha256: 0d465c01f4f52c68e8b3e0fc35a6d06e610e51af1771706698ce1fb109e963fb
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and
+    15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: crab
+  date: '2026-11-21'
+  revision: 283b4d0d (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/mujoco_crab_nav_obstacle.json
+  sha256: 4058ca36a098e666afb2c847e62e7074d8baa1182fcc7f44009aa22396209368
+  source_hashes: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json
+  source_hashes_sha256: 0d465c01f4f52c68e8b3e0fc35a6d06e610e51af1771706698ce1fb109e963fb
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and
+    15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: in_phase
+  date: '2026-11-21'
+  revision: 283b4d0d (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/mujoco_in_phase_nav_obstacle.json
+  sha256: 8ed5fe2a54695aa9a944feb0eb9bd879ea5e1cf933478b576a7f264c8fe08129
+  source_hashes: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json
+  source_hashes_sha256: 0d465c01f4f52c68e8b3e0fc35a6d06e610e51af1771706698ce1fb109e963fb
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and
+    15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: mecanum_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: 283b4d0d (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/mujoco_mecanum_nav_obstacle.json
+  sha256: 15066e0fcb32f69dbb3c65aa69c7073d2badedeb9a9548fcc8a13b81973b9f22
+  source_hashes: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json
+  source_hashes_sha256: 0d465c01f4f52c68e8b3e0fc35a6d06e610e51af1771706698ce1fb109e963fb
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and
+    15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: mujoco
+  task_type: navigation_mission
+  steering_mode: pivot
+  date: '2026-11-21'
+  revision: 283b4d0d (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/mujoco_pivot_nav_obstacle.json
+  sha256: efc134c9a057270b6ca51a8ac562d35253c1ccede4f64348bdb5e6f30521ded4
+  source_hashes: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json
+  source_hashes_sha256: 0d465c01f4f52c68e8b3e0fc35a6d06e610e51af1771706698ce1fb109e963fb
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and
+    15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ackermann
+  date: '2026-11-21'
+  revision: 283b4d0d (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/pybullet_ackermann_nav_obstacle.json
+  sha256: 266e581a802f03a63d200fcd2f2999cc775887065d33221ad66d46b919e81133
+  source_hashes: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json
+  source_hashes_sha256: 0d465c01f4f52c68e8b3e0fc35a6d06e610e51af1771706698ce1fb109e963fb
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and
+    15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: crab
+  date: '2026-11-21'
+  revision: 283b4d0d (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/pybullet_crab_nav_obstacle.json
+  sha256: dc73640143ee396ac6bafa7d54d07e518dad87442b9e0217e903a244a7cdc8f3
+  source_hashes: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json
+  source_hashes_sha256: 0d465c01f4f52c68e8b3e0fc35a6d06e610e51af1771706698ce1fb109e963fb
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and
+    15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: in_phase
+  date: '2026-11-21'
+  revision: 283b4d0d (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/pybullet_in_phase_nav_obstacle.json
+  sha256: 4aef346f22e73e756903e40183b8d03f260996fcf479ac1d26bf7efb2d346773
+  source_hashes: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json
+  source_hashes_sha256: 0d465c01f4f52c68e8b3e0fc35a6d06e610e51af1771706698ce1fb109e963fb
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and
+    15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: mecanum_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: 283b4d0d (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/pybullet_mecanum_nav_obstacle.json
+  sha256: 21a438f2e16e5a065ec9d1d891d1696cb41394ea65107a11796c8c66abdfca35
+  source_hashes: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json
+  source_hashes_sha256: 0d465c01f4f52c68e8b3e0fc35a6d06e610e51af1771706698ce1fb109e963fb
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and
+    15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October
+- robot_id: four_wheel_steer_car
+  environment_id: nav_obstacle
+  simulator: pybullet
+  task_type: navigation_mission
+  steering_mode: pivot
+  date: '2026-11-21'
+  revision: 283b4d0d (installed build of 0f918f21; later commits only docs)
+  report: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/pybullet_pivot_nav_obstacle.json
+  sha256: 56573460cd2cf0eb98f70faa0488d87984e18ad4e8aa482b8d5e2ebe0ff5aa3a
+  source_hashes: docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json
+  source_hashes_sha256: 0d465c01f4f52c68e8b3e0fc35a6d06e610e51af1771706698ce1fb109e963fb
+  report_kind: mission_screen
+  scope: 'sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and
+    15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.'
+  limitations:
+  - One seed per cell; repeats of cells measured since October

@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-11-21T15:16:18.996136+00:00",
+  "generated_utc": "2026-11-21T15:50:56.170220+00:00",
   "task": "R9.3",
   "status": "partial",
   "qualification": "Exact hashed screens only; artifact validation does not rerun a mission",
@@ -5296,18 +5296,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-15",
-      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
+      "last_tested": "2026-11-21",
+      "revision": "283b4d0d (installed build of 0f918f21; later commits only docs)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/gazebo_ackermann_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/gazebo_ackermann_nav_obstacle.json",
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json"
       ],
       "limitations": [
-        "Goal seeds 2 and 3; seed 1 is the October 13 round",
+        "One seed per cell; repeats of cells measured since October",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
+      "notes": "sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and 15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.",
       "steering_mode": "ackermann"
     },
     {
@@ -5317,18 +5317,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-16",
-      "revision": "ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)",
+      "last_tested": "2026-11-21",
+      "revision": "283b4d0d (installed build of 0f918f21; later commits only docs)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/gazebo_crab_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json"
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/gazebo_crab_nav_obstacle.json",
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json"
       ],
       "limitations": [
-        "Goal seeds 1-3, one world",
+        "One seed per cell; repeats of cells measured since October",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal seeds 1-3; truth-measured final poses and the measured drive configuration.",
+      "notes": "sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and 15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.",
       "steering_mode": "crab"
     },
     {
@@ -5338,18 +5338,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-16",
-      "revision": "ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)",
+      "last_tested": "2026-11-21",
+      "revision": "283b4d0d (installed build of 0f918f21; later commits only docs)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/gazebo_in_phase_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json"
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/gazebo_in_phase_nav_obstacle.json",
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json"
       ],
       "limitations": [
-        "Goal seeds 1-3, one world",
+        "One seed per cell; repeats of cells measured since October",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal seeds 1-3; truth-measured final poses and the measured drive configuration.",
+      "notes": "sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and 15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.",
       "steering_mode": "in_phase"
     },
     {
@@ -5359,18 +5359,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-15",
-      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
+      "last_tested": "2026-11-21",
+      "revision": "283b4d0d (installed build of 0f918f21; later commits only docs)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/gazebo_mecanum_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/gazebo_mecanum_nav_obstacle.json",
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json"
       ],
       "limitations": [
-        "Goal seeds 2 and 3; seed 1 is the October 13 round",
+        "One seed per cell; repeats of cells measured since October",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
+      "notes": "sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and 15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.",
       "steering_mode": ""
     },
     {
@@ -5380,18 +5380,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-15",
-      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
+      "last_tested": "2026-11-21",
+      "revision": "283b4d0d (installed build of 0f918f21; later commits only docs)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/gazebo_pivot_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/gazebo_pivot_nav_obstacle.json",
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json"
       ],
       "limitations": [
-        "Goal seeds 2 and 3; seed 1 is the October 13 round",
+        "One seed per cell; repeats of cells measured since October",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
+      "notes": "sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and 15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.",
       "steering_mode": "pivot"
     },
     {
@@ -5401,18 +5401,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-15",
-      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
+      "last_tested": "2026-11-21",
+      "revision": "283b4d0d (installed build of 0f918f21; later commits only docs)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/isaac_ackermann_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/isaac_ackermann_nav_obstacle.json",
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json"
       ],
       "limitations": [
-        "Goal seeds 2 and 3; seed 1 is the October 13 round",
+        "One seed per cell; repeats of cells measured since October",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
+      "notes": "sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and 15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.",
       "steering_mode": "ackermann"
     },
     {
@@ -5422,18 +5422,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-16",
-      "revision": "ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)",
+      "last_tested": "2026-11-21",
+      "revision": "283b4d0d (installed build of 0f918f21; later commits only docs)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/isaac_crab_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json"
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/isaac_crab_nav_obstacle.json",
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json"
       ],
       "limitations": [
-        "Goal seeds 1-3, one world",
+        "One seed per cell; repeats of cells measured since October",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal seeds 1-3; truth-measured final poses and the measured drive configuration.",
+      "notes": "sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and 15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.",
       "steering_mode": "crab"
     },
     {
@@ -5443,18 +5443,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-16",
-      "revision": "ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)",
+      "last_tested": "2026-11-21",
+      "revision": "283b4d0d (installed build of 0f918f21; later commits only docs)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/isaac_in_phase_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json"
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/isaac_in_phase_nav_obstacle.json",
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json"
       ],
       "limitations": [
-        "Goal seeds 1-3, one world",
+        "One seed per cell; repeats of cells measured since October",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal seeds 1-3; truth-measured final poses and the measured drive configuration.",
+      "notes": "sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and 15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.",
       "steering_mode": "in_phase"
     },
     {
@@ -5464,18 +5464,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-15",
-      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
+      "last_tested": "2026-11-21",
+      "revision": "283b4d0d (installed build of 0f918f21; later commits only docs)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/isaac_mecanum_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/isaac_mecanum_nav_obstacle.json",
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json"
       ],
       "limitations": [
-        "Goal seeds 2 and 3; seed 1 is the October 13 round",
+        "One seed per cell; repeats of cells measured since October",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
+      "notes": "sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and 15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.",
       "steering_mode": ""
     },
     {
@@ -5485,18 +5485,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-15",
-      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
+      "last_tested": "2026-11-21",
+      "revision": "283b4d0d (installed build of 0f918f21; later commits only docs)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/isaac_pivot_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/isaac_pivot_nav_obstacle.json",
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json"
       ],
       "limitations": [
-        "Goal seeds 2 and 3; seed 1 is the October 13 round",
+        "One seed per cell; repeats of cells measured since October",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
+      "notes": "sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and 15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.",
       "steering_mode": "pivot"
     },
     {
@@ -5506,18 +5506,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-15",
-      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
+      "last_tested": "2026-11-21",
+      "revision": "283b4d0d (installed build of 0f918f21; later commits only docs)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/mujoco_ackermann_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/mujoco_ackermann_nav_obstacle.json",
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json"
       ],
       "limitations": [
-        "Goal seeds 2 and 3; seed 1 is the October 13 round",
+        "One seed per cell; repeats of cells measured since October",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
+      "notes": "sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and 15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.",
       "steering_mode": "ackermann"
     },
     {
@@ -5527,18 +5527,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-16",
-      "revision": "ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)",
+      "last_tested": "2026-11-21",
+      "revision": "283b4d0d (installed build of 0f918f21; later commits only docs)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/mujoco_crab_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json"
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/mujoco_crab_nav_obstacle.json",
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json"
       ],
       "limitations": [
-        "Goal seeds 1-3, one world",
+        "One seed per cell; repeats of cells measured since October",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal seeds 1-3; truth-measured final poses and the measured drive configuration.",
+      "notes": "sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and 15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.",
       "steering_mode": "crab"
     },
     {
@@ -5548,18 +5548,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-16",
-      "revision": "ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)",
+      "last_tested": "2026-11-21",
+      "revision": "283b4d0d (installed build of 0f918f21; later commits only docs)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/mujoco_in_phase_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json"
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/mujoco_in_phase_nav_obstacle.json",
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json"
       ],
       "limitations": [
-        "Goal seeds 1-3, one world",
+        "One seed per cell; repeats of cells measured since October",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal seeds 1-3; truth-measured final poses and the measured drive configuration.",
+      "notes": "sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and 15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.",
       "steering_mode": "in_phase"
     },
     {
@@ -5569,18 +5569,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-15",
-      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
+      "last_tested": "2026-11-21",
+      "revision": "283b4d0d (installed build of 0f918f21; later commits only docs)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/mujoco_mecanum_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/mujoco_mecanum_nav_obstacle.json",
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json"
       ],
       "limitations": [
-        "Goal seeds 2 and 3; seed 1 is the October 13 round",
+        "One seed per cell; repeats of cells measured since October",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
+      "notes": "sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and 15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.",
       "steering_mode": ""
     },
     {
@@ -5590,18 +5590,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-15",
-      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
+      "last_tested": "2026-11-21",
+      "revision": "283b4d0d (installed build of 0f918f21; later commits only docs)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/mujoco_pivot_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/mujoco_pivot_nav_obstacle.json",
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json"
       ],
       "limitations": [
-        "Goal seeds 2 and 3; seed 1 is the October 13 round",
+        "One seed per cell; repeats of cells measured since October",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
+      "notes": "sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and 15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.",
       "steering_mode": "pivot"
     },
     {
@@ -5611,18 +5611,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-15",
-      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
+      "last_tested": "2026-11-21",
+      "revision": "283b4d0d (installed build of 0f918f21; later commits only docs)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/pybullet_ackermann_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/pybullet_ackermann_nav_obstacle.json",
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json"
       ],
       "limitations": [
-        "Goal seeds 2 and 3; seed 1 is the October 13 round",
+        "One seed per cell; repeats of cells measured since October",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
+      "notes": "sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and 15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.",
       "steering_mode": "ackermann"
     },
     {
@@ -5632,18 +5632,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-16",
-      "revision": "ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)",
+      "last_tested": "2026-11-21",
+      "revision": "283b4d0d (installed build of 0f918f21; later commits only docs)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/pybullet_crab_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json"
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/pybullet_crab_nav_obstacle.json",
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json"
       ],
       "limitations": [
-        "Goal seeds 1-3, one world",
+        "One seed per cell; repeats of cells measured since October",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal seeds 1-3; truth-measured final poses and the measured drive configuration.",
+      "notes": "sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and 15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.",
       "steering_mode": "crab"
     },
     {
@@ -5653,18 +5653,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-16",
-      "revision": "ae2989c (rounds 40-41, 01:23-02:11, omni_parallel samples vx from -0.3 to 0.3)",
+      "last_tested": "2026-11-21",
+      "revision": "283b4d0d (installed build of 0f918f21; later commits only docs)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/pybullet_in_phase_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/crab-backward-sampling/source-hashes-ae2989c.json"
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/pybullet_in_phase_nav_obstacle.json",
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json"
       ],
       "limitations": [
-        "Goal seeds 1-3, one world",
+        "One seed per cell; repeats of cells measured since October",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission for the 4WS crab and in_phase patterns with DWB sampling backward translation, goal seeds 1-3; truth-measured final poses and the measured drive configuration.",
+      "notes": "sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and 15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.",
       "steering_mode": "in_phase"
     },
     {
@@ -5674,18 +5674,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-15",
-      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
+      "last_tested": "2026-11-21",
+      "revision": "283b4d0d (installed build of 0f918f21; later commits only docs)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/pybullet_mecanum_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/pybullet_mecanum_nav_obstacle.json",
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json"
       ],
       "limitations": [
-        "Goal seeds 2 and 3; seed 1 is the October 13 round",
+        "One seed per cell; repeats of cells measured since October",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
+      "notes": "sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and 15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.",
       "steering_mode": ""
     },
     {
@@ -5695,18 +5695,18 @@
       "task_type": "navigation_mission",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-10-15",
-      "revision": "371f724 (round 35, from 21:53; later commits changed no drive, Nav2 or mission file)",
+      "last_tested": "2026-11-21",
+      "revision": "283b4d0d (installed build of 0f918f21; later commits only docs)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/wheeled-repeats-2026-10-15/pybullet_pivot_seed3_nav_obstacle.json",
-        "docs/status/evidence/wheeled-repeats-2026-10-15/source-hashes-371f724.json"
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/pybullet_pivot_nav_obstacle.json",
+        "docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/source-hashes-283b4d0d.json"
       ],
       "limitations": [
-        "Goal seeds 2 and 3; seed 1 is the October 13 round",
+        "One seed per cell; repeats of cells measured since October",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "nav_obstacle mission per 4WS steering pattern and for the mecanum car, goal seeds 2 and 3; truth-measured final poses and the measured drive configuration. Details in docs/status/evidence/wheeled-repeats-2026-10-15.",
+      "notes": "sim_nav_mission: detour goal, cancel, resume and near-obstacle goal, truth-measured within 0.30 m and 15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.",
       "steering_mode": "pivot"
     },
     {

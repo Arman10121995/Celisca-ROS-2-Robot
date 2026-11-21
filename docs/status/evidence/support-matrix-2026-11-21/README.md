@@ -12,3 +12,5 @@ remain untested.
 
 The same day `docs/status/evidence/v3-car-matrix-2026-11-21/mission-batch.yaml` added 12 car
 records (index 745); the matrix was regenerated, still 342 cells (these cells were measured before).
+`docs/status/evidence/v3-4ws-matrix-2026-11-21/mission-batch.yaml` then added 20 4WS/mecanum records
+(index 765); still 342 cells.

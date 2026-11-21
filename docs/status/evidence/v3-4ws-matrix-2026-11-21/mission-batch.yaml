@@ -1,0 +1,31 @@
+# V3 4WS/mecanum repeat (2026-11-21): four_wheel_steer_car in four patterns and mecanum_car on four backends,
+# nav_obstacle, indexed by scripts/r9_3_index_missions.py.
+date: '2026-11-21'
+scope: "Exact hashed named simulation screens; unlisted cells remain untested."
+source_files:
+  - scripts/sim_nav_mission.py
+  - scripts/sim_nav_mission.sh
+  - scripts/gazebo_isolation.sh
+  - src/robot_lab_bringup/launch/simulated_robot.launch.py
+  - src/robot_lab_bringup/config/sim_maps.yaml
+  - src/robot_lab_navigation/launch/navigation.launch.py
+  - src/robot_lab_navigation/config/controller_server.yaml
+  - src/robot_lab_navigation/config/planner_server.yaml
+  - src/robot_lab_robots/config/robots.yaml
+  - src/robot_lab_mujoco/python/robot_lab_mujoco/mujoco_spawner.py
+  - src/robot_lab_pybullet/python/robot_lab_pybullet/pybullet_spawner.py
+  - src/robot_lab_isaac/python/robot_lab_isaac/isaac_runtime.py
+  - src/robot_lab_isaac/python/robot_lab_isaac/isaac_spawner.py
+  - src/robot_lab_utils/robot_lab_utils/drive_kinematics.py
+groups:
+  - reports:
+      - docs/status/evidence/v3-4ws-matrix-2026-11-21/runs/*_nav_obstacle.json
+    four_wheel: true
+    date: '2026-11-21'
+    revision: "283b4d0d (installed build of 0f918f21; later commits only docs)"
+    hash_revision: 283b4d0d
+    scope: >-
+      sim_nav_mission: detour goal, cancel, resume and near-obstacle goal,
+      truth-measured within 0.30 m and 15 deg, --robot-radius 0.35 (the 10-13 4WS protocol); seed 1. Details in docs/status/evidence/v3-4ws-matrix-2026-11-21.
+    limitations:
+      - One seed per cell; repeats of cells measured since October
