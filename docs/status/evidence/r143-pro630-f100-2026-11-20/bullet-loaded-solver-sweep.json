@@ -1,0 +1,122 @@
+{
+  "scope": "Fixed-base PyBullet closure fixture using the first measured precision-dock closure pose. No mobile mission.",
+  "payload_kg": 0.04,
+  "step_s": 0.004166666666666667,
+  "driver_effort_cap_nm": 0.8,
+  "pad_force_floor_n": 0.1,
+  "follower_error_limit_rad": 0.01,
+  "start_pose_source": "bullet-gui-precision-dock-grasp.json",
+  "ssd_raw_log_relative": "bullet-loaded-sweep.log",
+  "ssd_raw_log_sha256": "51dd549df0ae63e812ffc5d78aea0b1fd0f2d86445fa47afed8c36be289b2b8b",
+  "ssd_script_relative": "bullet-loaded-sweep.py",
+  "cases": [
+    {
+      "gear_erp": 0.1,
+      "solver_iterations": 50,
+      "noncontact_inner_iterations": 1,
+      "observations": 19,
+      "bilateral_observations": 19,
+      "bilateral_observations_within_follower_error": 0,
+      "max_follower_error_rad": 0.16300111660593852,
+      "peak_normal_force_n": {
+        "left": 2.8188646953390046,
+        "right": 2.4951038301968564
+      },
+      "final_payload_center_m": [
+        1.3557316078878061,
+        -0.006208110514806636,
+        0.544791389183987
+      ]
+    },
+    {
+      "gear_erp": 0.1,
+      "solver_iterations": 50,
+      "noncontact_inner_iterations": 4,
+      "observations": 19,
+      "bilateral_observations": 0,
+      "bilateral_observations_within_follower_error": 0,
+      "max_follower_error_rad": 0.0001327132465134273,
+      "peak_normal_force_n": {
+        "left": 0.0,
+        "right": 0.0
+      },
+      "final_payload_center_m": [
+        1.3557028034754903,
+        -0.012576587847345857,
+        0.5463661284630489
+      ]
+    },
+    {
+      "gear_erp": 0.35,
+      "solver_iterations": 50,
+      "noncontact_inner_iterations": 4,
+      "observations": 19,
+      "bilateral_observations": 0,
+      "bilateral_observations_within_follower_error": 0,
+      "max_follower_error_rad": 9.516731891423547e-08,
+      "peak_normal_force_n": {
+        "left": 0.0,
+        "right": 0.0
+      },
+      "final_payload_center_m": [
+        1.3538633469504477,
+        -0.009243468428716147,
+        0.5449884250034778
+      ]
+    },
+    {
+      "gear_erp": 0.6,
+      "solver_iterations": 50,
+      "noncontact_inner_iterations": 4,
+      "observations": 19,
+      "bilateral_observations": 19,
+      "bilateral_observations_within_follower_error": 0,
+      "max_follower_error_rad": 0.06542033855752605,
+      "peak_normal_force_n": {
+        "left": 4.706788991779333,
+        "right": 4.5744174207782144
+      },
+      "final_payload_center_m": [
+        1.3554310994466605,
+        -0.006371010418666365,
+        0.5447451693756404
+      ]
+    },
+    {
+      "gear_erp": 0.35,
+      "solver_iterations": 100,
+      "noncontact_inner_iterations": 4,
+      "observations": 19,
+      "bilateral_observations": 19,
+      "bilateral_observations_within_follower_error": 0,
+      "max_follower_error_rad": 0.05103762223780478,
+      "peak_normal_force_n": {
+        "left": 6.1599031470569585,
+        "right": 5.018882531006433
+      },
+      "final_payload_center_m": [
+        1.355103410137557,
+        -0.006139514487425768,
+        0.5448903418897469
+      ]
+    },
+    {
+      "gear_erp": 0.35,
+      "solver_iterations": 50,
+      "noncontact_inner_iterations": 16,
+      "observations": 19,
+      "bilateral_observations": 0,
+      "bilateral_observations_within_follower_error": 0,
+      "max_follower_error_rad": 0.00014182408285057235,
+      "peak_normal_force_n": {
+        "left": 0.0,
+        "right": 0.0
+      },
+      "final_payload_center_m": [
+        1.4017499757249405,
+        -0.007640520437421793,
+        0.5198765167288782
+      ]
+    }
+  ]
+}

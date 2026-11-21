@@ -178,6 +178,12 @@ from after the retract before it rebuilds the arm plan. The updated retry
 still needs a physical mission.
 [PyBullet measured trial](bullet-gui-precision-dock-grasp.json).
 
+A fixed-base PyBullet replay at the measured closure pose swept six gear
+ERP and solver iteration combinations. Three cases reported bilateral pad
+load. The smallest maximum follower error among those cases was 0.051 rad,
+above the 0.01 rad limit. The measured production settings remain in place.
+[Fixed-base solver sweep](bullet-loaded-solver-sweep.json).
+
 An Isaac Sim 6.0.1 loaded trial reached the block in the same world. Its
 right pad peaked at 5.89 N and its left pad recorded zero in all 46 closure
 samples. The largest sampled follower error was 0.0082 rad. The run
