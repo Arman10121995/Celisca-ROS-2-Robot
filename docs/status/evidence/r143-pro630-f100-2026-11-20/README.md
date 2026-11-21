@@ -122,8 +122,12 @@ as a separate check.
 PyBullet now has a matching normal-force reader for named URDF pads. It
 transforms Bullet's link-level contact points into the source collision
 geometry so a contact on the same link outside the pad stays excluded.
-This implementation has a focused regression test. The F100 profile
-remains MuJoCo-only while the loaded Bullet linkage awaits measurement.
+This implementation has a focused regression test. In a fixed-base Bullet
+fixture, the source linkage reached 1.0 rad open, 0.0 rad closed, and the
+54 mm aperture reference within 0.000017 rad of each target. Maximum
+follower skew during travel was 0.000399 rad. PyBullet Display is exposed
+with experimental workflows enabled. Loaded Bullet missions remain open.
+[Fixed-base travel samples](bullet-f100-fixed-base-travel.jsonl).
 
 ### Complete GUI fetch
 

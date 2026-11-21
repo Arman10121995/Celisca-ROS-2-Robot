@@ -140,8 +140,13 @@ tables and floor have the same geometry. One full GUI run lifted the block
 result covers the short-block map in MuJoCo Display with straight transport.
 [Completed fetch evidence](../status/evidence/r143-pro630-f100-2026-11-20/README.md#complete-gui-fetch).
 
+**PyBullet → Display** is also selectable when experimental workflows are
+enabled. A fixed-base Bullet fixture measured Open, Close and the calibrated
+54 mm opening with all five passive followers. Loaded Bullet fetch remains
+unqualified. [Bullet travel samples](../status/evidence/r143-pro630-f100-2026-11-20/bullet-f100-fixed-base-travel.jsonl).
+
 To try Nav2 transport, keep the same experimental profile and map and
-select **Navigation**. **Run fetch** becomes available when the Nav2 transit
+select **MuJoCo → Navigation**. **Run fetch** becomes available when the Nav2 transit
 action and articulation feedback are ready. The loaded leg waits for both
 costmaps to confirm the payload footprint. The Nav2 fetch mission remains
 unqualified.

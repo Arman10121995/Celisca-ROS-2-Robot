@@ -1736,8 +1736,12 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
   workflows enabled. The GUI waits for the transit action and requests it
   explicitly. The loaded leg still requires both costmaps to acknowledge the
   payload footprint. The end-to-end Nav mission remains unmeasured.
-- **Remaining implementation:** qualify a loaded Nav2 mission and port the
-  physical linkage to additional backends.
+- **PyBullet Display candidate:** the fixed-base bench measured unloaded
+  shaft travel and all five passive followers. Named pad normal forces are
+  available from the Bullet backend. Enable experimental workflows to
+  select it. Loaded Bullet missions remain open.
+- **Remaining implementation:** qualify loaded Nav2 and PyBullet missions,
+  and port the physical linkage to the remaining backends.
 - **How to do it:** preserve the vendor flange and follower transforms, one
   shaft effort budget and the real measured linkage. Build on the existing
   source planner and R5.9 grasp/release contract.

@@ -218,14 +218,17 @@ def provision(store, download=False, variant='fortress'):
             default_approach=.06, default_lift=.05,
             arm_seeds=[[-.188, 1.125, -.641, 1.086, -1.571, 2.151]],
             mobile=dict(reach=.47, place_reach=.445, base_radius=.37, place_inset=.06, dock_position_tolerance=.01))
-        profile.update(supported_simulators=['mujoco'], experimental_modes_by_simulator={'mujoco':['display','nav']},
+        profile.update(supported_simulators=['mujoco', 'pybullet'],
+            supported_modes_by_simulator={'mujoco': ['display'], 'pybullet': []},
+            experimental_modes_by_simulator={'mujoco': ['display', 'nav'], 'pybullet': ['display']},
             experimental_asset_options={'pick_place': pick_place},
             features=[*profile['features'],'gripper'], notes=profile['notes']+
             ' Vendor F100 mount and one bounded jaw actuator with five linked followers. '
             'Compound finger collisions and a nominal grasp frame are derived from the source CAD. '
             'The joint effort, rate and damping are declared simulation estimates. The experimental short-block fetch '
             'completed pickup, straight carry, supported release and clearance in one MuJoCo Display GUI run. '
-            'Loaded Nav2 transit remains unqualified.')
+            'PyBullet Display is opt-in. Unloaded jaw travel was measured in a fixed-base Bullet fixture. '
+            'Loaded PyBullet and Nav2 transit remain unqualified.')
         changes.extend(('vendor F100 mount and linkage', 'bounded F100 servo and MuJoCo transmission inertia',
                         'source CAD finger hulls, separate pad contacts, and nominal grasp frame'))
     receipt=dict(repository=source['repository'],source_id=source['id'],revision=source['revision'],license='BSD-3-Clause',
