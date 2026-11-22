@@ -49,6 +49,38 @@ def test_loaded_direct_drive_slows_and_ramps_without_delaying_stop(pick_place, m
     assert node._twist.call_args.args == (-.15, .30)
 
 
+def test_live_alignment_checks_distinct_samples_and_refuses_remaining_offset(pick_place, monkeypatch):
+    import numpy as np
+
+    node = object.__new__(pick_place.PickPlace)
+    node.mobile = {'align_live_grasp': True}
+    node.spec = SimpleNamespace(pad_geoms=('left', 'right'))
+    node._table_under = Mock(return_value=SimpleNamespace(name='pickup'))
+    node._plan_grasp_alignment = Mock()
+    node._tcp_truth = Mock(return_value=np.array([1.004, 0., .57]))
+    node.truth = {'payload': [1., 0., .54]}
+    node.base_twist = (0., 0.)
+    task = dict(object='payload', table='pickup', pose_source='truth')
+    tcp = np.array([1.0, 0., .57])
+    clock = [0.]
+    monkeypatch.setattr(pick_place, '_now', lambda: clock[0])
+
+    def check(stage, timestamp):
+        clock[0] = node.link_poses_at = node.truth_at = node.base_at = timestamp
+        return node._check_grasp_alignment(task, stage, tcp)
+
+    for t in (1.0, 1.0, 1.1):
+        assert check('down_to_grasp', t) is None
+    result = check('down_to_grasp', 1.2)
+    assert result['align'] and result['live_grasp_error_m'] == pytest.approx(.004)
+    node._plan_grasp_alignment.assert_called_once()
+    assert node._plan_grasp_alignment.call_args.args[3] == pytest.approx([-.004, 0.])
+    assert check('align_grasp', 1.3) is None
+    assert check('align_grasp', 1.4) is None
+    assert check('align_grasp', 1.5)['passed'] is False
+    node._plan_grasp_alignment.assert_called_once()
+
+
 def test_pick_place_uses_authored_collision_pose_from_measured_model_pose(pick_place, tmp_path):
     node = object.__new__(pick_place.PickPlace)
     node.object_shapes, node.object_collision_frames = {}, {}

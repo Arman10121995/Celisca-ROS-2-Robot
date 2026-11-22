@@ -1827,6 +1827,9 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
   and the executor stopped with the payload footprint retained. The direct
   carry controller now accepts optional speed and acceleration limits. The
   Bullet trace separates load outside the pad bounds from measured pad load.
+  The first low-speed candidate stopped above the block at 30.25 mm of
+  projected drift, outside the existing 30 mm gross limit. The loaded
+  ramp still needs a physical carry run.
   [Carry receipt](docs/status/evidence/r143-pro630-f100-2026-11-20/bullet-gui-loaded-carry-pad-loss.json).
   [GUI evidence](docs/status/evidence/r143-pro630-f100-2026-11-20/bullet-gui-gripper-confirmed.json).
 - **Isaac Display:** the F100 imported with one powered shaft and five
@@ -1845,6 +1848,10 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
   zero force in all 44 closure samples. The other jaw colliders registered
   zero on both sides. The real-time factor impact remains pending.
   [Closure receipt](docs/status/evidence/r143-pro630-f100-2026-11-20/isaac-gui-reanchor-one-sided-closure.json).
+  An opt-in open-jaw alignment now uses fresh tool and payload positions
+  after descent. The measured replay requested about 5.2 mm of lateral
+  correction and produced a collision-checked alignment, close and lift
+  path. The live task still requires fresh alignment and bilateral load.
   [GUI evidence](docs/status/evidence/r143-pro630-f100-2026-11-20/isaac-gui-gripper-confirmed.json).
 - **Remaining implementation:** qualify loaded PyBullet and Isaac missions,
   including measured pad contacts and custody. The physical linkage on

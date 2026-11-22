@@ -126,6 +126,9 @@ PREGRASP_REPLAN_M = .002  # Account for millimetre-scale drift during approach.
 PREGRASP_RECHECK_M = .004
 PREGRASP_MAX_DRIFT_M = .03
 PREGRASP_MAX_REPLANS = 2
+GRASP_ALIGN_TOLERANCE_M = .002
+GRASP_ALIGN_MAX_M = .007
+GRASP_ALIGN_TIMEOUT_S = 4.
 CARRY_DRIFT = 0.03      # m of object motion relative to the base while carrying
 NAV2_MIN_LEG = 0.5      # m: shorter transit legs stay straight (DWB circles on tiny paths)
 NAV2_HANDOFF = 0.15      # m: localization this close to the run-up point hands over to docking
@@ -861,6 +864,92 @@ class PickPlace(Node):
         scene.set_joints({n: measured[n] for n in self.spec.arm_joints + self.spec.finger_joints})
         return scene.tcp()
 
+    def _check_grasp_alignment(self, task, stage, tcp):
+        """Measure tool/payload alignment with the jaws open and the base held."""
+        if (not self.mobile or self.mobile.get('align_live_grasp') is not True
+                or not self.spec.pad_geoms or task['pose_source'] != 'truth'
+                or stage not in ('down_to_grasp', 'align_grasp')):
+            return dict(passed=True)
+        now = _now()
+        actual_tcp = self._tcp_truth()
+        name = task['object']
+        support = self._table_under(name)
+        if support is None or support.name != task['table']:
+            return dict(passed=False, reason='payload has left the pickup support')
+        samples = task.setdefault('grasp_alignment_samples', [])
+        if (actual_tcp is not None and now-min(self.link_poses_at, self.truth_at, self.base_at) <= PAD_SETTLE_MAX_GAP
+                and max(self.base_twist) < STILL_SPEED):
+            stamp = min(self.link_poses_at, self.truth_at)
+            if not samples or stamp != samples[-1][0]:
+                offset = np.asarray(self.truth[name][:2]) - actual_tcp[:2]
+                if np.isfinite(offset).all():
+                    samples.append((stamp, offset))
+                    del samples[:-PAD_SETTLE_SAMPLES]
+        else:
+            samples.clear()
+        elapsed = now-task.setdefault('grasp_alignment_started', now)
+        if (len(samples) < PAD_SETTLE_SAMPLES or samples[-1][0] - samples[0][0] > 2 * PAD_SETTLE_MAX_GAP
+                or max(np.linalg.norm(offset-samples[-1][1]) for _, offset in samples) > .001):
+            return (dict(passed=False, reason='no stable measured tool alignment')
+                    if elapsed > GRASP_ALIGN_TIMEOUT_S else None)
+        shift = np.median([offset for _, offset in samples], axis=0)
+        error = float(np.linalg.norm(shift))
+        checks = dict(live_grasp_error_m=round(error, 5), measured_tool_xyz_m=actual_tcp.tolist(),
+                      correction_xy_m=shift.tolist())
+        if error <= GRASP_ALIGN_TOLERANCE_M:
+            return dict(passed=True, **checks)
+        if error > GRASP_ALIGN_MAX_M or stage == 'align_grasp':
+            return dict(passed=False, reason='measured TCP is outside the grasp alignment tolerance', **checks)
+        from robot_lab_mujoco.arm_pick_place import PlanningError
+
+        try:
+            self._plan_grasp_alignment(task, tcp, actual_tcp, shift)
+        except (PlanningError, ValueError) as exc:
+            return dict(passed=False, reason=str(exc), **checks)
+        task.pop('grasp_alignment_started')
+        samples.clear()
+        return dict(passed=True, align=True, **checks)
+
+    def _plan_grasp_alignment(self, task, tcp, actual_tcp, shift):
+        """Replace closure and lift with a collision-checked aligned continuation."""
+        from robot_lab_mujoco.arm_pick_place import ArmScene, Box, plan_pick_lift, synchronised
+
+        measured = self.measured()
+        current = {name: measured[name] for name in self.spec.arm_joints}
+        opened = dict.fromkeys(self.spec.finger_joints, self.spec.finger_open)
+        obj = task['obj']
+        pose = self.truth[task['object']]
+        obj = Box(obj.name, pose[:3], pose[3:], obj.size, obj.shape)
+        # The live TCP can be displaced from the frozen kinematic scene by
+        # base compliance. Shift only the private planning root so collision
+        # checks near the payload use the observed lateral tool position.
+        bias = np.asarray(actual_tcp[:2]) - np.asarray(tcp[:2])
+        if not np.isfinite(bias).all() or np.linalg.norm(bias) > GRASP_ALIGN_MAX_M:
+            raise ValueError('Measured tool bias exceeds the grasp alignment limit')
+        bx, by, bz, yaw = task['scene'].base
+        held = {c['name']: c['measured'] for c in self.state.get('channels', [])
+                if c.get('mode') == 'position' and c.get('measured') is not None
+                and c['name'] not in current and c['name'] not in opened}
+        scene = ArmScene(self.robot_mjcf, self.spec, self.arm_obstacles, obj,
+                         base=(bx + bias[0], by + bias[1], bz, yaw), held=held)
+        scene.set_joints(dict(current, **opened))
+        position, rotation = scene.tcp()
+        target = position + [*shift, 0.]
+        goal = scene.solve(target, rotation, current, opened, position_tolerance=.0005)
+        if goal is None or max(abs(goal[name]-current[name]) for name in current) > .20:
+            raise ValueError('No IK for the measured grasp alignment')
+        align = scene.joint_segment(current, goal, opened, allow_fingers=True)
+        lift, closed = plan_pick_lift(scene, goal, obj, target, rotation, task['plan']['grasp_width_m'], task['lift'])
+        continuation = []
+        for stage, waypoints, fingers in (('align_grasp', align, opened), ('close', [goal], closed), ('lift', lift, closed)):
+            targets = synchronised(waypoints, current, RATE, PERIOD)
+            continuation.append(dict(name=stage, targets=targets,
+                                     fingers={n: fingers[n] for n in self.finger_masters}, finger_goal=fingers))
+            current = waypoints[-1]
+        task['stages'][task['index'] + 1:] = continuation
+        task['scene'] = scene
+        task['held_in_tool'] = tuple(np.array(value, dtype=float) for value in scene.attached)
+
     def _tick(self):
         try:
             self._advance()
@@ -989,6 +1078,10 @@ class PickPlace(Node):
         if (self.mobile and stage['name'] == 'above_object' and phase['name'] == 'pick'
                 and self.mobile.get('reanchor_before_descent') is True and task['pose_source'] == 'truth'):
             check = self._check_pregrasp_anchor(task, tcp)
+            if check is None:
+                return
+        elif check.get('passed') and phase['name'] == 'pick' and stage['name'] in ('down_to_grasp', 'align_grasp'):
+            check = self._check_grasp_alignment(task, stage['name'], tcp)
             if check is None:
                 return
         task['log'].append(dict(stage=stage['name'], seconds=round(_now() - task['stage_started'], 2),

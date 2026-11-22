@@ -412,7 +412,8 @@ class ArmScene:
         return found
 
     # --- inverse kinematics ------------------------------------------------------
-    def solve(self, position, rotation, seed: Dict[str, float], fingers: Dict[str, float], iterations=300):
+    def solve(self, position, rotation, seed: Dict[str, float], fingers: Dict[str, float], iterations=300,
+              *, position_tolerance=POSITION_TOLERANCE_M):
         """Arm joints placing the TCP at position/rotation (damped least squares), or None."""
         m, d, names = self.model, self.data, self.spec.arm_joints
         q = np.array([seed[n] for n in names], dtype=float)
@@ -426,7 +427,7 @@ class ArmScene:
             tcp_position, tcp_rotation = self.tcp()
             error_position = np.asarray(position) - tcp_position
             error_rotation = Rotation.from_matrix(target_rotation @ tcp_rotation.T).as_rotvec()
-            if np.linalg.norm(error_position) < POSITION_TOLERANCE_M and np.linalg.norm(error_rotation) < ANGLE_TOLERANCE_RAD:
+            if np.linalg.norm(error_position) < position_tolerance and np.linalg.norm(error_rotation) < ANGLE_TOLERANCE_RAD:
                 return dict(zip(names, map(float, q)))
             self.mj.mj_jacSite(m, d, jacp, jacr, self.site)
             jacobian = np.vstack([jacp[:, dofs], jacr[:, dofs]])
@@ -637,16 +638,24 @@ def _plan_pick_at(scene, current, obj, tool_yaw, width, approach, lift, seeds):
             grasp_point = centre + [0, 0, raise_m]
     stages.append(dict(stage='down_to_grasp', waypoints=down, fingers=open_f))
     grasp = down[-1]
-    closed = spec.closing_targets(width)
+    up, closed = plan_pick_lift(scene, grasp, obj, grasp_point, rotation, width, lift)
     stages.append(dict(stage='close', waypoints=[dict(grasp)], fingers=closed))
-    holding_f = spec.closing_targets(width, squeeze=0.) if spec.aperture else open_f
+    stages.append(dict(stage='lift', waypoints=up, fingers=closed))
+    return dict(stages=stages, grasp_width_m=width, tool_yaw=tool_yaw, grasp_point=grasp_point.tolist())
+
+
+def plan_pick_lift(scene, grasp, obj, grasp_point, rotation, width, lift):
+    """Build the loaded vertical path and leave the source scene attached."""
+    spec = scene.spec
+    closed = spec.closing_targets(width)
+    holding_f = (spec.closing_targets(width, squeeze=0.) if spec.aperture
+                 else dict.fromkeys(spec.finger_joints, spec.finger_open))
     scene.set_joints(dict(grasp, **holding_f))
     scene.attach()
     pickup_supports = tuple(box.name for box in scene.obstacles.values() if obj.rests_on(box, height_tolerance=.01))
     up = scene.straight_line(grasp, grasp_point + [0, 0, lift], rotation, holding_f, allow_fingers=True,
                              allow_supports=pickup_supports)
-    stages.append(dict(stage='lift', waypoints=up, fingers=closed))
-    return dict(stages=stages, grasp_width_m=width, tool_yaw=tool_yaw, grasp_point=grasp_point.tolist())
+    return up, closed
 
 
 def plan_place(scene: ArmScene, current: Dict[str, float], obj: Box, support: Box, *, place_xy=None,
