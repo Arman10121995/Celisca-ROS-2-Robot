@@ -1547,6 +1547,7 @@ tasks:
         title: Make CI bootstrap and doctor trustworthy
     title: Trustworthy development baseline
   R10:
+    validation_usv_20261122: 'Claude V7: lab_usv surge/coast/yaw/current/operator-loss probe on Gazebo, MuJoCo, PyBullet, Isaac, 2 runs each, 8/8 within 2 percent of 2026-11-20. docs/status/evidence/v7-marine-usv-2026-11-22/README.md'
     acceptance_ref: ROADMAP.md R10
     active_scope: 'October 27: catalog restoration and native fleet/aerial/marine/multi-leg workflow implementation
       delivered; preserve real scoped results and complete remaining accuracy, infrastructure, terrain
