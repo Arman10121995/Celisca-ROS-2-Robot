@@ -229,3 +229,4 @@ choices.
 | 11-22 | V8 | Left "identified dynamics" for real-robot data | Identifying MOLAR dynamics from the simulator would only fit the model to itself |
 | 11-22 | V4 | Ran the legged repeat at the mission's default goal radius and added a B2 run at the radius its October goals imply (0.6) instead of guessing radii for every robot | The October receipt does not record the radius; only B2's goal clearances are outside the default window |
 | 11-22 | V4 | Recorded the G1 drift and forward-arc goal-B failures as regressions with candidate causes instead of tuning during validation | Validation measures current code; the deliberate changes since October are listed for a later bisect |
+| 11-22 | V4 | Ran the G1 leg-odometry screen to localize the G1 regression, then left the bisect open | The screen shows the gait/odometry changed; bisecting 71 commits needs per-step rebuilds of a shared copy install while the other agent works, and no worktree is allowed |

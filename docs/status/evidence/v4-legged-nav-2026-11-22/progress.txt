@@ -27,3 +27,6 @@ mujoco unitree_b2 r0.6 seed1 exit=1
 mujoco unitree_b2 r0.6 seed2 exit=0
 mujoco unitree_b2 r0.6 seed3 exit=0
 ALLDONE-B2
+mujoco unitree_g1_29dof leg_odometry exit=0
+isaac unitree_g1_29dof leg_odometry exit=0
+ALLDONE-LEGODOM

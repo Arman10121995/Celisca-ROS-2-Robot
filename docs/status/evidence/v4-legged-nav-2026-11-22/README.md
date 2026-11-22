@@ -62,6 +62,32 @@ The G1's larger localization error appears on both MuJoCo and Isaac. Its
 leg odometry and localization configs are unchanged, so one of the
 physics changes is a candidate. That is not yet tested.
 
+## G1 leg-odometry screen (diagnosis)
+
+`scripts/leg_odometry_check.sh <sim> unitree_g1_29dof nav_obstacle` runs
+the October screen in slam mode. The G1 walks forward, arcs both ways,
+slows and stops, and the screen reports where the leg odometry and the
+EKF end relative to truth:
+
+| Backend | Walked | Leg odometry drift | EKF drift | October (MuJoCo, v2) |
+|---|---|---|---|---|
+| MuJoCo | 6.61 m | 0.574 m (8.7 %) | 0.694 m (10.5 %) | 9.94 m walked, 0.302 m (3.0 %), EKF 2.5 % |
+| Isaac | 7.19 m | 4.648 m (65 %) | 4.305 m (60 %) | not screened |
+
+So the G1's odometry itself is worse, and on MuJoCo the same commanded
+screen covers a third less ground. The gait has changed.
+- The G1 has no articulation contract.
+- Its PD actuators were already integrated implicitly on October 12.
+- So the October 16 articulation change is not the cause.
+
+A bisect needs older revisions of the spawner and robot configs:
+- 71 commits since October's last G1 round (80b52f0) touch these files;
+- the Python install is a copy, so each step needs a rebuild;
+- the other agent is active, and there is no separate worktree on this
+  host.
+
+It is left open.
+
 ## Limits
 
 - One map, three seeds per cell.

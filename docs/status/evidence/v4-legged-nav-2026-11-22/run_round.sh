@@ -26,3 +26,11 @@ if [ "$1" = b2_r06 ]; then
     echo "mujoco unitree_b2 r0.6 seed$seed exit=$?" >> "$DIR/progress.txt"; sleep 3
   done; echo ALLDONE-B2 >> "$DIR/progress.txt"
 fi
+# G1 leg-odometry screen (added 11-22, diagnosing the G1 drift): the October slam-mode screen, nav_obstacle.
+if [ "$1" = g1_legodom ]; then
+  for sim in mujoco isaac; do
+    out="$RUN/${sim}_unitree_g1_29dof_leg_odometry.json"
+    [ -s "$out" ] || flock -w 1800 "$LOCK" timeout --signal=INT 1200 "$HERE/scripts/leg_odometry_check.sh" $sim unitree_g1_29dof nav_obstacle "$out" > "$out.run.log" 2>&1
+    echo "$sim unitree_g1_29dof leg_odometry exit=$?" >> "$DIR/progress.txt"; sleep 3
+  done; echo ALLDONE-LEGODOM >> "$DIR/progress.txt"
+fi
