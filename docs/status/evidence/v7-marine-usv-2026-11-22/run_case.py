@@ -2,7 +2,7 @@
 """V7: one lab_usv backend case as on 2026-11-20 (r107-usv-backends): launch the marine
 simulator, run rov_probe.py into CASE_OUTPUT, then stop the launch's own process group.
 
-usage: run_case.py <simulator> <case-dir>
+usage: [MARINE_MODEL=lab_rov] run_case.py <simulator> <case-dir>
 """
 import os, signal, subprocess, sys, time
 from pathlib import Path
@@ -16,7 +16,7 @@ def main():
     case.mkdir(parents=True, exist_ok=True)
     env = dict(os.environ, IGN_PARTITION='v7_usv_'+str(os.getpid()), GZ_PARTITION='v7_usv_'+str(os.getpid()))
     with (case/'launch.log').open('w') as log:
-        launch = subprocess.Popen(['ros2', 'launch', 'robot_lab_bringup', 'marine_simulator.launch.py', 'robot_model:=lab_usv',
+        launch = subprocess.Popen(['ros2', 'launch', 'robot_lab_bringup', 'marine_simulator.launch.py', 'robot_model:='+os.environ.get('MARINE_MODEL', 'lab_usv'),
                                    'map_name:=marine_tank', 'simulator:='+simulator, 'gui:=false', 'rviz:=false'],
                                   stdout=log, stderr=subprocess.STDOUT, env=env, start_new_session=True)
     try:

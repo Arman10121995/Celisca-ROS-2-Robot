@@ -1,0 +1,157 @@
+{
+  "backend": null,
+  "phases": {
+    "hold": {
+      "duration_s": 12.0,
+      "start": [
+        0.0012416155726628691,
+        -3.2402201372488244e-06,
+        -1.0012397814453047
+      ],
+      "end": [
+        0.0228207618642072,
+        -3.875118538279753e-06,
+        -1.0002798781979456
+      ],
+      "displacement_m": 0.021579146300884273,
+      "depth_change_m": 0.0009599032473590619,
+      "max_depth_dev_m": 0.0011651258526323982,
+      "max_xy_drift_m": 0.021579146300884273,
+      "yaw_change_rad": 0.00017603164430742232,
+      "speed_m_s": 0.0017982621917403561,
+      "enabled_end": true,
+      "reason_end": "Depth/heading hold armed; planar commands neutral"
+    },
+    "surge": {
+      "duration_s": 9.92,
+      "start": [
+        0.0228207618642072,
+        -3.875118538279753e-06,
+        -1.0002798781979456
+      ],
+      "end": [
+        1.0958171704392337,
+        -2.83525332581312e-06,
+        -1.0001687494270584
+      ],
+      "displacement_m": 1.0729964085755304,
+      "depth_change_m": 0.00011112877088725881,
+      "max_depth_dev_m": 0.00011112877088725881,
+      "max_xy_drift_m": 1.0729964085755304,
+      "yaw_change_rad": 4.998658600749489e-08,
+      "speed_m_s": 0.10816496054188814,
+      "enabled_end": true,
+      "reason_end": "Depth/heading hold armed; planar commands neutral"
+    },
+    "settle": {
+      "duration_s": 5.960000000000001,
+      "start": [
+        1.1027295555509615,
+        -2.835110175735384e-06,
+        -1.0001687040462117
+      ],
+      "end": [
+        1.1811535484120268,
+        -3.3111519654907864e-06,
+        -1.0002686352920658
+      ],
+      "displacement_m": 0.07842399286251009,
+      "depth_change_m": -9.993124585405688e-05,
+      "max_depth_dev_m": 9.993124585405688e-05,
+      "max_xy_drift_m": 0.07842399286251009,
+      "yaw_change_rad": -5.571532880451452e-07,
+      "speed_m_s": 0.013158388064179544,
+      "enabled_end": true,
+      "reason_end": "Depth/heading hold armed; planar commands neutral"
+    },
+    "yaw": {
+      "duration_s": 5.940000000000001,
+      "start": [
+        1.1811535484120268,
+        -3.3111519654907864e-06,
+        -1.0002686352920658
+      ],
+      "end": [
+        1.1813005013392703,
+        -2.4391463575399863e-05,
+        -1.000276843180812
+      ],
+      "displacement_m": 0.00014845720717774315,
+      "depth_change_m": -8.207888746225578e-06,
+      "max_depth_dev_m": 8.207888746225578e-06,
+      "max_xy_drift_m": 0.00014845720717774315,
+      "yaw_change_rad": 1.4833800127025223,
+      "speed_m_s": 2.4992795821168876e-05,
+      "enabled_end": true,
+      "reason_end": "Depth/heading hold armed; planar commands neutral"
+    },
+    "hold2": {
+      "duration_s": 9.939999999999998,
+      "start": [
+        1.181300923702405,
+        -2.3125222604058362e-05,
+        -1.0002768481995312
+      ],
+      "end": [
+        1.181176888559826,
+        1.157680370642943e-05,
+        -1.0002770514638821
+      ],
+      "displacement_m": 0.00012879808703807283,
+      "depth_change_m": -2.0326435090645134e-07,
+      "max_depth_dev_m": 2.0326435090645134e-07,
+      "max_xy_drift_m": 0.00012879808703807283,
+      "yaw_change_rad": 0.3031084239074193,
+      "speed_m_s": 1.2957554027975137e-05,
+      "enabled_end": true,
+      "reason_end": "Depth/heading hold armed; planar commands neutral"
+    },
+    "current": {
+      "duration_s": 14.96,
+      "start": [
+        1.181176882861975,
+        1.1575745412236974e-05,
+        -1.00027705148783
+      ],
+      "end": [
+        1.1795786942677966,
+        -0.010037808084111349,
+        -1.0002770987779732
+      ],
+      "displacement_m": 0.010175673055658398,
+      "depth_change_m": -4.729014313475943e-08,
+      "max_depth_dev_m": 9.05472442231936e-05,
+      "max_xy_drift_m": 0.010175739522969508,
+      "yaw_change_rad": 0.00483467964708395,
+      "speed_m_s": 0.0006801920491750265,
+      "enabled_end": true,
+      "reason_end": "Depth/heading hold armed; planar commands neutral"
+    },
+    "loss": {
+      "duration_s": 5.939999999999998,
+      "start": [
+        1.1795786942677966,
+        -0.010037808084111349,
+        -1.0002770987779732
+      ],
+      "end": [
+        1.1805769590613364,
+        0.00884735663965402,
+        -1.2803580409450275
+      ],
+      "displacement_m": 0.018911530325221516,
+      "depth_change_m": -0.28008094216705426,
+      "max_depth_dev_m": 0.28008094216705426,
+      "max_xy_drift_m": 0.018911530325221516,
+      "yaw_change_rad": -0.001697851075334711,
+      "speed_m_s": 0.003183759314010357,
+      "enabled_end": false,
+      "reason_end": "Observer/clock/operator loss; thruster forces zero"
+    }
+  },
+  "samples": 1261,
+  "loss": {
+    "disarmed": true,
+    "reason": "Observer/clock/operator loss; thruster forces zero"
+  }
+}

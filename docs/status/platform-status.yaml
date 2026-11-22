@@ -1547,6 +1547,7 @@ tasks:
         title: Make CI bootstrap and doctor trustworthy
     title: Trustworthy development baseline
   R10:
+    validation_rov_20261122: 'Claude V7: lab_rov probe on Gazebo, MuJoCo, PyBullet, Isaac, 2 runs each, 8/8 reproduce 2026-11-18/19 (surge within 1.5, yaw within 2 percent), all disarm. docs/status/evidence/v7-marine-rov-2026-11-22/README.md'
     validation_auv_20261122: 'Claude V7: Tethys AUV probe on Gazebo, MuJoCo, PyBullet, Isaac, 2 runs each, 8/8 completed and disarmed; cruise/turn within 0.04 m and 0.01 rad of 2026-11-19; Gazebo turn depth now held (was +0.24 m). docs/status/evidence/v7-marine-auv-2026-11-22/README.md'
     validation_ward_20261122: 'Claude V7: fleet_ward door crossing, docking and modeled charge (11-18 run 3 protocol) 3/3 passed, closest approach 1.00-1.01 m, no contacts. docs/status/evidence/v7-fleet-ward-2026-11-22/README.md'
     validation_swarm_20261122: 'Claude V7: swarm aggregation (11-18 run 6 protocol) 3/3 gathered within 22-30 s; together 33/43/71 percent (11-18 56 percent), 1/3 ended all within 1.5 m. docs/status/evidence/v7-swarm-aggregation-2026-11-22/README.md'

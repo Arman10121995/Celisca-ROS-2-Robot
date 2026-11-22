@@ -359,6 +359,8 @@ November 20: **R7 `dijkstra_planner` is its own planner (implemented, experiment
 
 November 20: **R6.5 the repo `small_house` world projects to an occupancy grid.** Its AWS RoboMaker furniture now resolves from the installed world dataset, and its grid agrees with the dataset copy of the same house (occupied-cell IoU 0.846, free-space IoU 0.949). [Receipt](evidence/r65-small-house-occupancy-2026-11-20/README.md).
 
+November 22: **V7 lab ROV on four backends, repeated: 8 of 8.** Surge within 1.5 % and yaw within 2 % of November 18–19 on Gazebo, MuJoCo, PyBullet and Isaac; the current feedforward holds within a few centimetres and every run disarms. The ported plants now hold 0.5–1.1 cm while arming (5.7–8.2 cm before; cause not identified). [Round](evidence/v7-marine-rov-2026-11-22/README.md)
+
 November 22: **V7 Tethys AUV on four backends, repeated: 8 of 8 completed.** Cruise and the cruising turn reproduce November 19 within 0.04 m and 0.01 rad on Gazebo, MuJoCo, PyBullet and Isaac, and every run disarms. Gazebo now holds depth through the turn (rose ≤ 1.5 cm; 0.24 m on November 19); one Gazebo climb ended at the tank wall on the attitude/depth envelope. [Round](evidence/v7-marine-auv-2026-11-22/README.md)
 
 November 22: **V7 fleet_ward repeated: 3 of 3 passed.** Bumperbot and Labbot cross the one door in opposite directions (alpha waits for the reservation each time, closest approach 1.00–1.01 m, no contacts), then dock at the far chargers in 19–20 s with modeled charge rising at 120 W, as on November 18. [Round](evidence/v7-fleet-ward-2026-11-22/README.md)

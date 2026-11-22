@@ -1,0 +1,157 @@
+{
+  "backend": null,
+  "phases": {
+    "hold": {
+      "duration_s": 11.959999999999999,
+      "start": [
+        0.0014959468146950926,
+        -3.3624264402497705e-06,
+        -1.0015590613531924
+      ],
+      "end": [
+        0.023416095983737898,
+        -3.611896810946825e-06,
+        -1.0004338328895097
+      ],
+      "displacement_m": 0.021920149170462398,
+      "depth_change_m": 0.0011252284636826815,
+      "max_depth_dev_m": 0.0013429078216613544,
+      "max_xy_drift_m": 0.021920151084619737,
+      "yaw_change_rad": 0.00017807665353862984,
+      "speed_m_s": 0.0018327883921791304,
+      "enabled_end": true,
+      "reason_end": "Depth/heading hold armed; planar commands neutral"
+    },
+    "surge": {
+      "duration_s": 9.92,
+      "start": [
+        0.023416102850187984,
+        -3.6520404421926004e-06,
+        -1.0004328315510544
+      ],
+      "end": [
+        1.0962425813414167,
+        -1.9949119605244772e-06,
+        -1.0003224518571194
+      ],
+      "displacement_m": 1.0728264784925086,
+      "depth_change_m": 0.00011037969393501434,
+      "max_depth_dev_m": 0.00011037969393501434,
+      "max_xy_drift_m": 1.0728264784925086,
+      "yaw_change_rad": 1.9381216525344127e-08,
+      "speed_m_s": 0.10814783049319643,
+      "enabled_end": true,
+      "reason_end": "Depth/heading hold armed; planar commands neutral"
+    },
+    "settle": {
+      "duration_s": 5.98,
+      "start": [
+        1.1031549664496665,
+        -1.994777052562593e-06,
+        -1.0003224061525928
+      ],
+      "end": [
+        1.179766342528684,
+        -2.9425094558856724e-06,
+        -1.0004224604695855
+      ],
+      "displacement_m": 0.0766113760848795,
+      "depth_change_m": -0.00010005431699267042,
+      "max_depth_dev_m": 0.00010005431699267042,
+      "max_xy_drift_m": 0.0766113760848795,
+      "yaw_change_rad": -2.172885736558906e-07,
+      "speed_m_s": 0.012811266903826002,
+      "enabled_end": true,
+      "reason_end": "Depth/heading hold armed; planar commands neutral"
+    },
+    "yaw": {
+      "duration_s": 5.919999999999998,
+      "start": [
+        1.179766342528684,
+        -2.9425094558856724e-06,
+        -1.0004224604695855
+      ],
+      "end": [
+        1.1799113616709933,
+        -2.4161131804913603e-05,
+        -1.0004305339121713
+      ],
+      "displacement_m": 0.0001465632340340906,
+      "depth_change_m": -8.073442585798674e-06,
+      "max_depth_dev_m": 8.073442585798674e-06,
+      "max_xy_drift_m": 0.0001465632340340906,
+      "yaw_change_rad": 1.4776908446815433,
+      "speed_m_s": 2.4757303046299098e-05,
+      "enabled_end": true,
+      "reason_end": "Depth/heading hold armed; planar commands neutral"
+    },
+    "hold2": {
+      "duration_s": 9.939999999999998,
+      "start": [
+        1.1799120020701255,
+        -2.226336385550463e-05,
+        -1.0004305414851502
+      ],
+      "end": [
+        1.179787705672992,
+        1.2398295034436669e-05,
+        -1.000430744380717
+      ],
+      "displacement_m": 0.00012903885049618,
+      "depth_change_m": -2.0289556679209397e-07,
+      "max_depth_dev_m": 2.0289556679209397e-07,
+      "max_xy_drift_m": 0.00012903885049618,
+      "yaw_change_rad": 0.29914299663362787,
+      "speed_m_s": 1.2981775703841048e-05,
+      "enabled_end": true,
+      "reason_end": "Depth/heading hold armed; planar commands neutral"
+    },
+    "current": {
+      "duration_s": 14.920000000000002,
+      "start": [
+        1.1797876990528906,
+        1.2398049660035868e-05,
+        -1.000430744408866
+      ],
+      "end": [
+        1.1782228309290426,
+        -0.009740247254733892,
+        -1.000430803211713
+      ],
+      "displacement_m": 0.009877393516426922,
+      "depth_change_m": -5.8802847036076855e-08,
+      "max_depth_dev_m": 9.002910276634246e-05,
+      "max_xy_drift_m": 0.009877393516426922,
+      "yaw_change_rad": 0.004743561106541616,
+      "speed_m_s": 0.0006620236941304907,
+      "enabled_end": true,
+      "reason_end": "Depth/heading hold armed; planar commands neutral"
+    },
+    "loss": {
+      "duration_s": 5.980000000000004,
+      "start": [
+        1.1782229042220196,
+        -0.009740230453762409,
+        -1.0004307987529046
+      ],
+      "end": [
+        1.1792021742794196,
+        0.007639185966998659,
+        -1.2802095526185697
+      ],
+      "displacement_m": 0.017406983798795808,
+      "depth_change_m": -0.2797787538656651,
+      "max_depth_dev_m": 0.2797787538656651,
+      "max_xy_drift_m": 0.017406983798795808,
+      "yaw_change_rad": -0.001687121101473732,
+      "speed_m_s": 0.002910866855985919,
+      "enabled_end": false,
+      "reason_end": "Observer/clock/operator loss; thruster forces zero"
+    }
+  },
+  "samples": 1267,
+  "loss": {
+    "disarmed": true,
+    "reason": "Observer/clock/operator loss; thruster forces zero"
+  }
+}
