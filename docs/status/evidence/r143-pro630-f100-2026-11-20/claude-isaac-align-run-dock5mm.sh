@@ -9,7 +9,7 @@ Y="$RUN/runtime/external_assets/installed/robots.yaml"; L=$(grep -n "        min
 source "$HERE/scripts/ssd_env.sh" >/dev/null; source /opt/ros/humble/setup.bash; source "$HERE/install/setup.bash"
 export ROBOT_LAB_RUNTIME_ROOT="$RUN/runtime" ROS_DOMAIN_ID=117 IGN_PARTITION=claude_f100 GZ_PARTITION=claude_f100
 cd "$HERE"
-flock -w 1800 /workspace/molar/robot_lab_runtime/physics-qualification.lock timeout --signal=INT 1500 xvfb-run -a python3 scripts/qualify_urdf_arm_gui.py \
+flock -w 1800 /workspace/molar/robot_lab_runtime/physics-qualification.lock timeout --signal=INT 2700 xvfb-run -a python3 scripts/qualify_urdf_arm_gui.py \
   --robot asset_elephant_myagv_pro_pro630_f100 --simulator isaac --map mobile_fetch_lab_f100 --experimental \
-  --pick-place fetch_block drop_table --output "$RUN/gui" > "$RUN/gui-run.log" 2>&1
+  --pick-place fetch_block drop_table --task-timeout 2000 --output "$RUN/gui" > "$RUN/gui-run.log" 2>&1
 echo "$RUN exit=$?" >> "$BASE/claude-runs.txt"

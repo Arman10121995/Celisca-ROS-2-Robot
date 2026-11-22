@@ -117,6 +117,7 @@ TURN_SPEED = 0.3        # rad/s
 POSITION_TOLERANCE = 0.03   # m
 YAW_TOLERANCE = 0.03        # rad
 DRIVE_TIMEOUT = 240.0   # s per drive phase (Nav2 transit legs took 65-75 s under load)
+DRIVE_WALL_BACKSTOP = 4.0  # x DRIVE_TIMEOUT of wall time, when the phase is timed on the simulation clock
 TRACE_PERIOD = 0.5      # s between stability samples in the receipt
 STILL_SPEED = 0.01      # m/s and rad/s: the base counts as stopped
 HOLONOMIC_DOCK_CAPTURE_M = .12
@@ -133,6 +134,9 @@ GRASP_ALIGN_TIMEOUT_S = 4.
 GRASP_ALIGN_MIN_IMPROVEMENT_M = .001
 GRASP_ALIGN_MAX_CORRECTIONS = 2
 GRASP_ALIGN_OPEN_TOLERANCE_RAD = .005
+OPEN_JAW_APPROACH_STAGES = ('above_object', 'down_to_grasp', 'align_grasp')
+GRASP_ALIGN_RISE_M = .025          # raised alignment: the F100 has no IK 60 mm above the grasp at full reach
+GRASP_ALIGN_STOPPED_TOLERANCE = .02  # rad: a stopped arm this near its align target counts as settled
 COMPOUND_MOTION_TOLERANCE_M = .005
 CARRY_DRIFT = 0.03      # m of object motion relative to the base while carrying
 NAV2_MIN_LEG = 0.5      # m: shorter transit legs stay straight (DWB circles on tiny paths)
@@ -480,6 +484,13 @@ class PickPlace(Node):
     def _sim_seconds(self):
         return self.get_clock().now().nanoseconds * 1e-9
 
+    def _drive_clock(self):
+        """Simulated seconds, or 0 without a running clock (drive phases then use wall time)."""
+        try:
+            return self._sim_seconds()
+        except AttributeError:
+            return 0.
+
     def _on_state(self, message):
         self.state = json.loads(message.data)
         self.state_at = _now()
@@ -680,6 +691,7 @@ class PickPlace(Node):
     def _start_phase(self, task):
         phase = task['phases'][task['phase_index']]
         phase['started'] = _now()
+        phase['started_sim'] = self._drive_clock()
         task['stage'] = phase['name']
         self.message = 'Phase %s' % phase['name']
         if phase['kind'] == 'arm':
@@ -970,7 +982,8 @@ class PickPlace(Node):
         task.update(grasp_alignment_corrections=corrections + 1, grasp_alignment_previous_error=error)
         task.pop('grasp_alignment_started')
         samples.clear()
-        return dict(passed=True, align=True, alignment_correction=corrections + 1, **checks)
+        return dict(passed=True, align=True, alignment_correction=corrections + 1,
+                    alignment_path=task.get('grasp_alignment_path'), **checks)
 
     def _plan_grasp_alignment(self, task, tcp, actual_tcp, shift):
         """Replace closure and lift with a collision-checked aligned continuation."""
@@ -1000,7 +1013,33 @@ class PickPlace(Node):
         goal = scene.solve(target, rotation, current, opened, position_tolerance=.0005)
         if goal is None or max(abs(goal[name]-current[name]) for name in current) > .20:
             raise ValueError('No IK for the measured grasp alignment')
-        align = scene.joint_segment(current, goal, opened, allow_fingers=True)
+        # The lateral correction happens clear of the payload: a sideways move
+        # at grasp height let an unsensed jaw part push the block 2.5 mm and
+        # hold joint 4 1.3 mrad off its target (Isaac F100, 2026-11-22).
+        # Rise by the approach height, shift, then descend straight down.
+        # Without IK for the raised path (the F100 reach is tight), the
+        # lateral move at grasp height is kept and recorded.
+        from robot_lab_mujoco.arm_pick_place import PlanningError
+        clear = np.array([0., 0., min(float(task['approach']), GRASP_ALIGN_RISE_M)])
+        try:
+            legs = []
+            for leg, start, end, allow in (('rise', current, position + clear, True),
+                                           ('shift', None, target + clear, False),
+                                           ('descend', None, target, True)):
+                try:
+                    legs.append(scene.straight_line(start or legs[-1][-1], end, rotation, opened,
+                                                    **({'allow_fingers': True} if allow else {})))
+                except PlanningError as exc:
+                    raise PlanningError('raised alignment %s: %s' % (leg, exc)) from exc
+            scene.set_joints(dict(legs[-1][-1], **opened))
+            if np.linalg.norm(scene.tcp()[0] - target) > .001:
+                raise PlanningError('raised alignment does not end on the aligned target')
+            goal, align = legs[-1][-1], [waypoint for path in legs for waypoint in path]
+            task['grasp_alignment_path'] = 'raised'
+        except PlanningError as exc:
+            task['grasp_alignment_path'] = 'lateral (%s)' % exc
+            scene.set_joints(dict(current, **opened))
+            align = scene.joint_segment(current, goal, opened, allow_fingers=True)
         lift, closed = plan_pick_lift(scene, goal, obj, target, rotation, task['plan']['grasp_width_m'], task['lift'])
         continuation = []
         for stage, waypoints, fingers in (('align_grasp', align, opened), ('close', [goal], closed), ('lift', lift, closed)):
@@ -1197,7 +1236,13 @@ class PickPlace(Node):
         """Follow the phase's waypoints on /cmd_vel; never while the articulation is active."""
         if self.base_pose is None or _now() - self.base_at > STATE_STALE:
             return self._finish('failed', 'base pose stale')
-        if _now() - phase['started'] > DRIVE_TIMEOUT:
+        # Simulated seconds when the clock runs: Isaac drove the loaded F100 at
+        # 4 % of real time, so a wall-clock budget timed out a carry that was
+        # progressing (2026-11-22). A wall backstop catches a stalled clock.
+        sim_elapsed = self._drive_clock() - phase.get('started_sim', 0.)
+        if (phase.get('started_sim', 0.) > 0. and sim_elapsed > DRIVE_TIMEOUT) or \
+                _now() - phase['started'] > DRIVE_WALL_BACKSTOP * DRIVE_TIMEOUT or \
+                (phase.get('started_sim', 0.) <= 0. and _now() - phase['started'] > DRIVE_TIMEOUT):
             return self._finish('failed', 'drive %s timed out' % phase['name'])
         interlock = task['interlock']
         interlock['drive_ticks'] += 1
@@ -1489,12 +1534,15 @@ class PickPlace(Node):
         final = stage['targets'][-1]
         if any(abs(measured[n] - final[n]) > SETTLE_TOLERANCE for n in final):
             stage.pop('pad_settle', None)
-            return False
+            if not (self.spec.pad_geoms and stage['name'] == 'align_grasp' and self._arm_stopped(final)):
+                return False
         if self.spec.pad_geoms and stage['name'] in ('close', 'lift', 'over_support', 'lower'):
             return self._pads_settled(stage)
-        if stage['name'] == 'align_grasp':
+        if stage['name'] == 'align_grasp' or (self.spec.pad_geoms and stage['name'] in OPEN_JAW_APPROACH_STAGES):
             # Six calibrated open joints can settle slightly short of the
-            # endpoint. Closure still uses its measured bilateral-load gate.
+            # endpoint, and their jitter keeps them from reading still (Isaac
+            # F100 down_to_grasp, 2026-11-22). Closure still uses its measured
+            # bilateral-load gate.
             return not self.state.get('coupling_inhibited') and all(
                 abs(measured[name] - goal) <= GRASP_ALIGN_OPEN_TOLERANCE_RAD
                 for name, goal in stage['finger_goal'].items())
@@ -1509,6 +1557,22 @@ class PickPlace(Node):
         spans = [max(v[k] for _t, v in history) - min(v[k] for _t, v in history) for k in range(len(self.spec.finger_joints))]
         stopped = len(history) >= 3 and max(spans) < FINGER_STILL_SPAN
         return on_target or (stopped and _now() - self.task['stage_started'] > 1.0)
+
+    def _arm_stopped(self, final):
+        """The arm has held still within GRASP_ALIGN_STOPPED_TOLERANCE of its align
+        target for FINGER_STILL_WINDOW. The lateral alignment can rest against the
+        payload (Isaac F100 joint 4 held 1.3-2.2 mrad past tolerance, 2026-11-22);
+        closure still has to pass the measured bilateral pad load."""
+        measured = self.measured()
+        if any(abs(measured[n] - final[n]) > GRASP_ALIGN_STOPPED_TOLERANCE for n in final):
+            self.task.pop('align_arm_history', None)
+            return False
+        history = self.task.setdefault('align_arm_history', [])
+        history.append((_now(), [measured[n] for n in final]))
+        while history and history[0][0] < _now() - FINGER_STILL_WINDOW:
+            history.pop(0)
+        spans = [max(v[k] for _t, v in history) - min(v[k] for _t, v in history) for k in range(len(final))]
+        return len(history) >= 3 and max(spans) < FINGER_STILL_SPAN and _now() - self.task['stage_started'] > 1.0
 
     def _pads_settled(self, stage):
         """Require measured bilateral load on a stable, named payload."""

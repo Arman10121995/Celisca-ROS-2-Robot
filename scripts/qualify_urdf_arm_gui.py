@@ -57,7 +57,7 @@ def pick_place(app, page, args, report, press, settle, until, pump, screenshot):
     if page.pick_state.get('phase') != 'executing':
         report['pick_place'] = dict(result=page.pick_state.get('last_result'), page_status=page.pick_status.get())
         return
-    deadline = time.monotonic() + 600
+    deadline = time.monotonic() + args.task_timeout
 
     def finished():
         return (page.pick_state.get('phase') == 'idle'
@@ -106,6 +106,8 @@ def main():
                       help='use Open and Close and measure the leader and its linked followers')
     task.add_argument('--flange-offset', type=float, nargs=3, metavar=('DX', 'DY', 'DZ'),
                       help='plan and execute this offset in metres from the measured source flange')
+    parser.add_argument('--task-timeout', type=float, default=600.,
+                        help='wall seconds for one pick/place or fetch task (a slow simulator needs more)')
     args = parser.parse_args()
     if args.pose_source != 'truth' and not args.pick_place:
         parser.error('--pose-source requires --pick-place')
