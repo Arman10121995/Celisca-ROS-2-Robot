@@ -24,6 +24,7 @@
   <depend>robot_lab_registry</depend>
   <depend>robot_lab_bringup</depend>
   <depend>robot_lab_utils</depend>
+  <exec_depend>robot_lab_models</exec_depend>
   
   <test_depend>ament_flake8</test_depend>
   <test_depend>ament_pep257</test_depend>

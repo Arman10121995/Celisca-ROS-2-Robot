@@ -32,7 +32,14 @@ class StaticScene:
             if path.is_file():
                 self.resource_stamps[str(path)] = (path.stat().st_mtime_ns, path.stat().st_size)
         remember(world)
-        resolve_upstream = uri_resolver(package_share=get_package_share_directory)
+        # The shared model set, as the PyBullet and Isaac world loaders search
+        # it: small_house's AWS RoboMaker furniture lives there (V5, 11-22).
+        model_dirs = []
+        try:
+            model_dirs.append(str(Path(get_package_share_directory('robot_lab_models'))/'models'))
+        except Exception:
+            pass
+        resolve_upstream = uri_resolver(model_dirs, package_share=get_package_share_directory)
         def resolve(uri, base_dir):
             path = resolve_upstream(uri, base_dir)
             if path:

@@ -196,7 +196,9 @@ def _world_arguments(environment: Dict[str, Any]) -> Dict[str, str]:
     # robot_lab_maps / maps / <key> / worlds / <key>.world
     if len(parts) >= 5 and parts[2] and parts[-1].endswith('.world'):
         key = parts[2]
-        args['map_name'] = key
+        # sim_maps.yaml lists a renamed environment under its canonical id
+        # (terrain_rough's world is the outdoor_terrain map).
+        args['map_name'] = ENVIRONMENT_ALIASES.get(key, key)
         args['world_package'] = WORLD_PACKAGE
         args['world_name'] = key
         args['world_path'] = f'maps/{key}/worlds/{key}.world'

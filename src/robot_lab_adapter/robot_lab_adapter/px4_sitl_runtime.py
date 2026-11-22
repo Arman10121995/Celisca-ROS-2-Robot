@@ -479,6 +479,10 @@ def main():
     from ament_index_python.packages import get_package_share_directory
     maps = Path(get_package_share_directory('robot_lab_maps'))
     resources.extend(str(p) for p in maps.glob('maps/*/models'))
+    # Shared furniture/residential models (small_house includes the AWS
+    # RoboMaker set): without them Gazebo never loads the world and PX4
+    # waits for it (V5, 11-22).
+    resources.append(str(Path(get_package_share_directory('robot_lab_models'))/'models'))
     environment['GZ_SIM_RESOURCE_PATH'] = os.pathsep.join(resources+[environment.get('GZ_SIM_RESOURCE_PATH', '')])
     if not mujoco_plant:                       # the MuJoCo plant starts no Gazebo
         environment['GZ_SIM_SYSTEM_PLUGIN_PATH'] = os.pathsep.join([environment['PX4_GZ_PLUGINS'], environment.get('GZ_SIM_SYSTEM_PLUGIN_PATH', '')])

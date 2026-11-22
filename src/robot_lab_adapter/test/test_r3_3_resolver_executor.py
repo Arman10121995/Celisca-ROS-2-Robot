@@ -205,6 +205,11 @@ class R33ResolverTests(unittest.TestCase):
         self.assertTrue(ok, manifest)
         self.assertEqual(manifest["environment_id"], "outdoor_terrain")
         self.assertTrue(any("terrain_rough" in a for a in manifest["aliases_applied"]))
+        # The launch looks the map up in sim_maps.yaml by its canonical id;
+        # the Gazebo world keeps its own name (PX4 outdoor_terrain, 11-22).
+        launch_args = manifest["launch"]["arguments"]
+        self.assertEqual(launch_args["map_name"], "outdoor_terrain")
+        self.assertEqual(launch_args["world_name"], "terrain_rough")
 
     # ------------------------------------------------------------------
     # Planner switching changes the active plugin

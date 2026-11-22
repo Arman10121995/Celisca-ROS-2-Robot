@@ -277,10 +277,18 @@ def measured_result(report,kind):
     if kind == 'flight_manual_screen':
         try:
             neutral, trace = report['neutral'], report['body_trace']
+            # Takeoff climbs 3 m, or the lower rise a clear selected-world
+            # check allowed under a ceiling (small_house, 2026-11-22).
+            rise = 3.
+            if 'takeoff_check' in report:
+                check = report['takeoff_check']
+                if check.get('state') != 'clear' or not finite(check.get('rise_m')) or not .8 <= check['rise_m'] <= 3.:
+                    return False
+                rise = check['rise_m']
             passed = (report.get('launch_returncode') == 0 and neutral['commands'] == 0
                 and neutral['armed'] is False and finite(neutral['displacement_m'])
                 and 0 <= neutral['displacement_m'] < .08
-                and finite(report['takeoff_height_m']) and abs(report['takeoff_height_m']-3.) < .35
+                and finite(report['takeoff_height_m']) and abs(report['takeoff_height_m']-rise) < .35
                 and finite(report['publisher_loss_drift_m']) and 0 <= report['publisher_loss_drift_m'] < .2
                 and finite(report['landing_height_error_m']) and 0 <= report['landing_height_error_m'] < .1
                 and finite(report['rotor_max_rad_s']) and report['rotor_max_rad_s'] > 10

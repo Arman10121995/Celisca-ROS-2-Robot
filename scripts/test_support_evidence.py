@@ -69,6 +69,19 @@ def test_manual_flight_screen_requires_actual_neutral_seven_direction_stop_and_b
     assert not module.measured_result(report, 'flight_manual_screen')
 
 
+def test_manual_flight_screen_takes_the_checked_ceiling_limited_rise():
+    root = Path(__file__).resolve().parents[1]
+    report = json.loads((root/'docs/status/evidence/extensions-finish-2026-10-08/controls/px4/report-measured.json').read_text())
+    report['takeoff_check'] = {'state': 'clear', 'rise_m': 2.04, 'ceiling_limited': True}
+    report['takeoff_height_m'] = 1.98
+    assert module.measured_result(report, 'flight_manual_screen')
+    report['takeoff_height_m'] = 3.
+    assert not module.measured_result(report, 'flight_manual_screen')   # climbed past the checked rise
+    report['takeoff_height_m'] = 1.98
+    report['takeoff_check']['state'] = 'failed'
+    assert not module.measured_result(report, 'flight_manual_screen')
+
+
 def test_short_valid_screen_is_partial_and_cannot_transfer_to_other_maps(tmp_path):
     catalog = framework(tmp_path,measured_nav())
     cell = module.SupportCell('four_wheel_steer_car','nav_empty','isaac','navigation',steering_mode='crab')
