@@ -1780,12 +1780,15 @@ def _build_simulation_actions(context):
             )
         )
 
-    if (_section_enabled(mode_config.get("joystick"))
-            and _as_bool(LaunchConfiguration('enable_joystick').perform(context), True)):
+    if _section_enabled(mode_config.get("joystick")):
+        # enable_joystick:=false drops only the joystick nodes: the same
+        # include carries twist_mux/twist_relay, Gazebo's only path from Nav2
+        # and the GUI to the base controller (the V11 Gazebo jobs never moved).
         actions.append(
             IncludeLaunchDescription(
                 PythonLaunchDescriptionSource(_launch_file(controller_share, "joystick_teleop.launch.py")),
-                launch_arguments={"use_sim_time": use_sim_time}.items(),
+                launch_arguments={"use_sim_time": use_sim_time,
+                                  "enable_joystick": LaunchConfiguration('enable_joystick')}.items(),
             )
         )
 
@@ -2045,7 +2048,7 @@ def generate_launch_description():
         DeclareLaunchArgument('marine_database', default_value='', description='SSD RTAB-Map database to copy into this marine session'),
         DeclareLaunchArgument('marine_localization', default_value='false', description='Localize in the selected saved marine database'),
         DeclareLaunchArgument('enable_joystick', default_value='true',
-            description='Start the mode joystick node. Disable for isolated automated experiments.'),
+            description='Start the mode joystick nodes (velocity mux and relay always run). Disable for isolated automated experiments.'),
         DeclareLaunchArgument('enable_native_locomotion', default_value='false',
             description='Explicitly enable an installed exact-model experimental native policy in MuJoCo Display; default passive display remains.'),
         DeclareLaunchArgument('enable_native_articulation', default_value='false',

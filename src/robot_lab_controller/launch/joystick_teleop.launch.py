@@ -6,6 +6,7 @@ from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
 from launch.actions import IncludeLaunchDescription
+from launch.conditions import IfCondition
 from launch_ros.actions import Node
 
 
@@ -16,10 +17,17 @@ def generate_launch_description():
     use_sim_time_arg = DeclareLaunchArgument(name="use_sim_time", default_value="true",
                                       description="Use simulated time"
     )
+    # The joystick nodes are optional; twist_mux and twist_relay are not.
+    # They carry Nav2 and GUI velocity to the base controller (Gazebo has no
+    # other route), so enable_joystick:=false drops only the joystick.
+    enable_joystick_arg = DeclareLaunchArgument(name="enable_joystick", default_value="true",
+                                                description="Start the joystick input nodes")
+    joystick = IfCondition(LaunchConfiguration("enable_joystick"))
 
     joy_teleop = Node(
         package="joy_teleop",
         executable="joy_teleop",
+        condition=joystick,
         parameters=[os.path.join(get_package_share_directory("robot_lab_controller"), "config", "joy_teleop.yaml"),
                     {"use_sim_time": LaunchConfiguration("use_sim_time")}],
     )
@@ -28,6 +36,7 @@ def generate_launch_description():
         package="joy",
         executable="joy_node",
         name="joystick",
+        condition=joystick,
         parameters=[os.path.join(get_package_share_directory("robot_lab_controller"), "config", "joy_config.yaml"),
                     {"use_sim_time": LaunchConfiguration("use_sim_time")}]
     )
@@ -57,6 +66,7 @@ def generate_launch_description():
     return LaunchDescription(
         [
             use_sim_time_arg,
+            enable_joystick_arg,
             joy_teleop,
             joy_node,
             twist_mux_launch,

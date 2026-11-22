@@ -166,7 +166,7 @@ Blocked: [R9.4](#r94--optional-physical-bumperbot-hil) physical hardware
 | V8 | R11 | MOLAR repeats and identified dynamics |
 | V9 | R6.2–R6.7 | World geometry, actors, disturbances, terrain contact on all backends |
 | V10 | R7.1–R7.8 | Fair five-method comparisons per category. **2026-11-22:** global (Dijkstra, A*, PRM, RRT, RRT*) and local (Nav2 RPP, DWB, MPPI; robot_lab RPP, Follow-the-Gap) planners on the R7.6/R7.7 Gazebo maze protocol at one revision, 145/150 goals; MPPI 15/15 only with its Arrival fallback ([round](docs/status/evidence/v10-planner-comparisons-2026-11-22/README.md)); the offline R7.2–R7.5/R7.8 benchmarks reproduce October's accuracy exactly ([round](docs/status/evidence/v10-offline-benchmarks-2026-11-22/README.md)); Gazebo control round 6 × 15/15 as in October, cross-track 3–14 % higher ([round](docs/status/evidence/v10-control-comparison-2026-11-22/README.md)); live replays and the other planners (NavFn, Hybrid-A*, Lattice, Voronoi) remain |
-| V11 | R8.1, R8.3 | Backend mission matrix; concurrent experiments with budgets. **2026-11-21:** support matrix regenerated, 342 measured cells ([matrix](docs/status/evidence/support-matrix-2026-11-21/README.md)) |
+| V11 | R8.1, R8.3 | Backend mission matrix; concurrent experiments with budgets. **2026-11-21:** support matrix regenerated, 342 measured cells ([matrix](docs/status/evidence/support-matrix-2026-11-21/README.md)); **2026-11-22:** the October concurrency protocol repeated (serial, paired, budget stop) and Gazebo + MuJoCo + PyBullet Nav2 jobs at once 6/6, after fixing `enable_joystick:=false` removing Gazebo's velocity mux ([round](docs/status/evidence/v11-concurrency-2026-11-22/README.md)); Isaac pairs, reset during a workload and simulator-applied seeds remain |
 | V12 | P2 | Physical joystick trial |
 | V13 | R9.1–R9.3 | Clean-host reproduction, seven comparison tutorials, release matrix |
 
@@ -1106,6 +1106,8 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
 - **Have:** MuJoCo and PyBullet Bumperbot Nav2 jobs pass serially and at
   the same time. Budgets stop only their own job.
   [Concurrency evidence](docs/status/evidence/r83-concurrency-2026-10-15/README.md).
+  Since 2026-11-22, Gazebo, MuJoCo and PyBullet jobs also pass three at once
+  ([V11 round](docs/status/evidence/v11-concurrency-2026-11-22/README.md)).
 - **Done when:** R2 contracts and the mobile experiment pass on each backend,
   and concurrent runs keep isolated clocks, seeds and results under budgets.
 

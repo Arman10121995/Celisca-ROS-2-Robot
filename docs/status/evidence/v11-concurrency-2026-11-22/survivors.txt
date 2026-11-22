@@ -1,0 +1,22 @@
+== A_serial
+2133364 /opt/ros/humble/lib/nav2_lifecycle_manager/lifecycle_manager --ros-args -r __node:=lifecycle_manager -r __ns:=/molar --params-file /workspace/molar/robot_lab_runtime/tmp/launch_params_oxvady2t
+== B1_simultaneous
+2133364 /opt/ros/humble/lib/nav2_lifecycle_manager/lifecycle_manager --ros-args -r __node:=lifecycle_manager -r __ns:=/molar --params-file /workspace/molar/robot_lab_runtime/tmp/launch_params_oxvady2t
+== B2_simultaneous
+  83978 /bin/bash -c source /opt/ros/humble/setup.bash && source install/setup.bash && source scripts/ssd_env.sh && PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 PYTHONPATH="$PWD/src/robot_lab_utils:$PWD/src/robot_lab_mujoco/python:$PYTHONPATH" nice -n 12 python3 -m pytest -q src/robot_lab_bringup/test/test_pick_place_nav2.py src/robot_lab_mujoco/test/test_arm_pick_place.py && nice -n 12 colcon build --symlink-install --packages-select robot_lab_mujoco robot_lab_bringup --executor sequential
+  84006 python3 -m pytest -q src/robot_lab_bringup/test/test_pick_place_nav2.py src/robot_lab_mujoco/test/test_arm_pick_place.py
+2133364 /opt/ros/humble/lib/nav2_lifecycle_manager/lifecycle_manager --ros-args -r __node:=lifecycle_manager -r __ns:=/molar --params-file /workspace/molar/robot_lab_runtime/tmp/launch_params_oxvady2t
+== C_overload
+2133364 /opt/ros/humble/lib/nav2_lifecycle_manager/lifecycle_manager --ros-args -r __node:=lifecycle_manager -r __ns:=/molar --params-file /workspace/molar/robot_lab_runtime/tmp/launch_params_oxvady2t
+== E1_triple
+2133364 /opt/ros/humble/lib/nav2_lifecycle_manager/lifecycle_manager --ros-args -r __node:=lifecycle_manager -r __ns:=/molar --params-file /workspace/molar/robot_lab_runtime/tmp/launch_params_oxvady2t
+== E2_triple
+2133364 /opt/ros/humble/lib/nav2_lifecycle_manager/lifecycle_manager --ros-args -r __node:=lifecycle_manager -r __ns:=/molar --params-file /workspace/molar/robot_lab_runtime/tmp/launch_params_oxvady2t
+== F_gazebo_alone
+2133364 /opt/ros/humble/lib/nav2_lifecycle_manager/lifecycle_manager --ros-args -r __node:=lifecycle_manager -r __ns:=/molar --params-file /workspace/molar/robot_lab_runtime/tmp/launch_params_oxvady2t
+== F2_gazebo_alone_fixed
+2133364 /opt/ros/humble/lib/nav2_lifecycle_manager/lifecycle_manager --ros-args -r __node:=lifecycle_manager -r __ns:=/molar --params-file /workspace/molar/robot_lab_runtime/tmp/launch_params_oxvady2t
+== E3_triple_fixed
+2133364 /opt/ros/humble/lib/nav2_lifecycle_manager/lifecycle_manager --ros-args -r __node:=lifecycle_manager -r __ns:=/molar --params-file /workspace/molar/robot_lab_runtime/tmp/launch_params_oxvady2t
+== E4_triple_fixed
+2133364 /opt/ros/humble/lib/nav2_lifecycle_manager/lifecycle_manager --ros-args -r __node:=lifecycle_manager -r __ns:=/molar --params-file /workspace/molar/robot_lab_runtime/tmp/launch_params_oxvady2t

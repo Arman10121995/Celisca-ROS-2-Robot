@@ -37,7 +37,7 @@ literal run command and selection. Optional task commands run in that job's
 ROS domain after actual readiness. They are executable arguments, without
 shell evaluation. Queue more selections, choose **Parallel** 1–4, then **Run
 queue**. Start at one on this Jetson; concurrent heavy plants can exceed memory
-or CPU budgets. GUI/RViz and hardware joystick are disabled in queued launches.
+or CPU budgets. GUI/RViz and hardware joystick are disabled in queued launches; the velocity mux and relay still run, so Nav2 drives Gazebo jobs too (fixed 2026-11-22, [V11](../status/evidence/v11-concurrency-2026-11-22/README.md)).
 
 The queue leases separate ROS domains and Gazebo partitions. Each job has its
 own output directory, logs, resource trace, actual ROS telemetry and optional

@@ -1,0 +1,13 @@
+A_serial exit=0
+B1_simultaneous exit=0
+B2_simultaneous exit=0
+C_overload exit=1
+E1_triple exit=1
+E2_triple exit=1
+ALLDONE
+F_gazebo_alone exit=1
+ALLDONE-F
+F2_gazebo_alone_fixed exit=0
+E3_triple_fixed exit=0
+E4_triple_fixed exit=0
+ALLDONE-FIX
