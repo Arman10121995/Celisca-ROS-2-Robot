@@ -8,6 +8,7 @@ runtime.
 """
 import os
 import sys
+import tempfile
 import unittest
 import xml.etree.ElementTree as ET
 
@@ -92,11 +93,15 @@ class MjcfWorldTests(unittest.TestCase):
     def test_checked_in_mjcf_matches_the_generator(self):
         """The committed MJCF is what the Gazebo source currently produces."""
         stale = []
-        for name, path in self.worlds.items():
-            generated, _ = gen_mjcf_worlds.convert_world(path, name)
-            with open(os.path.join(_MJCF_DIR, name + ".xml")) as handle:
-                if handle.read() != generated:
-                    stale.append(name)
+        with tempfile.TemporaryDirectory() as scratch:
+            for name, path in self.worlds.items():
+                if name in gen_mjcf_worlds.SPECIALIZED_WORLDS:
+                    continue
+                generated, _ = gen_mjcf_worlds.convert_world(path, name, asset_dir=scratch)
+                with open(os.path.join(_MJCF_DIR, name + ".xml")) as handle:
+                    if (gen_mjcf_worlds.world_signature(handle.read(), _MJCF_DIR)
+                            != gen_mjcf_worlds.world_signature(generated, scratch)):
+                        stale.append(name)
         self.assertEqual([], stale, "regenerate with gen_mjcf_worlds.py")
 
     def test_every_mjcf_world_is_well_formed_and_has_geometry(self):
@@ -109,15 +114,16 @@ class MjcfWorldTests(unittest.TestCase):
                 self.assertTrue(worldbody.findall("geom"),
                                 "%s has no geometry" % name)
 
-    def test_mesh_assets_resolve_to_real_files(self):
-        """A referenced mesh that does not exist becomes an invisible gap."""
+    def test_assets_resolve_to_real_files(self):
+        """A missing mesh, texture or height raster loses part of the world."""
         missing = []
         for name in self.worlds:
             root = ET.parse(os.path.join(_MJCF_DIR, name + ".xml")).getroot()
-            for mesh in root.iter("mesh"):
-                path = mesh.get("file") or ""
-                if path and not os.path.isfile(path):
-                    missing.append("%s: %s" % (name, path))
+            for kind in ("mesh", "texture", "hfield"):
+                for asset in root.iter(kind):
+                    path = asset.get("file")
+                    if path and not os.path.isfile(os.path.join(_MJCF_DIR, path)):
+                        missing.append("%s: %s" % (name, path))
         self.assertEqual([], missing)
 
     def test_obstacle_geometry_is_carried_over_from_the_source_world(self):
@@ -148,18 +154,19 @@ class MjcfWorldTests(unittest.TestCase):
         self.assertEqual("0", planes[0].get("conaffinity"))
 
     def test_visual_fallback_never_replaces_all_collision_geometry(self):
-        for name, path in self.worlds.items():
-            generated, _ = gen_mjcf_worlds.convert_world(path, name)
-            root = ET.fromstring(generated)
-            geoms = root.find("worldbody").findall("geom")
-            fallbacks = [geom for geom in geoms
-                         if geom.get("type") == "plane"
-                         and geom.get("contype") == "0"
-                         and geom.get("conaffinity") == "0"]
-            if fallbacks:
-                self.assertTrue(
-                    any(geom.get("type") != "plane" for geom in geoms),
-                    f"{name}: visual fallback removed all collision geometry")
+        with tempfile.TemporaryDirectory() as scratch:
+            for name, path in self.worlds.items():
+                generated, _ = gen_mjcf_worlds.convert_world(path, name, asset_dir=scratch)
+                root = ET.fromstring(generated)
+                geoms = root.find("worldbody").findall("geom")
+                fallbacks = [geom for geom in geoms
+                             if geom.get("type") == "plane"
+                             and geom.get("contype") == "0"
+                             and geom.get("conaffinity") == "0"]
+                if fallbacks:
+                    self.assertTrue(
+                        any(geom.get("type") != "plane" for geom in geoms),
+                        f"{name}: visual fallback removed all collision geometry")
 
     def test_actors_are_skipped_and_reported(self):
         """Scripted movers are not static geometry; they must not be silent."""

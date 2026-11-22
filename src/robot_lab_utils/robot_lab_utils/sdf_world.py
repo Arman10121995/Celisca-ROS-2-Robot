@@ -215,8 +215,17 @@ def _shape(geometry, frame, base_dir, resolve, model_name, skipped):
                           _floats(_text(cylinder, "length"), 1, 1.0)[0]])
     plane = _child(geometry, "plane")
     if plane is not None:
-        return dict(record, type="plane",
-                    size=_floats(_text(plane, "size"), 2, 100.0))
+        x, y, z = _floats(_text(plane, "normal", "0 0 1"), 3, 0.0)
+        horizontal = math.hypot(x, y)
+        if horizontal > 1e-12:
+            # The local x axis lies along the surface horizontally. The
+            # normal is local +z and the height follows local y.
+            normal_rotation = quaternion_from_rpy(math.atan2(horizontal, z), 0.0,
+                                                   math.atan2(y, x) + math.pi / 2.0)
+            record["orientation"] = list(_multiply(orientation, normal_rotation))
+        elif z < 0.0:
+            record["orientation"] = list(_multiply(orientation, (0., 1., 0., 0.)))
+        return dict(record, type="plane", size=_floats(_text(plane, "size"), 2, 100.0))
     mesh = _child(geometry, "mesh")
     if mesh is not None:
         uri = _text(mesh, "uri")
@@ -314,6 +323,15 @@ def _walk_model(model, frame, base_dir, resolve, shapes, skipped,
                     diffuse = _text(material, 'diffuse') or _text(material, 'ambient')
                     if diffuse:
                         shape['rgba'] = _floats(diffuse, 4, 1.0)
+                if shape["type"] == "plane" and _tag(source) == "visual":
+                    pbr = _child(_child(source, "material"), "pbr")
+                    albedo = _text(_child(pbr, "metal"), "albedo_map")
+                    if albedo:
+                        texture = resolve(albedo, base_dir)
+                        if texture:
+                            shape["albedo_map"] = texture
+                        else:
+                            skipped.append("unresolved plane texture " + albedo.strip())
                 shapes.append(shape)
 
     for nested in _children(model, "model"):

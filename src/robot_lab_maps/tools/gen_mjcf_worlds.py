@@ -45,9 +45,11 @@ Usage::
 checked-in MJCF differs, which is what CI runs.
 """
 import argparse
+import hashlib
 import math
 import os
 import sys
+import tempfile
 import xml.etree.ElementTree as ET
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
@@ -69,6 +71,8 @@ _MODEL_DIRS = (
 )
 
 _GEOM_RGBA = "0.55 0.57 0.6 1"
+# Dedicated physics fixtures have their own generators.
+SPECIALIZED_WORLDS = {"gait_slip_patch": "gait_slip_patch.py"}
 
 _resolve_in_source = uri_resolver(
     _MODEL_DIRS, lambda package: os.path.join(_SRC_ROOT, package))
@@ -127,8 +131,6 @@ def _write_hfield_png(shape, asset_dir):
     raster maximum itself, which is the same rule measured in Gazebo, so
     re-encoding does not rescale the terrain.
     """
-    import hashlib
-
     from robot_lab_utils.heightfield import load_heightmap
 
     elevations = load_heightmap(shape["heightmap"])
@@ -175,11 +177,12 @@ def _geom(shape, meshes, hfields, asset_dir):
     return geom
 
 
-def convert_world(world_path, name=None, asset_dir=None):
+def convert_world(world_path, name=None, asset_dir=None, *, asset_reference_dir=None):
     """Return (mjcf_text, skipped_notes) for one SDF ``.world`` file.
 
-    *asset_dir* is where derived heightfield PNGs are written; it defaults to
-    the sibling directory the MJCF itself is written to.
+    *asset_dir* is where derived heightfield PNGs are written and defaults
+    to the source SDF directory. *asset_reference_dir* makes PNG references
+    relative to the final MJCF so a packaged world can be relocated.
     """
     name = name or os.path.splitext(os.path.basename(world_path))[0]
     if asset_dir is None:
@@ -191,6 +194,9 @@ def convert_world(world_path, name=None, asset_dir=None):
     meshes = {}
     hfields = {}
     geoms = [_geom(shape, meshes, hfields, asset_dir) for shape in shapes]
+
+    def png_reference(path):
+        return os.path.relpath(path, asset_reference_dir) if asset_reference_dir else os.path.abspath(path)
 
     # Marine scenery can be inspected as static geometry, but a visual water
     # surface is never a solid lid. Other marine force adapters stay gated.
@@ -208,8 +214,19 @@ def convert_world(world_path, name=None, asset_dir=None):
     ET.SubElement(mujoco, "option", {"gravity": "0 0 -9.81"})
     ET.SubElement(mujoco, "compiler", {"angle": "radian"})
 
-    if meshes or hfields:
+    textures = {}
+    for index, (shape, geom) in enumerate(zip(shapes, geoms)):
+        albedo = shape.get("albedo_map")
+        if albedo and os.path.splitext(albedo)[1].lower() == ".png":
+            material = textures.setdefault(albedo, "sdf_plane_%d" % index)
+            geom.update(material=material, name="visual_sdf_plane_%d" % index, contype="0", conaffinity="0")
+            geom.pop("rgba", None)
+
+    if meshes or hfields or textures:
         asset = ET.SubElement(mujoco, "asset")
+        for path, material in textures.items():
+            ET.SubElement(asset, "texture", {"name": material, "type": "2d", "file": png_reference(path)})
+            ET.SubElement(asset, "material", {"name": material, "texture": material})
         for mesh_name, path, scale in sorted(meshes.values()):
             ET.SubElement(asset, "mesh",
                           {"name": mesh_name, "file": path, "scale": scale})
@@ -228,7 +245,7 @@ def convert_world(world_path, name=None, asset_dir=None):
             # the SDF size_z; MuJoCo divides the raster by its own maximum,
             # which is how Gazebo scales it too.
             ET.SubElement(asset, "hfield", {
-                "name": hfield_name, "file": png,
+                "name": hfield_name, "file": png_reference(png),
                 "size": "%.6g %.6g %.6g %.6g" % (size[0] / 2.0, size[1] / 2.0,
                                                  size[2], size[2])})
 
@@ -281,7 +298,7 @@ def convert_world(world_path, name=None, asset_dir=None):
               % (name, name))
     if marine:
         header += '<!-- Static marine geometry only; native water/vehicle force adapters are not supplied by this conversion. -->\n'
-    return header + ET.tostring(mujoco, encoding="unicode") + "\n", skipped
+    return header + ET.tostring(mujoco, encoding="unicode").rstrip() + "\n", skipped
 
 
 def _primitive_volume(shape):
@@ -308,32 +325,58 @@ def _indent(element, level=0):
         element.tail = pad
 
 
+def world_signature(text, directory):
+    """Compare world definitions and PNG contents independent of path layout."""
+    root = ET.fromstring(text)
+    for tag in ("hfield", "texture"):
+        for asset in root.findall("asset/" + tag):
+            file = asset.get("file")
+            if file:
+                with open(os.path.join(directory, file), "rb") as stream:
+                    asset.set("file", hashlib.sha256(stream.read()).hexdigest())
+    return ET.tostring(root)
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--maps-dir", default=os.path.join(_PACKAGE_ROOT, "maps"))
     parser.add_argument("--out-dir", default=os.path.join(_PACKAGE_ROOT, "mjcf"))
+    parser.add_argument("--map", action="append", dest="selected",
+                        help="convert a named map, repeat to select several")
     parser.add_argument("--check", action="store_true",
                         help="fail when the checked-in MJCF is out of date")
     args = parser.parse_args(argv)
 
     os.makedirs(args.out_dir, exist_ok=True)
     stale, written = [], 0
-    for map_name in sorted(os.listdir(args.maps_dir)):
+    for map_name in sorted(args.selected or os.listdir(args.maps_dir)):
         world_path = os.path.join(args.maps_dir, map_name, "worlds",
                                   map_name + ".world")
         if not os.path.isfile(world_path):
+            if args.selected:
+                parser.error("source world not found for " + map_name)
             continue
-        mjcf, skipped = convert_world(world_path, map_name)
+        if map_name in SPECIALIZED_WORLDS:
+            print("%s uses %s" % (map_name, SPECIALIZED_WORLDS[map_name]))
+            continue
         target = os.path.join(args.out_dir, map_name + ".xml")
         existing = ""
         if os.path.isfile(target):
             with open(target) as handle:
                 existing = handle.read()
         if args.check:
-            if existing != mjcf:
+            with tempfile.TemporaryDirectory() as scratch:
+                generated, _ = convert_world(world_path, map_name, asset_dir=scratch)
+                try:
+                    up_to_date = existing and (
+                        world_signature(existing, args.out_dir) == world_signature(generated, scratch))
+                except (ET.ParseError, OSError):
+                    up_to_date = False
+            if not up_to_date:
                 stale.append(map_name)
             continue
-        if existing != mjcf:
+        mjcf, skipped = convert_world(world_path, map_name, asset_reference_dir=args.out_dir)
+        if existing.rstrip() != mjcf.rstrip():
             with open(target, "w") as handle:
                 handle.write(mjcf)
             written += 1
