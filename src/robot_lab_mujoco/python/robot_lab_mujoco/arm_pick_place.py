@@ -426,9 +426,16 @@ class ArmScene:
             self.set_joints(dict(zip(names, q), **fingers))
             tcp_position, tcp_rotation = self.tcp()
             error_position = np.asarray(position) - tcp_position
-            error_rotation = Rotation.from_matrix(target_rotation @ tcp_rotation.T).as_rotvec()
-            if np.linalg.norm(error_position) < position_tolerance and np.linalg.norm(error_rotation) < ANGLE_TOLERANCE_RAD:
+            # Converge on the exact rotation vector (the cross-product form below
+            # also vanishes at a 180 degree error), but step along the
+            # cross-product form: its sin-like magnitude keeps the solution on
+            # the seed's branch.  Stepping by the full rotation vector moved the
+            # TIAGo fetch onto a wrist branch its arm never settled into (V6,
+            # 2026-11-22; above_object timed out on MuJoCo and PyBullet).
+            exact_rotation = Rotation.from_matrix(target_rotation @ tcp_rotation.T).as_rotvec()
+            if np.linalg.norm(error_position) < position_tolerance and np.linalg.norm(exact_rotation) < ANGLE_TOLERANCE_RAD:
                 return dict(zip(names, map(float, q)))
+            error_rotation = 0.5 * sum(np.cross(tcp_rotation[:, k], target_rotation[:, k]) for k in range(3))
             self.mj.mj_jacSite(m, d, jacp, jacr, self.site)
             jacobian = np.vstack([jacp[:, dofs], jacr[:, dofs]])
             error = np.concatenate([error_position, error_rotation])
