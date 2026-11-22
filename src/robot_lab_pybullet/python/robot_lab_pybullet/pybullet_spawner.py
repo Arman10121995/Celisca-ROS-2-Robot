@@ -1121,6 +1121,22 @@ class PyBulletSpawner(Node):
         if articulation_config:
             from robot_lab_utils.urdf_articulation import ArticulationROS
             self._articulation = ArticulationROS(self, articulation_config, urdf, str(model))
+            added_inertia = self._articulation.contract.config.get('pybullet_added_link_inertia', {})
+            if not isinstance(added_inertia, dict):
+                raise ValueError('pybullet_added_link_inertia must map joint names to positive inertia')
+            for name, inertia in added_inertia.items():
+                if (name not in self._articulation.contract.joints or type(inertia) not in (int, float)
+                        or not math.isfinite(inertia) or inertia <= 0.):
+                    raise ValueError('Invalid PyBullet added link inertia for %s' % name)
+                index = self._joint_idx[name]
+                if p.getJointInfo(self._robot_id, index)[2] != p.JOINT_REVOLUTE:
+                    raise ValueError('PyBullet added link inertia requires a revolute joint: %s' % name)
+                # An isotropic addition preserves the imported principal axes.
+                source = p.getDynamicsInfo(self._robot_id, index)[2]
+                p.changeDynamics(self._robot_id, index, localInertiaDiagonal=tuple(value+inertia for value in source))
+            gear_erp = self._articulation.contract.config.get('pybullet_gear_erp', .1)
+            if type(gear_erp) not in (int, float) or not 0. < gear_erp <= 1.:
+                raise ValueError('pybullet_gear_erp must be a finite number in (0, 1]')
             named_pads = self._articulation.contract.config.get('grip_contact_geoms')
             if named_pads:
                 from robot_lab_pybullet.grip_contacts import GripContacts
@@ -1144,7 +1160,7 @@ class PyBulletSpawner(Node):
                     self._robot_id, self._joint_idx[follower], self._robot_id, self._joint_idx[coupling['joint']],
                     jointType=p.JOINT_GEAR, jointAxis=[1, 0, 0], parentFramePosition=[0, 0, 0],
                     childFramePosition=[0, 0, 0])
-                p.changeConstraint(gear, gearRatio=-float(coupling['multiplier']), erp=0.1,
+                p.changeConstraint(gear, gearRatio=-float(coupling['multiplier']), erp=gear_erp,
                                    relativePositionTarget=float(coupling['offset']),
                                    maxForce=self._articulation.contract.joints[follower]['effort'] * 2.5)
                 self.get_logger().info('Mechanical coupling %s = %g * %s (gear constraint)'

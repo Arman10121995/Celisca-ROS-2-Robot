@@ -1,0 +1,120 @@
+{
+  "scope": "PyBullet fixed-base loaded closure at the measured mobile pickup pose",
+  "start_pose_receipt": "bullet-gui-precision-dock-grasp.json",
+  "driver_effort_nm": 0.8,
+  "payload_kg": 0.04,
+  "step_s": 0.004166666666666667,
+  "follower_limit_rad": 0.01,
+  "pad_load_floor_n": 0.1,
+  "isotropic_link_inertia_scale_1_kg_m2": {
+    "driver": 0.003,
+    "each_follower": 0.00015
+  },
+  "script_ssd_relative": "bullet-loaded-rotor-sweep.py",
+  "raw_log_ssd_relative": "bullet-loaded-rotor-sweep.log",
+  "raw_log_sha256": "a88ed2b4606918c8daf2d0306a94c264b2da0177da9bb94cc9034a82d3e30b34",
+  "cases": [
+    {
+      "gear_erp": 0.1,
+      "solver_iterations": 50,
+      "noncontact_iterations": 1,
+      "inertia_scale": 0.0,
+      "sample_count": 19,
+      "bilateral_samples": 19,
+      "bilateral_samples_within_follower_limit": 0,
+      "max_follower_error_rad": 0.16300111660593852,
+      "peak_left_normal_force_n": 2.8188646953390046,
+      "peak_right_normal_force_n": 2.4951038301968564,
+      "final_center_m": [
+        1.3557316078878061,
+        -0.006208110514806636,
+        0.544791389183987
+      ]
+    },
+    {
+      "gear_erp": 0.1,
+      "solver_iterations": 50,
+      "noncontact_iterations": 1,
+      "inertia_scale": 0.25,
+      "sample_count": 19,
+      "bilateral_samples": 19,
+      "bilateral_samples_within_follower_limit": 0,
+      "max_follower_error_rad": 0.050608653920068525,
+      "peak_left_normal_force_n": 5.1370763084007836,
+      "peak_right_normal_force_n": 6.039177797375686,
+      "final_center_m": [
+        1.3568714184240156,
+        -0.007107494437175919,
+        0.5448213685994769
+      ]
+    },
+    {
+      "gear_erp": 0.1,
+      "solver_iterations": 50,
+      "noncontact_iterations": 1,
+      "inertia_scale": 1.0,
+      "sample_count": 19,
+      "bilateral_samples": 19,
+      "bilateral_samples_within_follower_limit": 0,
+      "max_follower_error_rad": 0.022565228759740097,
+      "peak_left_normal_force_n": 6.634419329496294,
+      "peak_right_normal_force_n": 5.899984297394656,
+      "final_center_m": [
+        1.3559219029241136,
+        -0.006694375110008837,
+        0.5448408798841129
+      ]
+    },
+    {
+      "gear_erp": 0.1,
+      "solver_iterations": 50,
+      "noncontact_iterations": 1,
+      "inertia_scale": 2.0,
+      "sample_count": 19,
+      "bilateral_samples": 19,
+      "bilateral_samples_within_follower_limit": 0,
+      "max_follower_error_rad": 0.017893617516694382,
+      "peak_left_normal_force_n": 6.534029544125697,
+      "peak_right_normal_force_n": 6.113608645084795,
+      "final_center_m": [
+        1.3558958052262498,
+        -0.006501416185471128,
+        0.5452446950607982
+      ]
+    },
+    {
+      "gear_erp": 0.1,
+      "solver_iterations": 50,
+      "noncontact_iterations": 4,
+      "inertia_scale": 1.0,
+      "sample_count": 19,
+      "bilateral_samples": 19,
+      "bilateral_samples_within_follower_limit": 12,
+      "max_follower_error_rad": 0.010165209568697209,
+      "peak_left_normal_force_n": 6.680133792431181,
+      "peak_right_normal_force_n": 5.633361245221494,
+      "final_center_m": [
+        1.355816021134856,
+        -0.007252521441964711,
+        0.5453238603160929
+      ]
+    },
+    {
+      "gear_erp": 0.35,
+      "solver_iterations": 100,
+      "noncontact_iterations": 4,
+      "inertia_scale": 1.0,
+      "sample_count": 19,
+      "bilateral_samples": 19,
+      "bilateral_samples_within_follower_limit": 19,
+      "max_follower_error_rad": 0.0004485750473061101,
+      "peak_left_normal_force_n": 6.8024529531286,
+      "peak_right_normal_force_n": 5.159577902656596,
+      "final_center_m": [
+        1.3554248376637827,
+        -0.00701133129781,
+        0.5450116527301527
+      ]
+    }
+  ]
+}

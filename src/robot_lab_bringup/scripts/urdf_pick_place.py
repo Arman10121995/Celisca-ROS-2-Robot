@@ -122,6 +122,9 @@ STILL_SPEED = 0.01      # m/s and rad/s: the base counts as stopped
 HOLONOMIC_DOCK_CAPTURE_M = .12
 HOLONOMIC_DOCK_SPEED_MPS = .045
 HOLONOMIC_DOCK_TURN_RPS = .12
+PREGRASP_REPLAN_M = .002  # Account for millimetre-scale drift during approach.
+PREGRASP_RECHECK_M = .004
+PREGRASP_MAX_DRIFT_M = .03
 CARRY_DRIFT = 0.03      # m of object motion relative to the base while carrying
 NAV2_MIN_LEG = 0.5      # m: shorter transit legs stay straight (DWB circles on tiny paths)
 NAV2_HANDOFF = 0.15      # m: localization this close to the run-up point hands over to docking
@@ -873,6 +876,35 @@ class PickPlace(Node):
         self._plan_arm(task, phase, reapproach=True)
         return True
 
+    def _check_pregrasp_anchor(self, task, tcp):
+        """Check the held tool and supported object against the plan's base pose."""
+        now = _now()
+        if (max(self.base_twist) >= STILL_SPEED or now-self.base_at > PAD_SETTLE_MAX_GAP
+                or now-self.truth_at > PAD_SETTLE_MAX_GAP):
+            task.pop('pregrasp_still_since', None)
+            return None
+        if now-task.setdefault('pregrasp_still_since', now) < .5:
+            return None
+        planned = task['scene'].base
+        actual = self.base_pose
+        offset = np.asarray(tcp) - np.asarray(planned[:3])
+        yaw = actual[3]-planned[3]
+        c, s = math.cos(yaw), math.sin(yaw)
+        transformed = np.asarray(actual[:3])+[c*offset[0]-s*offset[1], s*offset[0]+c*offset[1], offset[2]]
+        tool_drift = float(np.linalg.norm(transformed-tcp))
+        payload_drift = math.dist(self.truth[task['object']][:3], task['obj'].position)
+        drift = max(tool_drift, payload_drift)
+        diagnostics = dict(pregrasp_base=list(actual), projected_tool_drift_m=round(tool_drift, 5),
+                           payload_drift_m=round(payload_drift, 5))
+        support = self._table_under(task['object'])
+        if support is None or support.name != task['table']:
+            return dict(passed=False, reason='payload has left the pickup support', **diagnostics)
+        limit = PREGRASP_RECHECK_M if task.get('pregrasp_replanned') else PREGRASP_MAX_DRIFT_M
+        if drift > limit:
+            return dict(passed=False, reason='base or payload drifted beyond the pregrasp tolerance', **diagnostics)
+        return dict(passed=True, replan=not task.get('pregrasp_replanned') and drift > PREGRASP_REPLAN_M,
+                    **diagnostics)
+
     def _advance(self):
         if self.stopping_nav:
             self._twist(0.0, 0.0)
@@ -934,11 +966,21 @@ class PickPlace(Node):
         if check is None:
             return                              # still waiting on a timed observation
         tcp = self._tcp(task)[0]
+        if (self.mobile and stage['name'] == 'above_object' and phase['name'] == 'pick'
+                and self.mobile.get('reanchor_before_descent') is True and task['pose_source'] == 'truth'):
+            check = self._check_pregrasp_anchor(task, tcp)
+            if check is None:
+                return
         task['log'].append(dict(stage=stage['name'], seconds=round(_now() - task['stage_started'], 2),
                                 object_truth=[round(v, 4) for v in self.truth[task['object']][:3]],
                                 tcp_estimate=[round(float(v), 4) for v in tcp], **check))
         if not check.get('passed', True):
             return self._finish('failed', '%s: %s' % (stage['name'], check.get('reason')))
+        if check.get('replan'):
+            task['pregrasp_replanned'] = True
+            task.pop('pregrasp_still_since', None)
+            task.pop('finger_history', None)
+            return self._plan_arm(task, phase)
         if self.mobile and stage['name'] == 'lift':
             self.carried_footprint = self._carry_outline(task)
             self._set_footprint(self.carried_footprint, task['object'])

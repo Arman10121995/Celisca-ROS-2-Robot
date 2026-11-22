@@ -194,6 +194,27 @@ def test_retry_uses_fresh_post_retract_pose_on_the_same_support(pick_place, monk
     assert not node._check(task, 'retract_grasp')['passed']
 
 
+def test_pregrasp_anchor_catches_heading_drift_after_base_stops(pick_place, monkeypatch):
+    node = object.__new__(pick_place.PickPlace)
+    node.base_pose, node.base_twist = (.8808, -.0004, -.0034, -.0146), (.0, .0)
+    node.truth, node.base_at, node.truth_at = {'block': [1.36, 0., .545]}, 10., 10.
+    node._table_under = lambda name: SimpleNamespace(name='pickup')
+    monkeypatch.setattr(pick_place, '_now', lambda: 10.1)
+    task = dict(object='block', table='pickup', pregrasp_still_since=9.,
+                scene=SimpleNamespace(base=(.883, .0004, -.0036, -.0237)),
+                obj=SimpleNamespace(position=[1.36, 0., .545]))
+    first = node._check_pregrasp_anchor(task, [1.361, 0., .60])
+    assert first['passed'] and first['replan']
+    assert first['projected_tool_drift_m'] == pytest.approx(.00417, abs=.0001)
+    task['pregrasp_replanned'] = True
+    assert not node._check_pregrasp_anchor(task, [1.361, 0., .60])['passed']
+    task['scene'].base = node.base_pose
+    second = node._check_pregrasp_anchor(task, [1.361, 0., .60])
+    assert second['passed'] and not second['replan']
+    node.base_twist = (.05, .0)
+    assert node._check_pregrasp_anchor(task, [1.361, 0., .60]) is None
+
+
 def test_holonomic_dock_corrects_the_measured_pose_after_settling(pick_place, monkeypatch):
     node = object.__new__(pick_place.PickPlace)
     node.base_pose = (.8686, .01, -.002, -.0531)

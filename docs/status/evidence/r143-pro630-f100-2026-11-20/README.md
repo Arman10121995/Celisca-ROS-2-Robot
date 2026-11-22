@@ -184,6 +184,15 @@ load. The smallest maximum follower error among those cases was 0.051 rad,
 above the 0.01 rad limit. The measured production settings remain in place.
 [Fixed-base solver sweep](bullet-loaded-solver-sweep.json).
 
+Adding the already declared transmission inertia to Bullet's link inertia
+as an isotropic approximation, with 100 solver iterations, four non-contact
+iterations and gear ERP 0.35, produced bilateral loads in all 19 steady
+samples. The maximum follower error was 0.00045 rad. This was a fixed-base
+replay at the measured mobile pickup pose, with the same single 0.8 N m
+motor. The private portable profile can apply those settings for a GUI run.
+[Fixed-base transmission sweep](bullet-loaded-transmission-sweep.json) ·
+[Bullet inertia API](https://github.com/bulletphysics/bullet3/blob/master/examples/SharedMemory/grpc/proto/pybullet.proto).
+
 An Isaac Sim 6.0.1 loaded trial reached the block in the same world. Its
 right pad peaked at 5.89 N and its left pad recorded zero in all 46 closure
 samples. The largest sampled follower error was 0.0082 rad. The run
@@ -193,6 +202,12 @@ stopped at closure before lift.
 New Isaac traces report loads on other distal jaw surfaces separately
 from the named pads. This shows whether the source jaw hull reached the
 block before the pad. Only bilateral load on the named pads can authorize lift.
+
+The base shifted 0.0091 rad in yaw between docking and the steady grip
+phase. A replay at the measured tool reach projects about 4 mm of position
+error. The optional pregrasp check waits for a stopped base, fresh object
+pose, and original pickup support. It can rebuild the plan once before
+descent and stops if the correction moves outside the declared tolerance.
 
 ### Complete GUI fetch
 

@@ -146,4 +146,9 @@ def bullet_contact_parameters(config):
         if type(iterations) is not int or iterations < 1:
             raise ValueError('pybullet_noncontact_iterations must be a positive integer')
         options['numNonContactInnerIterations'] = iterations
+    solver_iterations = config.get('pybullet_solver_iterations')
+    if solver_iterations is not None:
+        if type(solver_iterations) is not int or solver_iterations < 1:
+            raise ValueError('pybullet_solver_iterations must be a positive integer')
+        options['numSolverIterations'] = solver_iterations
     return options
