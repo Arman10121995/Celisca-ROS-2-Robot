@@ -46,6 +46,12 @@ SEARCH_SECONDS = 15.0       # RRT-Connect budget when direct and via routes coll
 GRASP_RAISE_STEP_M = 0.006
 
 
+def _rotation_step(value):
+    if value not in ('cross', 'exact'):
+        raise ValueError("ik_rotation_step must be 'cross' or 'exact'")
+    return value
+
+
 @dataclass
 class ArmSpec:
     """The arm's planning description (robot profile ``pick_place``)."""
@@ -61,6 +67,9 @@ class ArmSpec:
     pad_geoms: Sequence[str] = ()
     aperture: Sequence[Sequence[float]] = ()
     min_object_width: float = 0.
+    # IK rotation step: 'cross' (sin-like, every arm measured before 2026-11-20)
+    # or 'exact' (full rotation vector; the F100 profile was developed on it).
+    ik_rotation_step: str = 'cross'
 
     @classmethod
     def from_config(cls, config):
@@ -71,7 +80,8 @@ class ArmSpec:
                    tool_yaw_offset=float(config.get('tool_yaw_offset', -math.pi / 4)),
                    tcp_quat=tuple(config.get('tcp_quat', (1., 0., 0., 0.))),
                    pad_geoms=tuple(config.get('pad_geoms', ())),
-                   min_object_width=float(config.get('min_object_width', 0.)))
+                   min_object_width=float(config.get('min_object_width', 0.)),
+                   ik_rotation_step=_rotation_step(config.get('ik_rotation_step', 'cross')))
 
     def closing_targets(self, width, squeeze=.004):
         """Position-servo references. F100 targets a small calibrated squeeze."""
@@ -414,9 +424,25 @@ class ArmScene:
     # --- inverse kinematics ------------------------------------------------------
     def solve(self, position, rotation, seed: Dict[str, float], fingers: Dict[str, float], iterations=300,
               *, position_tolerance=POSITION_TOLERANCE_M):
-        """Arm joints placing the TCP at position/rotation (damped least squares), or None."""
+        """Arm joints placing the TCP at position/rotation (damped least squares), or None.
+
+        Convergence is always judged on the exact rotation vector. The step
+        follows the arm's declared form: neither keeps every arm on its seed's
+        branch. Stepping by the exact vector moved the TIAGo fetch onto a wrist
+        branch its arm never settled into; the cross-product step swung the
+        Pro630 base joint by 2.9 rad (V6 / R14.3, 2026-11-22)."""
+        names = self.spec.arm_joints
+        start = np.array([seed[n] for n in names], dtype=float)
+        solution = self._descend(position, rotation, start, fingers, iterations, position_tolerance,
+                                 exact_step=self.spec.ik_rotation_step == 'exact')
+        if solution is None:
+            return None
+        self.set_joints(dict(zip(names, solution), **fingers))
+        return dict(zip(names, map(float, solution)))
+
+    def _descend(self, position, rotation, q, fingers, iterations, position_tolerance, *, exact_step):
         m, d, names = self.model, self.data, self.spec.arm_joints
-        q = np.array([seed[n] for n in names], dtype=float)
+        q = q.copy()
         low = np.array([self.limits[n][0] for n in names])
         high = np.array([self.limits[n][1] for n in names])
         dofs = [self.joint_dof[n] for n in names]
@@ -426,16 +452,13 @@ class ArmScene:
             self.set_joints(dict(zip(names, q), **fingers))
             tcp_position, tcp_rotation = self.tcp()
             error_position = np.asarray(position) - tcp_position
-            # Converge on the exact rotation vector (the cross-product form below
-            # also vanishes at a 180 degree error), but step along the
-            # cross-product form: its sin-like magnitude keeps the solution on
-            # the seed's branch.  Stepping by the full rotation vector moved the
-            # TIAGo fetch onto a wrist branch its arm never settled into (V6,
-            # 2026-11-22; above_object timed out on MuJoCo and PyBullet).
+            # Convergence is judged on the exact rotation vector; the
+            # cross-product form also vanishes at a 180 degree error.
             exact_rotation = Rotation.from_matrix(target_rotation @ tcp_rotation.T).as_rotvec()
             if np.linalg.norm(error_position) < position_tolerance and np.linalg.norm(exact_rotation) < ANGLE_TOLERANCE_RAD:
-                return dict(zip(names, map(float, q)))
-            error_rotation = 0.5 * sum(np.cross(tcp_rotation[:, k], target_rotation[:, k]) for k in range(3))
+                return q
+            error_rotation = exact_rotation if exact_step else \
+                0.5 * sum(np.cross(tcp_rotation[:, k], target_rotation[:, k]) for k in range(3))
             self.mj.mj_jacSite(m, d, jacp, jacr, self.site)
             jacobian = np.vstack([jacp[:, dofs], jacr[:, dofs]])
             error = np.concatenate([error_position, error_rotation])

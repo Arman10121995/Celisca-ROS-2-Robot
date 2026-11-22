@@ -3002,7 +3002,7 @@ tasks:
         title: Publish first reproducible planner comparison
     title: Measured reference experiment
   R5:
-    validation_v6_20261122: 'Claude V6: Panda cube GUI 4/4, Panda can MuJoCo/PyBullet/Gazebo 3/3, Shadow hand GUI 2/2, TIAGo RGB-D fetch MuJoCo/PyBullet 2/2 after the fix. Bisect: f7f476cf IK rotation error as exact rotvec moved TIAGo onto an unreachable wrist branch; ArmScene.solve now converges on rotvec and steps on the cross-product form (implemented, experimental). docs/status/evidence/v6-manipulation-2026-11-22/README.md'
+    validation_v6_20261122: 'Claude V6: Panda cube GUI 4/4, Panda can MuJoCo/PyBullet/Gazebo 3/3, Shadow hand GUI 2/2, TIAGo RGB-D fetch MuJoCo/PyBullet 2/2 after the fix. Bisect: f7f476cf IK rotation error as exact rotvec moved TIAGo onto an unreachable wrist branch; ArmSpec.ik_rotation_step (cross default, F100 exact) with rotvec convergence (implemented, experimental); F100 Isaac fetch then fails its reanchor replan after a +0.028 rad dock (open R14.3). docs/status/evidence/v6-manipulation-2026-11-22/README.md'
     owner: cline-agent
     state: active
     tasks:

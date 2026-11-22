@@ -287,3 +287,13 @@ def test_a_cylinder_is_gripped_across_its_diameter_and_supported(panda, lying):
         assert abs(math.cos(plan['tool_yaw'] - spec.tool_yaw_offset)) > .99
         narrow = Box('narrow', support.position, support.quaternion, [.07, .12, .3])
         assert not narrow.supports(placed)
+
+
+def test_ik_rotation_step_is_declared_per_arm():
+    """V6 / R14.3 (2026-11-22): the exact rotation-vector step moved the TIAGo fetch onto a
+    wrist branch it never settled into, while the F100 profile was developed on it."""
+    base = dict(arm_joints=['arm'], finger_joints=[], tool_body='tool')
+    assert ArmSpec.from_config(base).ik_rotation_step == 'cross'
+    assert ArmSpec.from_config(dict(base, ik_rotation_step='exact')).ik_rotation_step == 'exact'
+    with pytest.raises(ValueError):
+        ArmSpec.from_config(dict(base, ik_rotation_step='rotvec'))

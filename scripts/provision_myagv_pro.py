@@ -326,7 +326,7 @@ def provision(store, download=False, variant='fortress'):
             finger_joints=[leader, *articulation['couplings']], tool_body=carrier,
             tcp_offset=list(tcp_offset), tcp_quat=list(tcp_quat), tool_yaw_offset=0.,
             pad_geoms=list(articulation['grip_contact_geoms'].values()),
-            finger_open=1., min_object_width=.035, max_object_width=.048,
+            finger_open=1., min_object_width=.035, max_object_width=.048, ik_rotation_step='exact',
             default_approach=.06, default_lift=.05,
             arm_seeds=[[-.188, 1.125, -.641, 1.086, -1.571, 2.151]],
             mobile=dict(reach=.47, place_reach=.445, base_radius=.37, place_inset=.06, dock_position_tolerance=.01,

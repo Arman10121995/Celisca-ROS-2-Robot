@@ -45,13 +45,37 @@ because the cross-product form also reads zero at 180°. As the step
 direction, however, its larger rotational steps moved TIAGo's solution
 onto another wrist branch, which the arm then never settled into.
 
-**Fix** (`robot_lab_mujoco/arm_pick_place.py`, `ArmScene.solve`):
-- convergence is judged by the exact rotation vector;
-- the step uses the cross-product form, as before November 20.
+**First fix, then the F100.** The first fix stepped every arm along the
+cross-product form while judging convergence on the exact rotation
+vector. TIAGo then passed on both backends, and that is the round above.
+The F100 (R14.3) fetch on Isaac then timed out at `above_object`: its
+base joint swung from −0.02 to −2.96 rad and was still moving
+(`ik-step/f100-isaac-claude-isaac-align-1233.json`).
 
-The 77 focused checks pass (pick-place Nav2, arm pick-place, RGB-D binding
-and articulation). The F100 live acceptance (R14.3) was not yet achieved
-on either version and remains open. Its planning tests pass with the fix.
+A second try kept whichever of the two step forms' solutions lay
+nearer the seed. That failed TIAGo again
+(`ik-step/nearest-branch-tiago-mujoco.json`), because its bad wrist branch
+is the nearer one.
+
+**Fix** (`robot_lab_mujoco/arm_pick_place.py`, `ArmSpec.ik_rotation_step`):
+- the step form is declared per arm;
+- the default is `cross`, which every arm measured before November 20
+  used;
+- the F100 profile declares `exact`, which Codex developed it on
+  (`scripts/provision_myagv_pro.py`, the installed profile);
+- convergence is always judged on the exact rotation vector;
+- a test pins the default and the validation.
+
+With it, TIAGo passes again (`ik-step/per-arm-step-tiago-mujoco.json`).
+
+The F100 Isaac fetch then passes `above_object` and fails in its reanchor
+replan: "no IK above the object / along a straight move"
+(`ik-step/f100-isaac-claude-isaac-align-1252.json`). The base had docked at
++0.028 rad and 5 mm closer. In Codex's 07:38 run it docked at −0.015 rad,
+and the same replan succeeded. This is R14.3's open docking sensitivity,
+not this IK.
+
+78 focused checks pass. The F100 live acceptance (R14.3) remains open.
 
 ## Limits
 
