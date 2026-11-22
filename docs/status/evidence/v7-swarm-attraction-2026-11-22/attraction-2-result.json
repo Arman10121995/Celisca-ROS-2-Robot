@@ -1,0 +1,25 @@
+{
+  "phases": {
+    "local_attraction": {
+      "samples": 223,
+      "mean_start_m": 2.491281228956606,
+      "mean_end_m": 0.40281270338199704,
+      "min_pair_m": 0.346734098312938,
+      "end_pairs": {
+        "alpha-beta": 0.4066659184021917,
+        "alpha-gamma": 0.3560670478385104,
+        "beta-gamma": 0.445705143905289
+      },
+      "duration_s": 59.820802574045956,
+      "states": [
+        "Waiting for measured feedback",
+        "predicted member separation: alpha",
+        "predicted member separation: beta",
+        "predicted member separation: gamma",
+        "swarm command active",
+        "swarm member turning from a peer its scan does not show"
+      ]
+    }
+  },
+  "ready_s": 16.429455403937027
+}

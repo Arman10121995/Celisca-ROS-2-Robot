@@ -1,0 +1,21 @@
+{
+  "phases": {
+    "local_flocking": {
+      "samples": 446,
+      "mean_start_m": 2.491281228956606,
+      "mean_end_m": 11.097715242521275,
+      "min_pair_m": 0.5423716886347467,
+      "end_pairs": {
+        "alpha-beta": 9.338424789258013,
+        "alpha-gamma": 12.995534048251608,
+        "beta-gamma": 10.959186890054202
+      },
+      "duration_s": 119.87567914801184,
+      "states": [
+        "Waiting for measured feedback",
+        "swarm command active"
+      ]
+    }
+  },
+  "ready_s": 15.874974650098011
+}

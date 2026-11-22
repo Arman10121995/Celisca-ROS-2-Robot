@@ -3,7 +3,7 @@
 Bumperbots spread 3.6-4.0 m apart in swarm_arena, local_aggregation for 180 s, measured by
 swarm_probe.py; the shared-world launch runs in its own process group and is stopped after.
 
-usage: run_case.py <case-dir>
+usage: [SWARM_SESSION=<session.yaml>] [SWARM_PHASES=behaviour:seconds,...] run_case.py <case-dir>
 """
 import os, signal, subprocess, sys, time
 from pathlib import Path
@@ -17,13 +17,13 @@ def main():
     env = dict(os.environ, IGN_PARTITION='v7_swarm_'+str(os.getpid()), GZ_PARTITION='v7_swarm_'+str(os.getpid()))
     with (case/'launch.log').open('w') as log:
         launch = subprocess.Popen(['ros2', 'launch', 'robot_lab_bringup', 'shared_world.launch.py',
-                                   'session:='+str(DIR/'session-arena-spread.yaml'), 'navigation:=true', 'gui:=false', 'rviz:=false'],
+                                   'session:='+os.environ.get('SWARM_SESSION', str(DIR/'session-arena-spread.yaml')), 'navigation:=true', 'gui:=false', 'rviz:=false'],
                                   stdout=log, stderr=subprocess.STDOUT, env=env, start_new_session=True)
     try:
         with (case/'probe.log').open('w') as log:
             code = subprocess.run(['/usr/bin/python3', '-s', str(PROBE)], stdout=log, stderr=subprocess.STDOUT, timeout=600,
                                   env=dict(env, CASE_OUTPUT=str(case/'agg'), CASE_SKIP_COVERAGE='1',
-                                           CASE_PHASES='local_aggregation:180')).returncode
+                                           CASE_PHASES=os.environ.get('SWARM_PHASES', 'local_aggregation:180'))).returncode
     except subprocess.TimeoutExpired:
         code = 124
     finally:
