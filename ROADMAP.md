@@ -165,7 +165,7 @@ Blocked: [R9.4](#r94--optional-physical-bumperbot-hil) physical hardware
 | V7 | R10.1–R10.8 | Fleet, swarm, marine, multi-leg and form missions, loss and reset. **2026-11-22:** multi-leg saved-map goals (MuJoCo nav_obstacle, PyBullet nav_empty) 6/6 and tracked Nav2 route and command loss on MuJoCo/PyBullet 8/8 ([round](docs/status/evidence/v7-mobile-families-2026-11-22/README.md)); fleet, swarm, marine, forms and resets remain |
 | V8 | R11 | MOLAR repeats and identified dynamics |
 | V9 | R6.2–R6.7 | World geometry, actors, disturbances, terrain contact on all backends |
-| V10 | R7.1–R7.8 | Fair five-method comparisons per category |
+| V10 | R7.1–R7.8 | Fair five-method comparisons per category. **2026-11-22:** global (Dijkstra, A*, PRM, RRT, RRT*) and local (Nav2 RPP, DWB, MPPI; robot_lab RPP, Follow-the-Gap) planners on the R7.6/R7.7 Gazebo maze protocol at one revision, 145/150 goals; MPPI 15/15 only with its Arrival fallback ([round](docs/status/evidence/v10-planner-comparisons-2026-11-22/README.md)); control, fusion, perception, localization and state-estimation rounds remain |
 | V11 | R8.1, R8.3 | Backend mission matrix; concurrent experiments with budgets. **2026-11-21:** support matrix regenerated, 342 measured cells ([matrix](docs/status/evidence/support-matrix-2026-11-21/README.md)) |
 | V12 | P2 | Physical joystick trial |
 | V13 | R9.1–R9.3 | Clean-host reproduction, seven comparison tutorials, release matrix |
@@ -1015,7 +1015,7 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
 
 ### R7 — Algorithm breadth
 
-- **State:** partial (I19 implementation done 2026-11-14; comparisons remain V10) · **Priority:** V10 · **Depends on:** R7.1
+- **State:** partial (I19 implementation done 2026-11-14; V10 planner rounds re-run at one revision 2026-11-22, other categories remain) · **Priority:** V10 · **Depends on:** R7.1
 - **Goal:** five distinct, correct methods per category, compared fairly.
 - **Have:** real methods run in every category:
   - **Global and local planning:** eight global planners and five local

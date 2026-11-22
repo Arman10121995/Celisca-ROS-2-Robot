@@ -1,0 +1,8 @@
+{"simulator": "gazebo", "robot": "bumperbot", "map": "nav_maze", "goals_per_seed": 3, "sequence_start": [-7.0, -7.0],
+ "seeds": [11, 23, 37, 41, 53], "robot_radius": 0.12, "revision": "52964578685011089d52a71bcdf3efa5df200017",
+ "started": "2026-11-22T03:56:31+01:00", "finished": "2026-11-22T06:06:00+01:00",
+ "global": {"category": "global_planning", "launch_args": "local_planning:=pure_pursuit",
+            "planners": ["dijkstra_planner", "a_star_planner", "prm_planner", "rrt_planner", "rrt_star_planner"]},
+ "local": {"category": "local_planning", "launch_args": "global_planning:=a_star_planner",
+           "planners": ["pure_pursuit", "dwb_local_planner", "mppi_controller", "regulated_pure_pursuit", "follow_the_gap"]},
+ "order": "seed-major, planners interleaved within a seed; one physics-qualification lock hold per trial"}

@@ -1,0 +1,500 @@
+{
+ "planners": {
+  "dwb_local_planner": {
+   "seeds": [
+    11,
+    23,
+    37,
+    41,
+    53
+   ],
+   "trial_errors": [],
+   "goals": 15,
+   "succeeded": 14,
+   "success_rate": 0.933,
+   "outcomes": {
+    "succeeded": 14,
+    "aborted": 1
+   },
+   "duration_sim_s": {
+    "n": 14,
+    "median": 32.36,
+    "mean": 32.583,
+    "std": 7.462,
+    "min": 17.38,
+    "max": 46.08
+   },
+   "path_length_m": {
+    "n": 14,
+    "median": 6.944,
+    "mean": 6.839,
+    "std": 1.932,
+    "min": 3.144,
+    "max": 9.904
+   },
+   "mean_speed_mps": {
+    "n": 14,
+    "median": 0.216,
+    "mean": 0.208,
+    "std": 0.029,
+    "min": 0.137,
+    "max": 0.24
+   },
+   "final_error_truth_m": {
+    "n": 14,
+    "median": 0.063,
+    "mean": 0.068,
+    "std": 0.042,
+    "min": 0.018,
+    "max": 0.18
+   },
+   "min_footprint_clearance_m": {
+    "n": 15,
+    "median": 0.327,
+    "mean": 0.35,
+    "std": 0.081,
+    "min": 0.261,
+    "max": 0.53
+   }
+  },
+  "follow_the_gap": {
+   "seeds": [
+    11,
+    23,
+    37,
+    41,
+    53
+   ],
+   "trial_errors": [],
+   "goals": 15,
+   "succeeded": 15,
+   "success_rate": 1.0,
+   "outcomes": {
+    "succeeded": 15
+   },
+   "duration_sim_s": {
+    "n": 15,
+    "median": 28.32,
+    "mean": 28.177,
+    "std": 6.555,
+    "min": 14.66,
+    "max": 38.18
+   },
+   "path_length_m": {
+    "n": 15,
+    "median": 6.738,
+    "mean": 6.653,
+    "std": 1.884,
+    "min": 3.067,
+    "max": 9.88
+   },
+   "mean_speed_mps": {
+    "n": 15,
+    "median": 0.237,
+    "mean": 0.233,
+    "std": 0.02,
+    "min": 0.19,
+    "max": 0.259
+   },
+   "final_error_truth_m": {
+    "n": 15,
+    "median": 0.065,
+    "mean": 0.082,
+    "std": 0.048,
+    "min": 0.026,
+    "max": 0.185
+   },
+   "min_footprint_clearance_m": {
+    "n": 15,
+    "median": 0.304,
+    "mean": 0.302,
+    "std": 0.077,
+    "min": 0.163,
+    "max": 0.48
+   }
+  },
+  "mppi_controller": {
+   "seeds": [
+    11,
+    23,
+    37,
+    41,
+    53
+   ],
+   "trial_errors": [],
+   "goals": 15,
+   "succeeded": 15,
+   "success_rate": 1.0,
+   "outcomes": {
+    "succeeded": 15
+   },
+   "duration_sim_s": {
+    "n": 15,
+    "median": 74.82,
+    "mean": 64.789,
+    "std": 23.504,
+    "min": 24.72,
+    "max": 88.44
+   },
+   "path_length_m": {
+    "n": 15,
+    "median": 6.875,
+    "mean": 7.01,
+    "std": 1.761,
+    "min": 3.802,
+    "max": 10.055
+   },
+   "mean_speed_mps": {
+    "n": 15,
+    "median": 0.097,
+    "mean": 0.135,
+    "std": 0.083,
+    "min": 0.046,
+    "max": 0.275
+   },
+   "final_error_truth_m": {
+    "n": 15,
+    "median": 0.082,
+    "mean": 0.087,
+    "std": 0.034,
+    "min": 0.021,
+    "max": 0.161
+   },
+   "min_footprint_clearance_m": {
+    "n": 15,
+    "median": 0.372,
+    "mean": 0.362,
+    "std": 0.068,
+    "min": 0.184,
+    "max": 0.48
+   }
+  },
+  "pure_pursuit": {
+   "seeds": [
+    11,
+    23,
+    37,
+    41,
+    53
+   ],
+   "trial_errors": [],
+   "goals": 15,
+   "succeeded": 15,
+   "success_rate": 1.0,
+   "outcomes": {
+    "succeeded": 15
+   },
+   "duration_sim_s": {
+    "n": 15,
+    "median": 39.6,
+    "mean": 42.464,
+    "std": 20.222,
+    "min": 17.54,
+    "max": 111.16
+   },
+   "path_length_m": {
+    "n": 15,
+    "median": 6.781,
+    "mean": 6.795,
+    "std": 1.851,
+    "min": 3.139,
+    "max": 9.923
+   },
+   "mean_speed_mps": {
+    "n": 15,
+    "median": 0.179,
+    "mean": 0.173,
+    "std": 0.044,
+    "min": 0.061,
+    "max": 0.229
+   },
+   "final_error_truth_m": {
+    "n": 15,
+    "median": 0.087,
+    "mean": 0.076,
+    "std": 0.04,
+    "min": 0.01,
+    "max": 0.144
+   },
+   "min_footprint_clearance_m": {
+    "n": 15,
+    "median": 0.327,
+    "mean": 0.332,
+    "std": 0.065,
+    "min": 0.234,
+    "max": 0.48
+   }
+  },
+  "regulated_pure_pursuit": {
+   "seeds": [
+    11,
+    23,
+    37,
+    41,
+    53
+   ],
+   "trial_errors": [],
+   "goals": 15,
+   "succeeded": 15,
+   "success_rate": 1.0,
+   "outcomes": {
+    "succeeded": 15
+   },
+   "duration_sim_s": {
+    "n": 15,
+    "median": 29.38,
+    "mean": 28.844,
+    "std": 6.506,
+    "min": 14.92,
+    "max": 38.06
+   },
+   "path_length_m": {
+    "n": 15,
+    "median": 6.767,
+    "mean": 6.726,
+    "std": 1.883,
+    "min": 3.075,
+    "max": 9.882
+   },
+   "mean_speed_mps": {
+    "n": 15,
+    "median": 0.24,
+    "mean": 0.23,
+    "std": 0.024,
+    "min": 0.181,
+    "max": 0.26
+   },
+   "final_error_truth_m": {
+    "n": 15,
+    "median": 0.092,
+    "mean": 0.088,
+    "std": 0.052,
+    "min": 0.017,
+    "max": 0.172
+   },
+   "min_footprint_clearance_m": {
+    "n": 15,
+    "median": 0.327,
+    "mean": 0.335,
+    "std": 0.064,
+    "min": 0.261,
+    "max": 0.48
+   }
+  }
+ },
+ "paired": {
+  "dwb_local_planner vs follow_the_gap": {
+   "goals_both_succeeded": 14,
+   "identical_goal_positions": 14,
+   "time_ratio": {
+    "n": 14,
+    "median": 1.139,
+    "mean": 1.167,
+    "std": 0.13,
+    "min": 1.001,
+    "max": 1.479
+   },
+   "path_ratio": {
+    "n": 14,
+    "median": 1.013,
+    "mean": 1.02,
+    "std": 0.018,
+    "min": 1.0,
+    "max": 1.061
+   }
+  },
+  "dwb_local_planner vs mppi_controller": {
+   "goals_both_succeeded": 14,
+   "identical_goal_positions": 14,
+   "time_ratio": {
+    "n": 14,
+    "median": 0.468,
+    "mean": 0.631,
+    "std": 0.346,
+    "min": 0.198,
+    "max": 1.255
+   },
+   "path_ratio": {
+    "n": 14,
+    "median": 0.978,
+    "mean": 0.965,
+    "std": 0.055,
+    "min": 0.778,
+    "max": 1.02
+   }
+  },
+  "dwb_local_planner vs pure_pursuit": {
+   "goals_both_succeeded": 14,
+   "identical_goal_positions": 14,
+   "time_ratio": {
+    "n": 14,
+    "median": 0.894,
+    "mean": 0.876,
+    "std": 0.101,
+    "min": 0.705,
+    "max": 1.014
+   },
+   "path_ratio": {
+    "n": 14,
+    "median": 1.003,
+    "mean": 1.006,
+    "std": 0.012,
+    "min": 0.994,
+    "max": 1.039
+   }
+  },
+  "dwb_local_planner vs regulated_pure_pursuit": {
+   "goals_both_succeeded": 14,
+   "identical_goal_positions": 14,
+   "time_ratio": {
+    "n": 14,
+    "median": 1.132,
+    "mean": 1.15,
+    "std": 0.11,
+    "min": 1.017,
+    "max": 1.419
+   },
+   "path_ratio": {
+    "n": 14,
+    "median": 1.004,
+    "mean": 1.011,
+    "std": 0.015,
+    "min": 0.996,
+    "max": 1.055
+   }
+  },
+  "follow_the_gap vs mppi_controller": {
+   "goals_both_succeeded": 15,
+   "identical_goal_positions": 15,
+   "time_ratio": {
+    "n": 15,
+    "median": 0.388,
+    "mean": 0.544,
+    "std": 0.33,
+    "min": 0.167,
+    "max": 1.116
+   },
+   "path_ratio": {
+    "n": 15,
+    "median": 0.961,
+    "mean": 0.94,
+    "std": 0.061,
+    "min": 0.759,
+    "max": 0.995
+   }
+  },
+  "follow_the_gap vs pure_pursuit": {
+   "goals_both_succeeded": 15,
+   "identical_goal_positions": 15,
+   "time_ratio": {
+    "n": 15,
+    "median": 0.762,
+    "mean": 0.723,
+    "std": 0.158,
+    "min": 0.247,
+    "max": 0.882
+   },
+   "path_ratio": {
+    "n": 15,
+    "median": 0.99,
+    "mean": 0.977,
+    "std": 0.036,
+    "min": 0.848,
+    "max": 0.998
+   }
+  },
+  "follow_the_gap vs regulated_pure_pursuit": {
+   "goals_both_succeeded": 15,
+   "identical_goal_positions": 15,
+   "time_ratio": {
+    "n": 15,
+    "median": 0.986,
+    "mean": 0.976,
+    "std": 0.044,
+    "min": 0.827,
+    "max": 1.016
+   },
+   "path_ratio": {
+    "n": 15,
+    "median": 0.994,
+    "mean": 0.989,
+    "std": 0.013,
+    "min": 0.956,
+    "max": 1.004
+   }
+  },
+  "mppi_controller vs pure_pursuit": {
+   "goals_both_succeeded": 15,
+   "identical_goal_positions": 15,
+   "time_ratio": {
+    "n": 15,
+    "median": 1.84,
+    "mean": 1.782,
+    "std": 1.066,
+    "min": 0.62,
+    "max": 5.002
+   },
+   "path_ratio": {
+    "n": 15,
+    "median": 1.02,
+    "mean": 1.043,
+    "std": 0.068,
+    "min": 0.998,
+    "max": 1.287
+   }
+  },
+  "mppi_controller vs regulated_pure_pursuit": {
+   "goals_both_succeeded": 15,
+   "identical_goal_positions": 15,
+   "time_ratio": {
+    "n": 15,
+    "median": 2.558,
+    "mean": 2.422,
+    "std": 1.23,
+    "min": 0.884,
+    "max": 5.881
+   },
+   "path_ratio": {
+    "n": 15,
+    "median": 1.025,
+    "mean": 1.057,
+    "std": 0.076,
+    "min": 1.005,
+    "max": 1.313
+   }
+  },
+  "pure_pursuit vs regulated_pure_pursuit": {
+   "goals_both_succeeded": 15,
+   "identical_goal_positions": 15,
+   "time_ratio": {
+    "n": 15,
+    "median": 1.317,
+    "mean": 1.461,
+    "std": 0.531,
+    "min": 1.133,
+    "max": 3.344
+   },
+   "path_ratio": {
+    "n": 15,
+    "median": 1.004,
+    "mean": 1.013,
+    "std": 0.032,
+    "min": 0.987,
+    "max": 1.127
+   }
+  }
+ },
+ "manifest": {
+  "simulator": "gazebo",
+  "robot": "bumperbot",
+  "map": "nav_maze",
+  "category": "local_planning",
+  "planners": "follow_the_gap",
+  "seeds": "53",
+  "launch_args": "global_planning:=a_star_planner",
+  "goals_per_seed": "3",
+  "sequence_start": "-7.0 -7.0",
+  "revision": "52964578685011089d52a71bcdf3efa5df200017",
+  "started": "2026-11-22T06:04:02+01:00"
+ }
+}

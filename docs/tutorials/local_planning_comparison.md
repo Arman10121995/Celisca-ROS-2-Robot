@@ -118,6 +118,15 @@ second's):
     above keeps MPPI's own 7 of 15. `arrival_controller:=false` runs MPPI
     alone.
 
+**Repeat at one revision (2026-11-22).** V10 re-ran all five on the
+same goals at revision `52964578`:
+- Nav2 RPP, robot_lab pure pursuit and follow-the-gap: 15/15.
+- DWB: 14/15. It missed the same goal as in October.
+- MPPI with the Arrival assist: 15/15, but with 12 aborts and a median
+  of 74.8 s per goal, against 33 s on October 16. The slowdown is not yet
+  explained
+  ([round](../status/evidence/v10-planner-comparisons-2026-11-22/README.md)).
+
 **Path tracking.** Cross-track error from Gazebo truth to the latest
 global plan (`scripts/path_tracking_error.py` on the trial bags;
 [table](../status/evidence/r77-local-planner-comparison-2026-10-12/tracking.md)):

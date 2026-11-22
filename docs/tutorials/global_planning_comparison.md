@@ -181,6 +181,15 @@ expected at the earlier rate
 ([evidence](../status/evidence/r43-planner-comparison-2026-10-12/tf2-0.25.24-2026-10-13/README.md)).
 The failures above stay as measured.
 
+### Repeat at one revision (2026-11-22)
+
+V10 re-ran Dijkstra, A*, PRM, RRT and RRT* on the same protocol and goals,
+all at revision `52964578`. A*, Dijkstra and PRM reached 15/15, and RRT
+and RRT* 14/15. RRT again missed seed 11, goal 1, with no path found.
+Paired on shared goals, A* took 0.74× RRT's time and about 0.9–1.0× the
+others'. No TF freeze occurred
+([round](../status/evidence/v10-planner-comparisons-2026-11-22/README.md)).
+
 ## Limits
 
 - One robot, one map, five seeds, three goals each. These are
