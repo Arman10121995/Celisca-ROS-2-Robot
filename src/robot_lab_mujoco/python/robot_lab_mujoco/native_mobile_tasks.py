@@ -196,6 +196,9 @@ class NativeMobileTasks:
             return midpoint + offset
         if self.gripped_body != obj or not self.payload_confirmed:
             raise ValueError('Support placement requires a confirmed grasp of the selected object')
+        keys = ('left_body', 'right_body')
+        if {step[key] for key in keys} != {self.gripped_step[key] for key in keys}:
+            raise ValueError('Support placement must use the pads that grasped the payload')
         observation = self.measure_object(self.gripped_step)
         if observation['supported'] or min(observation['left_force'], observation['right_force']) < .1:
             raise ValueError('Support placement needs fresh bilateral contact on the unsupported payload')

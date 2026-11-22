@@ -133,7 +133,9 @@ def test_native_placement_uses_pad_offset_and_requires_contact_on_the_named_supp
     from types import SimpleNamespace
     from robot_lab_mujoco.native_mobile_tasks import NativeMobileTasks
 
-    scene = XML.replace('</worldbody>', '''
+    scene = XML.replace('<body name="object"', '''
+      <body name="spare_pad"><geom type="sphere" size=".01"/></body>
+      <body name="object"''').replace('</worldbody>', '''
       <geom name="delivery" type="box" size=".2 .1 .25" pos=".55 0 .25"/>
       <geom name="other" type="box" size=".2 .1 .25" pos="1.2 0 .25"/>
     </worldbody>''')
@@ -155,6 +157,8 @@ def test_native_placement_uses_pad_offset_and_requires_contact_on_the_named_supp
     measure = task.measure_object
     task.measure_object = lambda step: dict(supported=False, left_force=.2, right_force=.3)
     np.testing.assert_allclose(task._support_target(step), [.34, 0., .12], atol=1e-7)
+    with pytest.raises(ValueError, match='pads that grasped'):
+        task._support_target(dict(step, left_body='spare_pad'))
     with pytest.raises(ValueError, match='does not fit'):
         task._support_target(dict(step, offset=[0., .22, 0.]))
     task.measure_object = measure
