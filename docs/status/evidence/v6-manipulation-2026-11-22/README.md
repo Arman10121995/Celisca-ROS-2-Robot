@@ -77,6 +77,14 @@ not this IK.
 
 78 focused checks pass. The F100 live acceptance (R14.3) remains open.
 
+**Final code (dfe98603).** The Panda runs in the table above used the IK
+from before any fix, which stepped along the exact rotation vector. With
+the final code the Panda uses the cross-product default, so two runs
+confirm it:
+- the GUI cube on MuJoCo: **passed**
+  (`ik-step/final-code-panda-cube-gui-mujoco-report.json`);
+- the can on Gazebo: **passed** (`ik-step/final-code-panda-can-gazebo.json`).
+
 ## Limits
 
 - One run per backend for the cylinder and TIAGo; truth poses, except for
