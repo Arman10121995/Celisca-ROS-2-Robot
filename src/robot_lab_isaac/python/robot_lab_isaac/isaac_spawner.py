@@ -453,6 +453,11 @@ class IsaacSpawner(Node):
         proc = self._proc
         if proc is None or proc.stdin is None:
             return
+        camera_request = {}
+        if self._camera and self._camera.get('on_demand'):
+            camera_request['camera_demand'] = any(
+                publisher.get_subscription_count() for publisher in
+                (self._rgb_pub, self._depth_pub, self._camera_info_pub))
         if self._policy_targets is not None:
             # A legged policy owns every joint it was trained on; /cmd_vel
             # reaches it through the policy controller, not a wheel model.
@@ -460,7 +465,7 @@ class IsaacSpawner(Node):
                 sim_time = (self._state or {}).get('t')
             try:
                 proc.stdin.write(json.dumps({"joint_targets": self._policy_targets.targets(
-                    None if sim_time is None else float(sim_time))}) + "\n")
+                    None if sim_time is None else float(sim_time)), **camera_request}) + "\n")
                 proc.stdin.flush()
             except Exception:
                 pass
@@ -549,9 +554,10 @@ class IsaacSpawner(Node):
                 targets.velocity[name] = value
             for name, value in articulation_targets['position'].items():
                 targets.position[name] = value
-            proc.stdin.write(json.dumps({"joint_targets": dict({
-                "velocity": targets.velocity,
-                "position": targets.position}, **({"effort": efforts} if efforts else {}))}) + "\n")
+            joint_targets = {"velocity": targets.velocity, "position": targets.position}
+            if efforts:
+                joint_targets['effort'] = efforts
+            proc.stdin.write(json.dumps({"joint_targets": joint_targets, **camera_request}) + "\n")
             proc.stdin.flush()
         except Exception:
             pass
@@ -868,8 +874,12 @@ class IsaacSpawner(Node):
         rate = float(self.get_parameter("camera_rate").value)
         from robot_lab_utils.sim_frames import rigid_sensor_offsets
         offsets = rigid_sensor_offsets(urdf_text, link) if rate > 0 else {}
+        on_demand = parse_drive_config(self.get_parameter('drive_config').value).get('isaac_rgbd_on_demand', False)
+        if not isinstance(on_demand, bool):
+            raise ValueError('isaac_rgbd_on_demand must be a boolean')
         config = {
             "rate": rate if offsets else 0.0,
+            "on_demand": on_demand,
             "link": link,
             "width": int(self.get_parameter("camera_width").value),
             "height": int(self.get_parameter("camera_height").value),

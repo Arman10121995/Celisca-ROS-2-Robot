@@ -4,12 +4,14 @@ Isaac's python.sh runs the interpreter as a child instead of exec-ing it, so
 killing the launched process only killed the shell wrapper and orphaned Kit.
 These tests reproduce that process shape with stand-ins, without Isaac.
 """
+import io
 import os
 import subprocess
 import sys
 import tempfile
 import textwrap
 import unittest
+from unittest.mock import patch
 
 _SRC = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, os.path.join(_SRC, "robot_lab_isaac", "python"))
@@ -39,6 +41,19 @@ def _wrapper(child_code):
 
 @unittest.skipIf(_IMPORT_ERROR is not None, "isaac_spawner not importable")
 class IsaacRuntimeShutdownTests(unittest.TestCase):
+
+    def test_camera_demand_does_not_change_joint_command_or_stop(self):
+        from robot_lab_isaac.isaac_runtime import _StdinReader
+
+        reader = _StdinReader()
+        with patch.object(sys, 'stdin', io.StringIO(
+                '{"camera_demand":false,"joint_targets":{"position":{"shaft":0.5}}}\n'
+                '{"camera_demand":"true"}\n'
+                '{"cmd":"shutdown"}\n')):
+            reader.run()
+        self.assertFalse(reader.camera_demand)
+        self.assertEqual({'position': {'shaft': .5}}, reader.joint_targets)
+        self.assertTrue(reader.stop)
 
     def test_runtime_that_honours_stdin_eof_stops_gracefully(self):
         proc = _wrapper("""

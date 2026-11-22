@@ -924,6 +924,7 @@ class _StdinReader(threading.Thread):
         self.enabled = False
         self.terrain_enabled = False
         self.operator_id = ''
+        self.camera_demand = True
 
     def run(self):
         try:
@@ -935,6 +936,10 @@ class _StdinReader(threading.Thread):
                     msg = json.loads(line)
                 except ValueError:
                     continue
+                if not isinstance(msg, dict):
+                    continue
+                if isinstance(msg.get('camera_demand'), bool):
+                    self.camera_demand = msg['camera_demand']
                 if "cmd_vel" in msg:
                     self.cmd = list(msg["cmd_vel"])[:2]
                 elif "joint_targets" in msg:
@@ -1794,13 +1799,15 @@ def _run_stage(app, reader, cfg, state):
     sim_step = 0
     gait_observed_at=-math.inf
     headless = not bool(cfg.get('gui', False)) or not os.environ.get('DISPLAY')
-    render_every = camera['every'] if camera is not None else max(1, int(round(.1/dt)))
+    on_demand = bool((cfg.get('camera') or {}).get('on_demand'))
+    idle_every = max(1, int(round((.5 if on_demand and camera is not None else .1)/dt)))
+    render_every = camera['every'] if camera is not None else idle_every
     render_subframes = max(1, int(cfg.get('render_subframes') or 1)) if camera is not None else 1
     if render_subframes > 1:
         _emit({'event': 'log', 'msg': 'Camera frames rendered %d times each' % render_subframes})
     if headless:
-        _emit({'event': 'log', 'msg': 'Headless rendering every %d physics steps; '
-               'physics dt remains %.6f s' % (render_every, dt)})
+        _emit({'event': 'log', 'msg': 'Headless rendering every %d physics steps%s; '
+               'physics dt remains %.6f s' % (render_every, ' while the camera is requested' if on_demand else '', dt)})
     # Display hold: freeze joints at spawn so passive visualization of
     # legged/humanoid robots stays stable instead of collapsing under
     # gravity (the RViz "jump like crazy").  'true' always holds; 'auto'
@@ -1956,6 +1963,8 @@ def _run_stage(app, reader, cfg, state):
 
         if grip_contacts is not None:
             grip_contacts.begin_step()
+        camera_active = camera is not None and (not on_demand or reader.camera_demand)
+        camera_due = camera_active and (sim_step + 1) % camera['every'] == 0
         if headless:
             # Keep every physics/control step. Render only when a camera
             # sample is due (or periodically to service Kit without a camera).
@@ -1965,8 +1974,8 @@ def _run_stage(app, reader, cfg, state):
             # temporal accumulation and anti-aliasing see more than one
             # sample of it before the annotators are read.
             world.step(render=False)
-            if (sim_step + 1) % render_every == 0:
-                for _ in range(render_subframes):
+            if camera_due or (not camera_active and (sim_step + 1) % idle_every == 0):
+                for _ in range(render_subframes if camera_due else 1):
                     world.render()
         else:
             world.step(render=True)
@@ -2036,7 +2045,7 @@ def _run_stage(app, reader, cfg, state):
             else:
                 _emit({"event": "scan", "t": t, "ranges": ranges})
 
-        if camera is not None and sim_step % camera["every"] == 0:
+        if camera_due:
             try:
                 frame = _encode_rgbd(camera["rgb"].get_data(),
                                      camera["depth"].get_data(),

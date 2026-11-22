@@ -1827,6 +1827,9 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
   The base settled 0.0091 rad from the heading frozen into the pickup plan.
   An optional check above the block waits for fresh feedback from a stopped
   base and can replan from the measured pose and supported payload.
+  A private `drive.isaac_rgbd_on_demand` option suppresses frame readback
+  when no one subscribes to the RGB-D topics. The configured camera rate
+  returns with a subscriber. Its real-time factor impact remains pending.
   [GUI evidence](docs/status/evidence/r143-pro630-f100-2026-11-20/isaac-gui-gripper-confirmed.json).
 - **Remaining implementation:** qualify loaded PyBullet and Isaac missions,
   including measured pad contacts and custody. The physical linkage on
