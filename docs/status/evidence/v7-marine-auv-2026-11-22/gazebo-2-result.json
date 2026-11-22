@@ -1,0 +1,135 @@
+{
+  "backend": "gazebo",
+  "phases": {
+    "neutral": {
+      "duration_s": 4.9399999999999995,
+      "start": [
+        -4.0,
+        -3.0,
+        -1.5
+      ],
+      "end": [
+        -4.0,
+        -3.0,
+        -1.5
+      ],
+      "displacement_m": 0.0,
+      "depth_change_m": 0.0,
+      "max_depth_dev_m": 0.0,
+      "max_xy_drift_m": 0.0,
+      "yaw_change_rad": 0.0,
+      "speed_m_s": 0.0,
+      "enabled_end": true,
+      "reason_end": "AUV armed neutral; depth/heading guidance requires forward flow",
+      "mean_surge_m_s": 0.0,
+      "guidance_fraction": 0.0,
+      "depth_start": 1.5,
+      "depth_end": 1.5
+    },
+    "cruise": {
+      "duration_s": 9.96,
+      "start": [
+        -4.0,
+        -3.0,
+        -1.5
+      ],
+      "end": [
+        -1.8422212246138856,
+        -1.8193865080408302,
+        -1.4959205786132073
+      ],
+      "displacement_m": 2.459645799887216,
+      "depth_change_m": 0.0040794213867927365,
+      "max_depth_dev_m": 0.0394570903398912,
+      "max_xy_drift_m": 2.459645799887216,
+      "yaw_change_rad": -0.001752628592394334,
+      "speed_m_s": 0.24695238954690923,
+      "enabled_end": true,
+      "reason_end": "AUV armed neutral; depth/heading guidance requires forward flow",
+      "mean_surge_m_s": 0.24523591607277145,
+      "guidance_fraction": 0.8770053475935828,
+      "depth_start": 1.5,
+      "depth_end": 1.4983298340799585
+    },
+    "turn": {
+      "duration_s": 24.919999999999998,
+      "start": [
+        -1.8265590474492561,
+        -1.8108165799187572,
+        -1.4935231087607723
+      ],
+      "end": [
+        2.5492595988077356,
+        3.5963794702826775,
+        -1.478632172949876
+      ],
+      "displacement_m": 6.9559728255826565,
+      "depth_change_m": 0.0148909358108964,
+      "max_depth_dev_m": 0.1056606612955695,
+      "max_xy_drift_m": 6.9559728255826565,
+      "yaw_change_rad": 1.185150355269568,
+      "speed_m_s": 0.279132135858052,
+      "enabled_end": true,
+      "reason_end": "AUV armed neutral; depth/heading guidance requires forward flow",
+      "mean_surge_m_s": 0.29119895858544187,
+      "guidance_fraction": 1.0,
+      "depth_start": 1.4983298340799585,
+      "depth_end": 1.4800975579413862
+    },
+    "climb": {
+      "duration_s": 9.940000000000005,
+      "start": [
+        2.5501188521116385,
+        3.6081837650101933,
+        -1.4771875975812117
+      ],
+      "end": [
+        2.3415358635833226,
+        3.485153773773744,
+        -1.4786544031772852
+      ],
+      "displacement_m": 0.24216366747933996,
+      "depth_change_m": -0.0014668055960735948,
+      "max_depth_dev_m": 0.036485651877947056,
+      "max_xy_drift_m": 0.31006589858035233,
+      "yaw_change_rad": -0.11052700293588313,
+      "speed_m_s": 0.024362541999933585,
+      "enabled_end": false,
+      "reason_end": "AUV attitude/depth envelope exceeded",
+      "mean_surge_m_s": -0.007980521284450324,
+      "guidance_fraction": 0.08196721311475409,
+      "depth_start": 1.4800975579413862,
+      "depth_end": 1.4899833271627458
+    },
+    "loss": {
+      "duration_s": 5.980000000000004,
+      "start": [
+        2.3497895138031906,
+        3.48343240819611,
+        -1.4798317289468526
+      ],
+      "end": [
+        2.3527863724357125,
+        3.3742210245288997,
+        -1.5061548199307628
+      ],
+      "displacement_m": 0.1092524941782562,
+      "depth_change_m": -0.02632309098391028,
+      "max_depth_dev_m": 0.030624563945213623,
+      "max_xy_drift_m": 0.1092524941782562,
+      "yaw_change_rad": -0.004192797529355863,
+      "speed_m_s": 0.018269647855895674,
+      "enabled_end": false,
+      "reason_end": "AUV attitude/depth envelope exceeded",
+      "mean_surge_m_s": -0.018426006026173898,
+      "guidance_fraction": 0.0,
+      "depth_start": 1.4776599326094089,
+      "depth_end": 1.5100719781789527
+    }
+  },
+  "samples": 1040,
+  "loss": {
+    "disarmed": true,
+    "reason": "AUV attitude/depth envelope exceeded"
+  }
+}

@@ -1,0 +1,135 @@
+{
+  "backend": "isaac",
+  "phases": {
+    "neutral": {
+      "duration_s": 4.999999999,
+      "start": [
+        -4.0,
+        -3.0,
+        -1.5001176595687866
+      ],
+      "end": [
+        -4.0,
+        -3.0,
+        -1.5001176595687866
+      ],
+      "displacement_m": 0.0,
+      "depth_change_m": 0.0,
+      "max_depth_dev_m": 0.0,
+      "max_xy_drift_m": 0.0,
+      "yaw_change_rad": 0.0,
+      "speed_m_s": 0.0,
+      "enabled_end": true,
+      "reason_end": "AUV armed neutral; depth/heading guidance requires forward flow",
+      "mean_surge_m_s": 0.0,
+      "guidance_fraction": 0.0,
+      "depth_start": 1.5001176595687866,
+      "depth_end": 1.5001176595687866
+    },
+    "cruise": {
+      "duration_s": 9.990000001,
+      "start": [
+        -4.0,
+        -3.0,
+        -1.5001176595687866
+      ],
+      "end": [
+        -1.8731505870819092,
+        -1.8381012678146362,
+        -1.5038987398147583
+      ],
+      "displacement_m": 2.4235298820282747,
+      "depth_change_m": -0.0037810802459716797,
+      "max_depth_dev_m": 0.0037810802459716797,
+      "max_xy_drift_m": 2.4235298820282747,
+      "yaw_change_rad": -5.694201199446524e-07,
+      "speed_m_s": 0.24259558376233023,
+      "enabled_end": true,
+      "reason_end": "AUV armed neutral; depth/heading guidance requires forward flow",
+      "mean_surge_m_s": 0.2419667368678267,
+      "guidance_fraction": 0.858877086494689,
+      "depth_start": 1.5001176595687866,
+      "depth_end": 1.5038927793502808
+    },
+    "turn": {
+      "duration_s": 24.980000000000004,
+      "start": [
+        -1.8679089546203613,
+        -1.8352378606796265,
+        -1.5039047002792358
+      ],
+      "end": [
+        4.136673450469971,
+        2.561105489730835,
+        -1.5120712518692017
+      ],
+      "displacement_m": 7.441965111058952,
+      "depth_change_m": -0.00816655158996582,
+      "max_depth_dev_m": 0.00816655158996582,
+      "max_xy_drift_m": 7.441965111058952,
+      "yaw_change_rad": 0.49043037768250564,
+      "speed_m_s": 0.2979169379927522,
+      "enabled_end": true,
+      "reason_end": "AUV armed neutral; depth/heading guidance requires forward flow",
+      "mean_surge_m_s": 0.2978038064231358,
+      "guidance_fraction": 1.0,
+      "depth_start": 1.5038987398147583,
+      "depth_end": 1.512049913406372
+    },
+    "climb": {
+      "duration_s": 9.980000000000004,
+      "start": [
+        4.140644073486328,
+        2.5656185150146484,
+        -1.5120819807052612
+      ],
+      "end": [
+        5.8986053466796875,
+        4.988880157470703,
+        -1.4990978240966797
+      ],
+      "displacement_m": 2.993764323697915,
+      "depth_change_m": 0.012984156608581543,
+      "max_depth_dev_m": 0.012984156608581543,
+      "max_xy_drift_m": 2.993764323697915,
+      "yaw_change_rad": 0.1877829915469913,
+      "speed_m_s": 0.2999763851400715,
+      "enabled_end": true,
+      "reason_end": "AUV armed neutral; depth/heading guidance requires forward flow",
+      "mean_surge_m_s": 0.29740732268839637,
+      "guidance_fraction": 1.0,
+      "depth_start": 1.5120712518692017,
+      "depth_end": 1.4991896152496338
+    },
+    "loss": {
+      "duration_s": 5.980000000000004,
+      "start": [
+        5.901660442352295,
+        4.994054317474365,
+        -1.4990060329437256
+      ],
+      "end": [
+        6.664119243621826,
+        6.410614490509033,
+        -1.485319972038269
+      ],
+      "displacement_m": 1.6087218987324623,
+      "depth_change_m": 0.013686060905456543,
+      "max_depth_dev_m": 0.013807177543640137,
+      "max_xy_drift_m": 1.6087218987324623,
+      "yaw_change_rad": 0.03546873851841115,
+      "speed_m_s": 0.26901703992181625,
+      "enabled_end": false,
+      "reason_end": "AUV feedback/operator loss; propulsion zero, fins neutral",
+      "mean_surge_m_s": 0.26696160073292347,
+      "guidance_fraction": 0.015706806282722512,
+      "depth_start": 1.4990060329437256,
+      "depth_end": 1.4853098392486572
+    }
+  },
+  "samples": 3548,
+  "loss": {
+    "disarmed": true,
+    "reason": "AUV feedback/operator loss; propulsion zero, fins neutral"
+  }
+}
