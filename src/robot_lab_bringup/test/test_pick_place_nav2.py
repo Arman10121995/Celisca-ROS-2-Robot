@@ -31,6 +31,24 @@ def test_calibrated_close_meters_only_the_shaft_during_closure(pick_place):
     assert node._stage_fingers(release) == release['fingers']
 
 
+def test_loaded_direct_drive_slows_and_ramps_without_delaying_stop(pick_place, monkeypatch):
+    node = object.__new__(pick_place.PickPlace)
+    node.mobile = {'carry_drive_speed_scale': .5, 'carry_drive_ramp_seconds': 2.}
+    node._twist = Mock()
+    phase = {'carrying': True}
+    monkeypatch.setattr(pick_place, '_now', lambda: 1.)
+    node._drive_twist(phase, -.15, .30)
+    assert node._twist.call_args.args == pytest.approx((-.00375, .0075))
+    monkeypatch.setattr(pick_place, '_now', lambda: 1.05)
+    node._drive_twist(phase, -.15, .30)
+    assert node._twist.call_args.args == pytest.approx((-.005625, .01125))
+    node._drive_twist(phase, 0., 0.)
+    assert node._twist.call_args.args == (0., 0.)
+    assert 'carry_drive_command' not in phase
+    node._drive_twist({}, -.15, .30)
+    assert node._twist.call_args.args == (-.15, .30)
+
+
 def test_pick_place_uses_authored_collision_pose_from_measured_model_pose(pick_place, tmp_path):
     node = object.__new__(pick_place.PickPlace)
     node.object_shapes, node.object_collision_frames = {}, {}

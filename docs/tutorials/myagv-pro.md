@@ -122,8 +122,8 @@ The F100 uses the vendor's Pro630 flange and CAD. The inner pads are
 separate collision meshes. The fixed TF frame `pro630_f100_grasp_reference`
 marks the pad midpoint at a nominal 40.6 mm opening. The jaw linkage shifts
 that midpoint as the opening changes. Robot Lab uses a 0.8 Nm motor cap,
-0.5 rad/s reference cap and declared model damping. Pick, carry, release
-and additional backend missions remain open.
+0.5 rad/s reference cap and declared model damping. The successful MuJoCo
+missions below qualify the short-block fixture.
 [Pinned vendor source](https://github.com/elephantrobotics/mycobot_ros2/tree/b8176c264e583b073e1c4293c2edb1241b20e1aa/mycobot_pro/mycobotpro630_gazeboros2) · [MuJoCo evidence](../status/evidence/r143-pro630-f100-2026-11-20/README.md).
 
 #### Experimental fetch with the F100
@@ -143,9 +143,12 @@ result covers the short-block map in MuJoCo Display with straight transport.
 **PyBullet → Display** also supports the jaw controls. In the normal GUI
 on `nav_empty`, Open, Close and the calibrated 54 mm opening completed
 with all five passive followers. Isaac Display on the same map also
-measured both presets and 53.995 mm for a 54 mm opening command. Loaded
-PyBullet and Isaac fetch remain experimental.
+measured both presets and 53.995 mm for a 54 mm opening command. In a
+private short-block trial, PyBullet lifted 46.2 mm and stopped when the
+right pad lost contact during carry. Isaac stopped at a one-sided grasp.
+The installed GUI reports both loaded workflows as experimental.
 [Measured PyBullet presets](../status/evidence/r143-pro630-f100-2026-11-20/bullet-gui-gripper-confirmed.json) · [Measured Isaac presets](../status/evidence/r143-pro630-f100-2026-11-20/isaac-gui-gripper-confirmed.json).
+[PyBullet carry receipt](../status/evidence/r143-pro630-f100-2026-11-20/bullet-gui-loaded-carry-pad-loss.json) · [Isaac closure receipt](../status/evidence/r143-pro630-f100-2026-11-20/isaac-gui-reanchor-one-sided-closure.json).
 
 To try Nav2 transport, keep the same experimental profile and map and
 select **MuJoCo → Navigation**. **Run fetch** becomes available when the Nav2 transit

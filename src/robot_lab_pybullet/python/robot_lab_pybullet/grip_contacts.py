@@ -57,6 +57,7 @@ class GripContacts:
 
     def measure(self, bodies, sim_time):
         forces = {name: dict.fromkeys((pad[0] for pad in self.pads.values()), 0.) for name in bodies}
+        non_pad = {name: dict.fromkeys(loads, 0.) for name, loads in forces.items()}
         objects = {uid: name for name, uid in bodies.items()}
         if objects:
             local_frames = {}
@@ -72,4 +73,7 @@ class GripContacts:
                 local = to_bounds[:3, :3] @ point + to_bounds[:3, 3]
                 if np.all(np.abs(local) <= half + PAD_POINT_MARGIN_M):
                     forces[obj][side] += float(contact[9])
-        return {'sim_time_s': float(sim_time), 'normal_force_n': forces}
+                else:
+                    non_pad[obj][side] += float(contact[9])
+        return {'sim_time_s': float(sim_time), 'normal_force_n': forces,
+                'non_pad_jaw_normal_force_n': non_pad}

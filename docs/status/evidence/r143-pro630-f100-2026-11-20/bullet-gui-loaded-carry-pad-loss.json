@@ -1,0 +1,400 @@
+{
+  "robot": "asset_elephant_myagv_pro_pro630_f100",
+  "simulator": "pybullet",
+  "mode": "display",
+  "map": "mobile_fetch_lab_f100",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=display map_name:=mobile_fetch_lab_f100 robot_model:=asset_elephant_myagv_pro_pro630_f100 simulator:=pybullet gui:=false perception:=none allow_experimental_assets:=true",
+  "model_sha256": "bf9ef87b82586316cb4ff59956cd87179c1f681bd352f46777468aebd2bb082d",
+  "passed": false,
+  "launch_returncode": 0,
+  "feature_revision": "b630efec",
+  "private_settings": {
+    "solver_iterations": 100,
+    "noncontact_iterations": 4,
+    "gear_erp": 0.35,
+    "added_inertia_kg_m2": {
+      "driver": 0.003,
+      "each_follower": 0.00015
+    },
+    "holonomic_docking": true,
+    "pregrasp_replan_max": 2
+  },
+  "task_seconds": 75.27,
+  "stage": "carry",
+  "message": "Both pads must keep contact with the carried object. Loaded footprint retained. Restart the simulation before another fetch.",
+  "stages": [
+    {
+      "phase": "to_object_arrived",
+      "final_pose": [
+        0.885,
+        -0.0008,
+        -0.002,
+        -0.0073
+      ],
+      "dock_recaptures": 0
+    },
+    {
+      "phase": "to_object",
+      "seconds": 26.96
+    },
+    {
+      "stage": "open",
+      "seconds": 4.55,
+      "object_truth": [
+        1.36,
+        -0.0,
+        0.545
+      ],
+      "tcp_estimate": [
+        0.8873,
+        0.2844,
+        1.0728
+      ],
+      "passed": true
+    },
+    {
+      "stage": "above_object",
+      "seconds": 13.65,
+      "object_truth": [
+        1.36,
+        -0.0,
+        0.545
+      ],
+      "tcp_estimate": [
+        1.3599,
+        -0.0003,
+        0.605
+      ],
+      "passed": true,
+      "replan": true,
+      "pregrasp_base": [
+        0.8972215056419373,
+        -0.0033964558970183134,
+        -0.0019569043070077896,
+        -0.017756290086498174
+      ],
+      "projected_tool_drift_m": 0.01432,
+      "payload_drift_m": 1e-05
+    },
+    {
+      "stage": "open",
+      "seconds": 0.06,
+      "object_truth": [
+        1.36,
+        -0.0,
+        0.545
+      ],
+      "tcp_estimate": [
+        1.3721,
+        -0.0079,
+        0.605
+      ],
+      "passed": true
+    },
+    {
+      "stage": "above_object",
+      "seconds": 2.33,
+      "object_truth": [
+        1.36,
+        0.0,
+        0.545
+      ],
+      "tcp_estimate": [
+        1.3611,
+        -0.0001,
+        0.6059
+      ],
+      "passed": true,
+      "replan": false,
+      "pregrasp_base": [
+        0.8976494669914246,
+        -0.0016955432947725058,
+        -0.002011174103245139,
+        -0.020350470352143636
+      ],
+      "projected_tool_drift_m": 0.00066,
+      "payload_drift_m": 0.0
+    },
+    {
+      "stage": "down_to_grasp",
+      "seconds": 2.22,
+      "object_truth": [
+        1.3592,
+        0.0,
+        0.5452
+      ],
+      "tcp_estimate": [
+        1.3604,
+        0.0,
+        0.5758
+      ],
+      "passed": true
+    },
+    {
+      "stage": "close",
+      "seconds": 15.12,
+      "object_truth": [
+        1.3654,
+        0.0002,
+        0.5453
+      ],
+      "tcp_estimate": [
+        1.3604,
+        0.0,
+        0.5755
+      ],
+      "finger_positions": [
+        0.36021899745917185,
+        0.3603528274976982,
+        0.36090463987387555,
+        0.3629901514676005,
+        0.36052027011704624,
+        0.3609173488128091
+      ],
+      "passed": true,
+      "pad_normal_force_n": {
+        "left": 1.12131076249543,
+        "right": 7.864779025017926
+      },
+      "reason": ""
+    },
+    {
+      "stage": "lift",
+      "seconds": 5.82,
+      "object_truth": [
+        1.3736,
+        -0.0026,
+        0.5912
+      ],
+      "tcp_estimate": [
+        1.3595,
+        -0.0,
+        0.6244
+      ],
+      "passed": true,
+      "rise_m": 0.0462,
+      "hold_drift_m": 0.0012,
+      "reason": "",
+      "pad_normal_force_n": {
+        "left": 5.060989862113749,
+        "right": 5.649031463696373
+      }
+    },
+    {
+      "phase": "pick",
+      "seconds": 45.84
+    }
+  ],
+  "last_stage_samples": [
+    {
+      "t": 73.48,
+      "stage": "carry",
+      "object": [
+        1.3734,
+        -0.0047,
+        0.5906,
+        0.9999,
+        -0.0051,
+        0.0025,
+        0.0093
+      ],
+      "fingers": [
+        0.3626,
+        0.3626,
+        0.3625,
+        0.363,
+        0.3626,
+        0.3633
+      ],
+      "finger_references": [
+        0.3376,
+        0.3626,
+        0.3626,
+        0.363,
+        0.3622,
+        0.3631
+      ],
+      "pad_normal_force_n": {
+        "left": 2.437717834519715,
+        "right": 2.910198604691686
+      },
+      "arm_joints": {
+        "pro630_joint1_to_base": -0.16657,
+        "pro630_joint2_to_joint1": 0.98054,
+        "pro630_joint3_to_joint2": -0.44618,
+        "pro630_joint4_to_joint3": 1.03616,
+        "pro630_joint5_to_joint4": -1.57075,
+        "pro630_joint6_to_joint5": -0.99367
+      },
+      "base": [
+        0.9025,
+        -0.0108,
+        -0.0019,
+        -0.0094
+      ],
+      "object_in_base": [
+        0.4708,
+        0.0105,
+        0.5924
+      ]
+    },
+    {
+      "t": 74.0,
+      "stage": "carry",
+      "object": [
+        1.359,
+        -0.0042,
+        0.5908,
+        0.9999,
+        -0.0056,
+        0.0022,
+        0.0099
+      ],
+      "fingers": [
+        0.3626,
+        0.3627,
+        0.3625,
+        0.363,
+        0.3627,
+        0.3633
+      ],
+      "finger_references": [
+        0.3376,
+        0.3626,
+        0.3626,
+        0.363,
+        0.3622,
+        0.3631
+      ],
+      "pad_normal_force_n": {
+        "left": 2.3915521064666687,
+        "right": 2.9018211527100886
+      },
+      "arm_joints": {
+        "pro630_joint1_to_base": -0.16656,
+        "pro630_joint2_to_joint1": 0.98054,
+        "pro630_joint3_to_joint2": -0.44618,
+        "pro630_joint4_to_joint3": 1.03616,
+        "pro630_joint5_to_joint4": -1.57075,
+        "pro630_joint6_to_joint5": -0.99368
+      },
+      "base": [
+        0.8863,
+        -0.0111,
+        -0.0018,
+        -0.0075
+      ],
+      "object_in_base": [
+        0.4726,
+        0.0104,
+        0.5926
+      ]
+    },
+    {
+      "t": 74.55,
+      "stage": "carry",
+      "object": [
+        1.3348,
+        -0.0042,
+        0.5905,
+        0.9999,
+        -0.005,
+        0.0026,
+        0.0084
+      ],
+      "fingers": [
+        0.3626,
+        0.3626,
+        0.3624,
+        0.3629,
+        0.3626,
+        0.3633
+      ],
+      "finger_references": [
+        0.3376,
+        0.3626,
+        0.3626,
+        0.363,
+        0.3622,
+        0.3631
+      ],
+      "pad_normal_force_n": {
+        "left": 2.446691279898997,
+        "right": 0.0
+      },
+      "arm_joints": {
+        "pro630_joint1_to_base": -0.16657,
+        "pro630_joint2_to_joint1": 0.98054,
+        "pro630_joint3_to_joint2": -0.44618,
+        "pro630_joint4_to_joint3": 1.03616,
+        "pro630_joint5_to_joint4": -1.57074,
+        "pro630_joint6_to_joint5": -0.99367
+      },
+      "base": [
+        0.8595,
+        -0.009,
+        -0.0019,
+        -0.011
+      ],
+      "object_in_base": [
+        0.4752,
+        0.01,
+        0.5924
+      ]
+    },
+    {
+      "t": 75.27,
+      "stage": "carry",
+      "object": [
+        1.2903,
+        0.0006,
+        0.5916,
+        1.0,
+        -0.0064,
+        0.0023,
+        0.0072
+      ],
+      "fingers": [
+        0.3623,
+        0.3623,
+        0.3621,
+        0.3625,
+        0.3623,
+        0.3628
+      ],
+      "finger_references": [
+        0.3376,
+        0.3626,
+        0.3626,
+        0.363,
+        0.3622,
+        0.3631
+      ],
+      "pad_normal_force_n": {
+        "left": 2.450036227963763,
+        "right": 0.0
+      },
+      "arm_joints": {
+        "pro630_joint1_to_base": -0.16656,
+        "pro630_joint2_to_joint1": 0.98054,
+        "pro630_joint3_to_joint2": -0.44618,
+        "pro630_joint4_to_joint3": 1.03616,
+        "pro630_joint5_to_joint4": -1.57075,
+        "pro630_joint6_to_joint5": -0.99368
+      },
+      "base": [
+        0.8197,
+        -0.0065,
+        -0.0017,
+        -0.0099
+      ],
+      "object_in_base": [
+        0.4705,
+        0.0118,
+        0.5933
+      ]
+    }
+  ],
+  "raw_report": "/workspace/molar/robot_lab_runtime/pro630-gripper-20261120/bullet-loaded-second-anchor-s4nrWh/gui/report.json",
+  "raw_sha256": "8f11ebf79ba4a0f7c4cfd4e933fd5946cdc7c07cc77f9f5b9b22699c17d85cb4"
+}

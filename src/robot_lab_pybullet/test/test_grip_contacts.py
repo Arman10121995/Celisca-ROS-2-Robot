@@ -41,4 +41,5 @@ def test_force_reader_distinguishes_pad_points_from_the_same_links_hull(tmp_path
     assert reader.measure({'block': 8, 'other': 9}, 3.5) == {
         'sim_time_s': 3.5,
         'normal_force_n': {'block': {'left': 1.5, 'right': 2.}, 'other': {'left': 0., 'right': 0.}},
+        'non_pad_jaw_normal_force_n': {'block': {'left': 12., 'right': 0.}, 'other': {'left': 0., 'right': 0.}},
     }

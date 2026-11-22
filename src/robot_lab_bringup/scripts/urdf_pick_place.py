@@ -205,6 +205,12 @@ class PickPlace(Node):
         self.dock_tolerance = float((self.mobile or {}).get('dock_position_tolerance', POSITION_TOLERANCE))
         if not .005 <= self.dock_tolerance <= POSITION_TOLERANCE:
             raise ValueError('Docking position tolerance must be between 5 and 30 mm')
+        if self.mobile:
+            speed_scale = float(self.mobile.get('carry_drive_speed_scale', 1.0))
+            ramp_seconds = float(self.mobile.get('carry_drive_ramp_seconds', 0.0))
+            if not 0.0 < speed_scale <= 1.0 or not math.isfinite(ramp_seconds) or ramp_seconds < 0.0:
+                raise ValueError('Loaded direct drive requires a speed scale in (0, 1] and a nonnegative ramp')
+            self.mobile.update(carry_drive_speed_scale=speed_scale, carry_drive_ramp_seconds=ramp_seconds)
         self.base_pose, self.base_twist, self.base_at = None, (0.0, 0.0), -math.inf
         if self.mobile:
             self.create_subscription(Odometry, '/odom/ground_truth', self._on_odom, 10)
@@ -632,6 +638,9 @@ class PickPlace(Node):
         elif phase['name'] == 'carry':
             goal, xy = self._place_standoff(task, pose[:2])
             task['plan']['place_xy'] = [round(v, 3) for v in xy]
+            task['plan']['carry_direct_drive'] = dict(
+                speed_scale=self.mobile.get('carry_drive_speed_scale', 1.0),
+                ramp_seconds=self.mobile.get('carry_drive_ramp_seconds', 0.0))
             phase['waypoints'] = self._route(task, goal, pose, self.mobile['back_off'], self.mobile['carry_radius'])
             phase['reference'] = self._in_base(self.truth[task['object']][:3]).tolist()
         else:
@@ -1044,19 +1053,27 @@ class PickPlace(Node):
                                     % (drift, ', '.join('%+.3f' % v for v in offset)))
             if self.spec.pad_geoms and self._pads_lost(phase, task['object']):
                 return self._finish('failed', 'Both pads must keep contact with the carried object')
+            if (self.mobile.get('carry_drive_ramp_seconds', 0.) > 0. and 'pads_lost_at' in phase
+                    and phase.get('nav_goal') is None):
+                self.message = 'Pausing loaded drive while both pads regain contact.'
+                phase.pop('carry_drive_command', None)
+                return self._twist(0., 0.)
         if self.state.get('base_inhibited', self.state.get('active')):
             # The plant inhibits every drive command while the held arm moves.
             # An already-owned Nav2 goal can wait through that pause. Direct
             # driving and new goals need the interlock to clear first.
             interlock['drive_ticks_with_articulation_active'] += 1
             if phase.get('nav_goal') is None:
+                phase.pop('carry_drive_command', None)
                 return self._twist(0.0, 0.0)
             if self.state.get('holding') is not True or self.state.get('coupling_inhibited'):
                 return self._finish('failed', 'Articulation interlock during a Nav2 leg')
         x, y, _z, yaw = self.base_pose
         if phase['waypoint'] < len(phase['waypoints']) and phase['waypoints'][phase['waypoint']].get('nav2'):
+            phase.pop('carry_drive_command', None)
             return self._nav2_leg(task, phase, phase['waypoints'][phase['waypoint']])
         if phase['waypoint'] >= len(phase['waypoints']):
+            phase.pop('carry_drive_command', None)
             self._twist(0.0, 0.0)
             if max(self.base_twist) < STILL_SPEED:
                 phase['still'] = phase.get('still') or _now()
@@ -1098,7 +1115,7 @@ class PickPlace(Node):
                 scale = min(.8, HOLONOMIC_DOCK_SPEED_MPS/distance) if distance > position_tolerance else 0.
                 c, s = math.cos(yaw), math.sin(yaw)
                 wz = max(-HOLONOMIC_DOCK_TURN_RPS, min(HOLONOMIC_DOCK_TURN_RPS, 1.5*yaw_error))
-                return self._twist(scale*(c*dx+s*dy), wz, vy=scale*(-s*dx+c*dy))
+                return self._drive_twist(phase, scale*(c*dx+s*dy), wz, vy=scale*(-s*dx+c*dy))
         if distance > position_tolerance and not phase.get('at_point'):
             heading = math.atan2(dy, dx) + (math.pi if reverse else 0.0)
             error = _wrap(heading - yaw)
@@ -1106,21 +1123,44 @@ class PickPlace(Node):
             along = (math.cos(yaw) * dx + math.sin(yaw) * dy) * (-1 if reverse else 1)
             if phase.get('rolling') and along < 0:
                 phase['at_point'] = True
-                return self._twist(0.0, 0.0)
+                return self._drive_twist(phase, 0.0, 0.0)
             if abs(error) > (0.5 if phase.get('rolling') else 0.1):
                 phase['rolling'] = False
-                return self._twist(0.0, max(-TURN_SPEED, min(TURN_SPEED, 1.5 * error)))
+                return self._drive_twist(phase, 0.0, max(-TURN_SPEED, min(TURN_SPEED, 1.5 * error)))
             phase['rolling'] = True
             speed = min(DRIVE_SPEED, 0.6 * distance + 0.02)
-            return self._twist(-speed if reverse else speed, max(-TURN_SPEED, min(TURN_SPEED, 1.5 * error)))
+            return self._drive_twist(phase, -speed if reverse else speed, max(-TURN_SPEED, min(TURN_SPEED, 1.5 * error)))
         phase['at_point'] = True
         if 'yaw' in target:
             error = _wrap(target['yaw'] - yaw)
             if abs(error) > YAW_TOLERANCE:
-                return self._twist(0.0, max(-TURN_SPEED, min(TURN_SPEED, max(0.08, 1.5 * abs(error)) * math.copysign(1, error))))
+                angular = max(-TURN_SPEED, min(TURN_SPEED, max(0.08, 1.5 * abs(error)) * math.copysign(1, error)))
+                return self._drive_twist(phase, 0.0, angular)
         phase['waypoint'] += 1
         phase['rolling'] = phase['at_point'] = False
-        self._twist(0.0, 0.0)
+        self._drive_twist(phase, 0.0, 0.0)
+
+    def _drive_twist(self, phase, linear, angular, *, vy=0.):
+        """Apply a profile's loaded speed and slew limits to direct drive only."""
+        if not phase.get('carrying'):
+            return self._twist(linear, angular, vy=vy)
+        if linear == angular == vy == 0.0:
+            phase.pop('carry_drive_command', None)
+            return self._twist(0.0, 0.0)
+        scale = self.mobile.get('carry_drive_speed_scale', 1.0)
+        ramp = self.mobile.get('carry_drive_ramp_seconds', 0.0)
+        if ramp == 0.:
+            return self._twist(scale * linear, scale * angular, vy=scale * vy)
+        now = _now()
+        previous_time, previous = phase.get('carry_drive_command', (now-PERIOD, (0., 0., 0.)))
+        fraction = min(PERIOD, now - previous_time) / ramp
+        dx, dy, dw = (target * scale - current for target, current in zip((linear, vy, angular), previous))
+        # Limit the vector change so a diagonal move has the same acceleration.
+        change = max(math.hypot(dx, dy) / DRIVE_SPEED, abs(dw) / TURN_SPEED)
+        step = min(1., scale * fraction / change) if change else 1.
+        command = (previous[0] + step * dx, previous[1] + step * dy, previous[2] + step * dw)
+        phase['carry_drive_command'] = (now, command)
+        self._twist(command[0], command[2], vy=command[1])
 
     def _nav2_leg(self, task, phase, target):
         """Send one NavigateToPose goal and wait for its result; Nav2 owns /cmd_vel meanwhile."""

@@ -1822,6 +1822,12 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
   projected tool drift from 17.63 mm to 4.97 mm. The bounded check now allows
   a second correction if drift is measurably decreasing.
   [Mobile retry](docs/status/evidence/r143-pro630-f100-2026-11-20/bullet-gui-reanchor-drift.json).
+  A later GUI trial with the private transmission settings lifted the block
+  46.2 mm and began the loaded retreat. Right-pad force then dropped to zero
+  and the executor stopped with the payload footprint retained. The direct
+  carry controller now accepts optional speed and acceleration limits. The
+  Bullet trace separates load outside the pad bounds from measured pad load.
+  [Carry receipt](docs/status/evidence/r143-pro630-f100-2026-11-20/bullet-gui-loaded-carry-pad-loss.json).
   [GUI evidence](docs/status/evidence/r143-pro630-f100-2026-11-20/bullet-gui-gripper-confirmed.json).
 - **Isaac Display:** the F100 imported with one powered shaft and five
   passive followers. The normal GUI on `nav_empty` reached both presets
@@ -1834,7 +1840,11 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
   base and can replan from the measured pose and supported payload.
   A private `drive.isaac_rgbd_on_demand` option suppresses frame readback
   when no one subscribes to the RGB-D topics. The configured camera rate
-  returns with a subscriber. Its real-time factor impact remains pending.
+  returns with a subscriber. With both options enabled, the next live run
+  reduced projected drift from 6.89 to 0.14 mm. The left pad still registered
+  zero force in all 44 closure samples. The other jaw colliders registered
+  zero on both sides. The real-time factor impact remains pending.
+  [Closure receipt](docs/status/evidence/r143-pro630-f100-2026-11-20/isaac-gui-reanchor-one-sided-closure.json).
   [GUI evidence](docs/status/evidence/r143-pro630-f100-2026-11-20/isaac-gui-gripper-confirmed.json).
 - **Remaining implementation:** qualify loaded PyBullet and Isaac missions,
   including measured pad contacts and custody. The physical linkage on
