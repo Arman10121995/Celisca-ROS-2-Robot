@@ -329,7 +329,7 @@ def provision(store, download=False, variant='fortress'):
             finger_open=1., min_object_width=.035, max_object_width=.048, ik_rotation_step='exact',
             default_approach=.06, default_lift=.05,
             arm_seeds=[[-.188, 1.125, -.641, 1.086, -1.571, 2.151]],
-            mobile=dict(reach=.47, place_reach=.445, base_radius=.37, place_inset=.06, dock_position_tolerance=.01,
+            mobile=dict(reach=.47, place_reach=.445, base_radius=.37, place_inset=.06, dock_position_tolerance=.005,
                         nav_base_footprint=[[.29,.205],[.29,-.205],[-.29,-.205],[-.29,.205]]))
         profile.update(supported_simulators=['mujoco', 'pybullet'],
             supported_modes_by_simulator={'mujoco': ['display'], 'pybullet': []},

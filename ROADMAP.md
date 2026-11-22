@@ -1865,6 +1865,13 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
   after descent. The measured replay requested about 5.2 mm of lateral
   correction and produced a collision-checked alignment, close and lift
   path. The live task still requires fresh alignment and bilateral load.
+  **2026-11-22 (Claude takeover):** the IK rotation step is declared per
+  arm (the F100 keeps the exact step it was developed on). Two Isaac samples
+  docked 9.5–13.4 mm off and their reanchor replan found no descent IK.
+  With a 5 mm dock tolerance the base docked about 3 mm off, the replan, the
+  live 6.6 mm alignment and `down_to_grasp` passed, and `align_grasp` then
+  timed out with joint 4 at 0.0113 rad (limit 0.01). The F100 profile now
+  docks to 5 mm. Closure, carry and place are still unmeasured live.
   [GUI evidence](docs/status/evidence/r143-pro630-f100-2026-11-20/isaac-gui-gripper-confirmed.json).
 - **Remaining implementation:** qualify loaded PyBullet and Isaac missions,
   including measured pad contacts and custody. The physical linkage on

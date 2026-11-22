@@ -371,3 +371,26 @@ xvfb-run -a python3 scripts/qualify_urdf_arm_gui.py \
   --robot asset_elephant_myagv_pro_pro630_f100 --simulator mujoco \
   --map nav_empty --gripper-presets --output "$ROBOT_LAB_RUNTIME_ROOT/pro630-f100-repeat"
 ```
+
+## Isaac live fetch after the takeover (Claude, November 22)
+
+Codex's private Isaac qualification repeated with `claude-isaac-align-run.sh`:
+- a private runtime with the three profile opt-ins (`isaac_rgbd_on_demand`,
+  `align_live_grasp`, `reanchor_before_descent`);
+- the F100 IK on its exact rotation step;
+- the bounded alignment change of ddeb3c85.
+
+| Run | Dock (x, yaw) | Result |
+|---|---|---|
+| `claude-isaac-align-1252` | 0.8823, +0.019 → reanchored 0.8775, +0.028 | reanchor replan: no IK above the object / along the descent |
+| `claude-isaac-align-1301` | 0.8805, +0.024 → 0.8766, +0.020 | the same |
+| `claude-isaac-dock5mm-1307` (5 mm dock tolerance) | 0.8867, +0.020 → 0.8838, +0.011 | replan, live alignment (6.6 mm, one correction) and `down_to_grasp` passed. `align_grasp` timed out: joint 4 at 0.0113 rad, against the 0.01 rad settle tolerance |
+
+Codex's 07:38 run docked at 0.8836 and reanchored at 0.8830, inside 5 mm;
+its replan succeeded. Docking 9–13 mm short left the descent without IK, so
+the profile now docks to 5 mm (`dock_position_tolerance: 0.005`, the lowest
+value the executor accepts).
+
+The next blocker is the `align_grasp` settle: one arm joint 1.3 mrad over
+its tolerance while the measured alignment holds. Closure, lift, carry and
+place remain unmeasured live.
