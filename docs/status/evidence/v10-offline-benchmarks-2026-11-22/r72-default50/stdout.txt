@@ -1,0 +1,28 @@
+# R7.2 perception benchmark (synthetic scenes)
+
+Revision `b803693`, molar1 aarch64; 50 laser scenes, 10 point clouds.
+
+## Laser obstacle detection
+
+| Method | Precision | Recall | Median centroid offset (m) | ms p50 / max |
+|---|---|---|---|---|
+| obstacle_detector | 0.794 | 0.996 | -0.0304 | 1.11 / 1.27 |
+| scan_clusterer_fixed | 0.763 | 0.996 | -0.0297 | 0.77 / 0.80 |
+| scan_clusterer_adaptive | 0.854 | 0.989 | -0.0303 | 1.11 / 1.18 |
+| dbscan | 0.794 | 0.996 | -0.0304 | 1.32 / 1.48 |
+| euclidean | 0.794 | 0.996 | -0.0304 | 1.17 / 1.30 |
+
+## Ground removal (per point)
+
+| Method | Precision | Recall | ms p50 |
+|---|---|---|---|
+| pointcloud_segmenter (height 0.1 m) | 0.938 | 0.431 | 1.1 |
+| ransac_ground_removal | 0.930 | 1.000 | 37.4 |
+
+## Object clustering (non-ground points)
+
+| Method | Boxes found | Clusters per scene | ms p50 |
+|---|---|---|---|
+| euclidean_clusterer | 40/40 | 11.3 | 14.9 |
+| dbscan_clusterer | 40/40 | 16.0 | 14.9 |
+
