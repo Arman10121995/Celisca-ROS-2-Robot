@@ -27,6 +27,11 @@ run is pending. To install this variant on another checkout, run
 `python3 scripts/provision_mobile_manipulation_scene.py --cylinder` after
 sourcing the workspace and `scripts/ssd_env.sh`.
 
+For a place recipe after a measured grasp, **Place on → Delivery bench**
+uses the bench geometry and the observed pad-to-payload offset. See
+[Stretch object tasks](native-object-tasks.md#build-a-task) for the release
+checks and the manual world-coordinate option.
+
 For the pinned original Stretch at this fixture's default spawn, tested head
 targets are `head_pan = -1.576 rad` and `head_tilt = -0.923 rad`. Wait for the
 base to settle, then set those channels using the existing native joint

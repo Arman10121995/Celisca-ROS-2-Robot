@@ -61,16 +61,20 @@ Insert a base navigation destination using the existing map X/Y/heading
 controls. The arm must retract, the grasp must be confirmed, and both Nav2
 costmaps must report the matching payload outline before transport starts.
 
-Enter **Place XYZ · native world** for the gripper-pad midpoint at release.
-These coordinates are metres in `native_world`, not a camera frame. For this
-fixture, the second bench centre is approximately `(1.2, -0.62, 0.515)`;
-reachability and support still require physical inspection. **Add local place
-recipe** adds an approach from the selected direction, reach to the release
-point, gripper opening, measured supported release, retreat along that same
-direction (at least 10 cm) and retraction. Reposition the base before
-a local reach when needed; original Stretch has fewer wrist degrees of freedom
-than Stretch 3. Unreachable targets and routes for which no collision-free
-configuration path is found within the planning budget are refused.
+Select **Place on → Delivery bench** and press **Add local place recipe**
+to use the bench in the running lab scene. The executor derives the pad
+target from the measured grasp and the exact support collision box. It keeps
+the current pad orientation, checks that the payload fits and lowers it to
+10 mm above the surface before opening. The approach height field applies
+vertically. The recipe checks for stable contact on the selected bench, then
+retreats vertically and retracts. Select another named level box from the
+running scene if that is the desired destination.
+
+For manual placement, choose **World XYZ** and enter the gripper-pad
+midpoint in `native_world` metres. The manual recipe uses the selected
+approach direction and wrist orientation. Both forms still require a reachable
+pose and a collision-inspected path. Move the base within reach first.
+Original Stretch has fewer wrist degrees of freedom than Stretch 3.
 
 ## What the planner actually does
 

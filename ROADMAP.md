@@ -689,6 +689,11 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
     Mobile manipulation lab variant retains the two benches and occupancy
     grid. The compiled collision shape and dimensions must match the estimate.
     Source-camera pickup, transport and supported release remain unmeasured.
+  - 2026-11-22: the native Stretch task builder lists level box supports
+    from the running scene. A place recipe uses the held object's measured
+    collision bounds and pad midpoint, validates fit and requires stable
+    contact with the named support before retreat. World XYZ remains an
+    operator option. A complete native mission is still pending.
   - general recognition/pose for unconfigured, other shapes or occluded objects,
     source-specific grasp strategies and further
     source-specific object pipelines;

@@ -9,6 +9,18 @@ import time
 import numpy as np
 
 
+def pad_midpoint(model, data, bodies):
+    """World midpoint of the selected physical pad geometry centres."""
+    centers = []
+    for body in bodies:
+        geoms = [g for g in range(model.ngeom) if model.geom_bodyid[g] == body
+                 and (model.geom_contype[g] or model.geom_conaffinity[g])]
+        if not geoms:
+            raise ValueError('TCP requires physical collision pads on both selected bodies')
+        centers.append(np.mean(data.geom_xpos[geoms], axis=0))
+    return np.mean(centers, axis=0)
+
+
 class ControlKinematics:
     def __init__(self, model, snapshot, channels, robot_joints, excluded=()):
         import mujoco as mj
@@ -101,14 +113,7 @@ class ControlKinematics:
         return self.probe
 
     def midpoint(self, bodies):
-        centers = []
-        for body in bodies:
-            geoms = [g for g in range(self.model.ngeom) if self.model.geom_bodyid[g]==body
-                     and (self.model.geom_contype[g] or self.model.geom_conaffinity[g])]
-            if not geoms:
-                raise ValueError('TCP requires physical collision pads on both selected bodies')
-            centers.append(np.mean(self.probe.geom_xpos[geoms], axis=0))
-        return np.mean(centers, axis=0)
+        return pad_midpoint(self.model, self.probe, bodies)
 
     def midpoint_jacobian(self, bodies):
         jacobians = []

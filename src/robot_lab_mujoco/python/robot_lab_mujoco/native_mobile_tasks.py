@@ -25,6 +25,8 @@ from std_msgs.msg import String
 from std_srvs.srv import Trigger
 
 from robot_lab_utils.mobile_task import validate_task
+from robot_lab_utils.native_control_kinematics import pad_midpoint
+from robot_lab_utils.native_footprint import geometry_corners
 from robot_lab_utils.object_custody import ObjectCustody
 from robot_lab_utils.object_estimates import CAMERA_POSE_SOURCES, ObjectEstimates
 
@@ -34,6 +36,20 @@ class NativeMobileTasks:
         self.node, self.mobile, self.arm = node, node.mobile, node.articulation
         self.steps, self.handle, self.pending = None, None, False
         self.object_candidates, self.finger_candidates = [], []
+        self.support_candidates = {}
+        model, data, mj = node.model, node.data, node.mujoco
+        for geom in range(model.ngeom):
+            body = int(model.geom_bodyid[geom])
+            if ((0 < body < node.robot_bodies) or model.body_weldid[body] != 0
+                    or model.geom_type[geom] != mj.mjtGeom.mjGEOM_BOX
+                    or not (model.geom_contype[geom] or model.geom_conaffinity[geom])):
+                continue
+            rotation = data.geom_xmat[geom].reshape(3, 3)
+            top = data.geom_xpos[geom, 2] + rotation[2, 2]*model.geom_size[geom, 2]
+            if rotation[2, 2] >= math.cos(math.radians(.5)) and top > .03:
+                name = mj.mj_id2name(model, mj.mjtObj.mjOBJ_GEOM, geom)
+                if name:
+                    self.support_candidates[name] = geom
         for body in range(2, node.model.nbody):
             name = node.mujoco.mj_id2name(node.model, node.mujoco.mjtObj.mjOBJ_BODY, body)
             geoms = np.flatnonzero(node.model.geom_bodyid == body)
@@ -51,6 +67,7 @@ class NativeMobileTasks:
         self.gripped_step, self.grip_lost_since = None, None
         self.payload_body, self.gripped_body, self.payload_confirmed = None, None, False
         self.custody, self.object_outcome, self.object_measurement = None, 'unassessed', {}
+        self.released_support = None
         self.nav_guard_until, self.last_heartbeat = 0., -math.inf
         self.index, self.generation, self.task_id = 0, 0, ''
         self.events, self.event_path = [], None
@@ -121,6 +138,7 @@ class NativeMobileTasks:
     def measure_object(self, step):
         obj, sides = self.object_bodies(step)
         model, data, mj = self.node.model, self.node.data, self.node.mujoco
+        support = self.support_candidates[step['support_geom']] if 'support_geom' in step else None
         forces, support_force = [0., 0.], 0.
         for index, contact in enumerate(data.contact[:data.ncon]):
             bodies = [int(model.geom_bodyid[g]) for g in contact.geom]
@@ -135,15 +153,61 @@ class NativeMobileTasks:
                     forces[side] += force
             if other not in sides[0] | sides[1]:
                 # Release needs support from the environment, not the robot palm/chassis.
-                if step.get('condition') != 'released' or other == 0 or other >= self.node.robot_bodies:
+                if support is not None:
+                    if support in contact.geom:
+                        support_force += force
+                elif step.get('condition') != 'released' or other == 0 or other >= self.node.robot_bodies:
                     support_force += force
         velocity = np.zeros(6)
         mj.mj_objectVelocity(model, data, mj.mjtObj.mjOBJ_BODY, obj, velocity, 0)
         # Relative to the first finger's frame, so base/arm motion is not slip.
         reference = mj.mj_name2id(model, mj.mjtObj.mjOBJ_BODY, step['left_body'])
         relative = data.xmat[reference].reshape(3, 3).T @ (data.xpos[obj]-data.xpos[reference])
+        supported = support_force >= .1
+        if supported and support is not None:
+            supported = self._fits_support(support, self._payload_corners(obj))
         return dict(stamp=float(data.time), relative=relative.tolist(), left_force=forces[0],
-                    right_force=forces[1], supported=support_force>=.1, speed=float(np.linalg.norm(velocity[3:])))
+                    right_force=forces[1], supported=supported, speed=float(np.linalg.norm(velocity[3:])))
+
+    def _payload_corners(self, obj):
+        model, data = self.node.model, self.node.data
+        geoms = [geom for geom in range(model.ngeom)
+                 if model.geom_bodyid[geom] == obj and (model.geom_contype[geom] or model.geom_conaffinity[geom])]
+        if not geoms:
+            raise ValueError('Selected payload has no collision geometry')
+        return np.concatenate([geometry_corners(model, data, geom) for geom in geoms])
+
+    def _fits_support(self, support, corners):
+        model, data = self.node.model, self.node.data
+        local = (corners-data.geom_xpos[support]) @ data.geom_xmat[support].reshape(3, 3)
+        return bool(np.all(np.abs(local[:, :2]) <= model.geom_size[support, :2]+.001))
+
+    def _support_target(self, step):
+        """Solve for a pad midpoint using the actual grasp and support surface."""
+        model, data, mj = self.node.model, self.node.data, self.node.mujoco
+        obj, _ = self.object_bodies(step)
+        support = self.support_candidates[step['support_geom']]
+        pads = [mj.mj_name2id(model, mj.mjtObj.mjOBJ_BODY, step[key]) for key in ('left_body', 'right_body')]
+        midpoint = pad_midpoint(model, data, pads)
+        offset = np.asarray(step['offset'])
+        if step.get('support_retreat'):
+            if self.released_support != (obj, support) or self.payload_body is not None:
+                raise ValueError('Support retreat requires a measured release on the selected support')
+            return midpoint + offset
+        if self.gripped_body != obj or not self.payload_confirmed:
+            raise ValueError('Support placement requires a confirmed grasp of the selected object')
+        observation = self.measure_object(self.gripped_step)
+        if observation['supported'] or min(observation['left_force'], observation['right_force']) < .1:
+            raise ValueError('Support placement needs fresh bilateral contact on the unsupported payload')
+        corners = self._payload_corners(obj)
+        rotation = data.geom_xmat[support].reshape(3, 3)
+        surface = data.geom_xpos[support] + rotation[:, 2]*model.geom_size[support, 2]
+        center = (corners.min(axis=0)+corners.max(axis=0))/2
+        translation = surface - [center[0], center[1], corners[:, 2].min()] + offset
+        translation[2] += .01  # Leave room for the reach endpoint tolerance before the measured release.
+        if not self._fits_support(support, corners + translation):
+            raise ValueError('Observed payload does not fit on the selected support at this offset')
+        return midpoint + translation
 
     def active(self):
         return self.steps is not None
@@ -191,11 +255,14 @@ class NativeMobileTasks:
             if not isinstance(task_id, str) or not 1 <= len(task_id) <= 80:
                 raise ValueError('A unique operator task ID is required.')
             self.custody, self.object_outcome, self.object_measurement = None, 'unassessed', {}
+            self.released_support = None
             steps = validate_task(request.get('task'), self.arm.source_sha256, self.scene_id,
                 self.arm.channels, self.node.get_parameter('native_task').value == 'nav')
             for step in steps:
                 if step['kind'] in ('object_check','reach_object','grip','stow_arm'):
                     self.object_bodies(step)
+                if 'support_geom' in step and step['support_geom'] not in self.support_candidates:
+                    raise ValueError('The selected support is unavailable in the running scene')
             if any(step['kind'] == 'navigate' for step in steps) and not self.client.server_is_ready():
                 raise ValueError('The selected-world Nav2 action server is not ready.')
             directory = Path(os.environ.get('ROBOT_LAB_RUNTIME_ROOT', '/workspace/molar/robot_lab_runtime'))/'mobile-tasks'
@@ -275,7 +342,11 @@ class NativeMobileTasks:
 
     def begin_reach(self, step):
         source=step.get('pose_source','native_truth')
-        if source in CAMERA_POSE_SOURCES:
+        if 'support_geom' in step:
+            target = self._support_target(step)
+            step = dict(step, target_xyz=target.tolist(), keep_orientation=True)
+            self.record(support_geometry=step['support_geom'], pad_target_m=step['target_xyz'])
+        elif source in CAMERA_POSE_SOURCES:
             observed=self.perception_estimates[source].get(step['object'],self.estimate_identity(),float(self.node.data.time))
             obj,_=self.object_bodies(step);model=self.node.model;mj=self.node.mujoco
             if obj in (self.gripped_body,self.payload_body):
@@ -530,7 +601,10 @@ class NativeMobileTasks:
                         self.gripped_step = dict(step) if self.payload_body is not None else None
                         self.payload_confirmed = step['condition']=='grasped'
                         self.object_outcome = step['condition']
-                        self.record(object_observation=measurement, object_condition=self.object_outcome)
+                        if self.object_outcome == 'released' and 'support_geom' in step:
+                            self.released_support = (self.object_bodies(step)[0], self.support_candidates[step['support_geom']])
+                        self.record(object_observation=measurement, object_condition=self.object_outcome,
+                                    support_geometry=step.get('support_geom'))
                         self.custody = (dict(step=step, relative=measurement['relative'], lost_since=None)
                                         if step['condition']=='grasped' else None)
                         self.advance()
@@ -588,6 +662,7 @@ class NativeMobileTasks:
             physical_pose=self.pose(), active=self.active(), nav_cancel_pending=bool(self.pending or self.handle),
             navigation_available=self.node.get_parameter('native_task').value == 'nav' and self.client.server_is_ready(),
             object_candidates=self.object_candidates, finger_candidates=self.finger_candidates,
+            support_candidates=sorted(self.support_candidates),
             perception_objects=(list(self.object_estimates.targets) if time.monotonic()-self.object_estimates.received<1.
                 and -.05<=float(self.node.data.time)-getattr(self.object_estimates,'stamp',-math.inf)<=.5 else []),
             perception_error=self.perception_error,

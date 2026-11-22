@@ -18,6 +18,7 @@ POSE_SOURCES = {
     'RGB-D colored boxes': RGBD_BOX_SOURCE,
     'RGB-D upright objects': RGBD_PRIMITIVE_SOURCE,
 }
+MANUAL_PLACE = 'World XYZ'
 
 
 class MobileTaskControls(ttk.LabelFrame):
@@ -82,14 +83,28 @@ class MobileTaskControls(ttk.LabelFrame):
 
         self.reach_offset = [tk.DoubleVar(value=0.) for _ in range(3)]
         self.place_target = [tk.DoubleVar(value=v) for v in (0.,0.,.5)]
+        self.place_support = tk.StringVar(value=MANUAL_PLACE)
+        self.support_labels = {MANUAL_PLACE: None}
+        self.place_entries = []
         for row, (label, values) in enumerate((('Object offset XYZ (m)',self.reach_offset),
                                                ('Place XYZ · native world',self.place_target)),16):
             line = ttk.Frame(self)
             line.grid(row=row,column=0,columnspan=2,sticky='ew')
+            if values is self.place_target:
+                selector = ttk.Frame(line)
+                selector.pack(fill='x', pady=(4, 1))
+                ttk.Label(selector, text='Place on').pack(side='left', padx=(0, 4))
+                self.support_selector = ttk.Combobox(selector, textvariable=self.place_support,
+                                                     values=(MANUAL_PLACE,), state='readonly', width=18)
+                self.support_selector.pack(side='left', expand=True, fill='x')
             ttk.Label(line,text=label).pack(anchor='w')
             fields = ttk.Frame(line);fields.pack(fill='x')
             for variable in values:
-                ttk.Entry(fields,textvariable=variable,width=8).pack(side='left',expand=True,fill='x')
+                entry = ttk.Entry(fields,textvariable=variable,width=8)
+                entry.pack(side='left',expand=True,fill='x')
+                if values is self.place_target:
+                    self.place_entries.append(entry)
+        self.place_support.trace_add('write', self.update_place_entries)
         self.approach_mode=tk.StringVar(value='Above +Z')
         self.approach_distance=tk.DoubleVar(value=.08)
         approach=ttk.Frame(self);approach.grid(row=18,column=0,columnspan=2,sticky='ew')
@@ -147,7 +162,7 @@ class MobileTaskControls(ttk.LabelFrame):
             self.status.set(str(exc))
 
     def object_step(self, kind, **values):
-        if kind=='reach_object':
+        if kind=='reach_object' and 'support_geom' not in values:
             if 'target_xyz' not in values and 'pose_source' not in values:
                 source=getattr(self,'pose_source',None)
                 values['pose_source']=POSE_SOURCES.get(
@@ -205,6 +220,27 @@ class MobileTaskControls(ttk.LabelFrame):
 
     def add_place(self):
         try:
+            label = self.place_support.get()
+            if label != MANUAL_PLACE:
+                support = self.support_labels.get(label)
+                if support not in self.state.get('support_candidates', []):
+                    raise ValueError('Select a support from the running scene')
+                distance = float(self.approach_distance.get())
+                if not .03 <= distance <= .25:
+                    raise ValueError('Choose a support approach height between 3 and 25 cm')
+                approach = self.object_step('reach_object', support_geom=support, offset=[0., 0., distance])
+                lower = self.object_step('reach_object', support_geom=support)
+                retreat = self.object_step('reach_object', support_geom=support, support_retreat=True,
+                                           offset=[0., 0., max(.1, distance)])
+                approach['name'], lower['name'], retreat['name'] = (
+                    'Approach ' + label, 'Lower to ' + label, 'Retreat from ' + label)
+                self.add_native_steps([
+                    approach, lower,
+                    self.object_step('grip', operation='open'),
+                    self.object_step('object_check', condition='released', support_geom=support),
+                    retreat,
+                    self.object_step('stow_arm')])
+                return
             xyz=[float(v.get()) for v in self.place_target]
             offset=self.approach_offset()
             distance=float(self.approach_distance.get())
@@ -219,6 +255,23 @@ class MobileTaskControls(ttk.LabelFrame):
                 self.object_step('stow_arm')])
         except (ValueError,tk.TclError) as exc:
             self.status.set(str(exc))
+
+    def update_place_entries(self, *_):
+        manual = self.place_support.get() == MANUAL_PLACE
+        for entry in self.place_entries:
+            entry.state(['!disabled'] if manual else ['disabled'])
+
+    def update_support_selector(self):
+        labels = {MANUAL_PLACE: None}
+        if self.ready():
+            for name in self.state.get('support_candidates', []):
+                label = name.removeprefix('environment_').removesuffix('_collision').replace('_', ' ').capitalize()
+                labels[label if label and label not in labels else name] = name
+        self.support_labels = labels
+        self.support_selector.configure(values=tuple(labels),
+            state='disabled' if self.state.get('active') else 'readonly')
+        if self.place_support.get() not in labels:
+            self.place_support.set(MANUAL_PLACE)
 
     def approach_offset(self):
         directions={'Above +Z':(0.,0.,1.),'From +X':(1.,0.,0.),'From -X':(-1.,0.,0.),
@@ -381,6 +434,7 @@ class MobileTaskControls(ttk.LabelFrame):
         self.connect()
         self.update_perception_status()
         self.pose_source_selector.configure(state='disabled' if self.state.get('active') else 'readonly')
+        self.update_support_selector()
         if self.ready():
             for name, choice in self.object_choices.items():
                 values = self.state.get('object_candidates' if name=='object' else 'finger_candidates', [])

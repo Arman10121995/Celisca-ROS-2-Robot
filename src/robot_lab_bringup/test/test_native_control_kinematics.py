@@ -129,6 +129,42 @@ def test_rgbd_cylinder_uses_camera_position_and_checks_compiled_collision(monkey
     np.testing.assert_allclose(planned[0]['target_xyz'], [.27, .02, .47])
 
 
+def test_native_placement_uses_pad_offset_and_requires_contact_on_the_named_support():
+    from types import SimpleNamespace
+    from robot_lab_mujoco.native_mobile_tasks import NativeMobileTasks
+
+    scene = XML.replace('</worldbody>', '''
+      <geom name="delivery" type="box" size=".2 .1 .25" pos=".55 0 .25"/>
+      <geom name="other" type="box" size=".2 .1 .25" pos="1.2 0 .25"/>
+    </worldbody>''')
+    model = mj.MjModel.from_xml_string(scene)
+    data = mj.MjData(model)
+    mj.mj_forward(model, data)
+    obj = mj.mj_name2id(model, mj.mjtObj.mjOBJ_BODY, 'object')
+    support = mj.mj_name2id(model, mj.mjtObj.mjOBJ_GEOM, 'delivery')
+    other = mj.mj_name2id(model, mj.mjtObj.mjOBJ_GEOM, 'other')
+    step = dict(object='object', left_body='left', right_body='right', support_geom='delivery',
+                offset=[0., 0., 0.])
+    task = NativeMobileTasks.__new__(NativeMobileTasks)
+    task.node = SimpleNamespace(model=model, data=data, mujoco=mj, robot_bodies=obj)
+    task.support_candidates = {'delivery': support, 'other': other}
+    task.payload_confirmed = True
+    task.gripped_body = task.payload_body = obj
+    task.gripped_step = dict(step, condition='grasped')
+    task.gripped_step.pop('support_geom')
+    measure = task.measure_object
+    task.measure_object = lambda step: dict(supported=False, left_force=.2, right_force=.3)
+    np.testing.assert_allclose(task._support_target(step), [.34, 0., .12], atol=1e-7)
+    with pytest.raises(ValueError, match='does not fit'):
+        task._support_target(dict(step, offset=[0., .22, 0.]))
+    task.measure_object = measure
+    start = model.jnt_qposadr[model.body_jntadr[obj]]
+    data.qpos[start:start+3] = [.55, 0., .508]
+    mj.mj_forward(model, data)
+    assert task.measure_object(dict(step, condition='released'))['supported']
+    assert not task.measure_object(dict(step, condition='released', support_geom='other'))['supported']
+
+
 def test_planner_honours_deadline(plant):
     model,data,channels=plant
     ik=ControlKinematics(model,data,channels,model.njnt-1)
@@ -253,7 +289,8 @@ def test_live_task_orientation_guard_checks_held_paths_and_explicit_pose_endpoin
     from robot_lab_utils.object_estimates import ObjectEstimates
     task.object_estimates=ObjectEstimates();task.perception_error=''
     task.perception_estimates={'aruco_pnp':task.object_estimates,'rgbd_box_top':ObjectEstimates('rgbd_box_top')}
-    task.object_candidates=[];task.finger_candidates=[];task.payload_body=None;task.payload_confirmed=False
+    task.object_candidates=[];task.finger_candidates=[];task.support_candidates={}
+    task.payload_body=None;task.payload_confirmed=False
     task.event_path=None;task.object_outcome='not assessed';task.object_measurement={}
     def cancel(reason,failed=False):events.append(reason);task.steps=None
     task.cancel=cancel;task.tick()

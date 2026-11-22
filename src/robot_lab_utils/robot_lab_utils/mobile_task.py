@@ -61,6 +61,12 @@ def validate_task(document, source_sha256, scene_id, channels, allow_navigation)
                     raise ValueError('Choose an exact model body name for '+key)
             if len({step[key] for key in ('object', 'left_body', 'right_body')}) != 3:
                 raise ValueError('Object and opposing gripper bodies must be distinct.')
+            if 'support_geom' in step:
+                support = step['support_geom']
+                if not isinstance(support, str) or not support.strip() or len(support) > 200:
+                    raise ValueError('Choose an exact support collision geometry.')
+                if step['kind'] != 'reach_object' and (step['kind'], step.get('condition')) != ('object_check', 'released'):
+                    raise ValueError('A named support is available for a reach or a release checkpoint.')
             if step['kind']=='reach_object':
                 if step.get('pose_source','native_truth') not in ('native_truth', *CAMERA_POSE_SOURCES):
                     raise ValueError('Choose native geometry, camera markers or RGB-D upright targets')
@@ -73,6 +79,14 @@ def validate_task(document, source_sha256, scene_id, channels, allow_navigation)
                 if not all(map(math.isfinite, offset)) or max(map(abs, offset)) > .5:
                     raise ValueError('Reach offsets must be finite and within 0.5 m')
                 step['offset'] = offset
+                if 'support_geom' in step:
+                    if ('target_xyz' in step or 'orientation_wxyz' in step
+                            or step.get('pose_source', 'native_truth') != 'native_truth'
+                            or offset[2] < 0.):
+                        raise ValueError('A support reach uses measured geometry and an offset at or above the surface.')
+                    step['keep_orientation'] = True
+                if 'support_retreat' in step and (type(step['support_retreat']) is not bool or 'support_geom' not in step):
+                    raise ValueError('A support retreat needs a named support and a boolean retreat flag.')
                 if not isinstance(step.get('keep_orientation',False),bool):
                     raise ValueError('Keep-orientation must be a boolean')
                 if 'orientation_wxyz' in step:

@@ -81,6 +81,16 @@ def test_task_steps_are_validated_and_normalized():
     assert steps[1]["waypoints"][0]["settle_s"] == 0.5
 
 
+def test_named_native_support_has_no_camera_or_fixed_tcp_override():
+    step = dict(kind='reach_object', object='block', left_body='left', right_body='right',
+                support_geom='table_top', offset=[0, 0, .08])
+    accepted, = validate_task(_task(step), 'src', 'scene', CHANNELS, False)
+    assert accepted['keep_orientation'] and accepted['offset'] == [0., 0., .08]
+    for override in ({'pose_source': 'rgbd_box_top'}, {'target_xyz': [0, 0, .5]}, {'offset': [0, 0, -.01]}):
+        with pytest.raises(ValueError, match='support reach'):
+            validate_task(_task(dict(step, **override)), 'src', 'scene', CHANNELS, False)
+
+
 @pytest.mark.parametrize("document, message", [
     (dict(_task(dict(kind="navigate", pose=[0, 0, 0])), scene_id="other"), "must match"),
     (_task(), "1–32"),

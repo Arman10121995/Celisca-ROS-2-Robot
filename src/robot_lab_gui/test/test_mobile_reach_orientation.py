@@ -67,7 +67,17 @@ def test_real_widget_builds_source_bound_recipe_without_dispatch():
         panel.pose_source.set('RGB-D upright objects');panel.add_pick()
         assert panel.steps[1]['pose_source'] == panel.steps[2]['pose_source'] == 'rgbd_primitive_top'
         assert panel.steps[4]['pose_source'] == 'native_truth'
+        panel.state['support_candidates'] = ['environment_delivery_bench_collision']
         panel.ready=lambda:True
+        panel.update_support_selector()
+        panel.place_support.set('Delivery bench')
+        panel.add_place()
+        assert len(panel.steps) == 13 and panel.place_entries[0].instate(['disabled'])
+        assert panel.steps[7]['offset'] == [0., 0., .08]
+        for index in (7, 8, 10, 11):
+            assert panel.steps[index]['support_geom'] == 'environment_delivery_bench_collision'
+            assert 'target_xyz' not in panel.steps[index]
+        assert panel.steps[10]['condition'] == 'released' and panel.steps[11]['support_retreat']
         panel.state.update(perception_sources={'aruco_pnp':['cube'], 'rgbd_primitive_top':['can']},
                            perception_errors={'rgbd_box_top':'ambiguous color'})
         panel.update_perception_status()
