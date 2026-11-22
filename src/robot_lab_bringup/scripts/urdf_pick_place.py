@@ -127,8 +127,10 @@ PREGRASP_RECHECK_M = .004
 PREGRASP_MAX_DRIFT_M = .03
 PREGRASP_MAX_REPLANS = 2
 GRASP_ALIGN_TOLERANCE_M = .002
-GRASP_ALIGN_MAX_M = .007
+GRASP_ALIGN_MAX_M = .008
+GRASP_ALIGN_FEEDBACK_AGE_S = .8
 GRASP_ALIGN_TIMEOUT_S = 4.
+COMPOUND_MOTION_TOLERANCE_M = .005
 CARRY_DRIFT = 0.03      # m of object motion relative to the base while carrying
 NAV2_MIN_LEG = 0.5      # m: shorter transit legs stay straight (DWB circles on tiny paths)
 NAV2_HANDOFF = 0.15      # m: localization this close to the run-up point hands over to docking
@@ -156,6 +158,25 @@ def _wrap(angle):
 def _plain(value):
     """JSON fallback for numpy scalars and arrays in check results."""
     return value.tolist() if hasattr(value, 'tolist') else str(value)
+
+
+def _primitive_collision_size(shape):
+    kind, size = shape['type'], shape.get('size', [])
+    if kind == 'sphere':
+        return [2 * size[0]] * 3
+    if kind == 'cylinder':
+        return [2 * size[0], 2 * size[0], size[1]]
+    return size
+
+
+def _drive_footprint(obstacle):
+    from robot_lab_mujoco.arm_pick_place import Box, yaw_of
+
+    yaw = yaw_of(obstacle.quaternion)
+    c, s = math.cos(yaw), math.sin(yaw)
+    footprint = [2 * obstacle.half_extent(axis) for axis in ((c, s, 0.), (-s, c, 0.))]
+    return Box(obstacle.name, obstacle.position, (math.cos(yaw/2), 0., 0., math.sin(yaw/2)),
+               (*footprint, obstacle.size[2]))
 
 
 class PickPlace(Node):
@@ -269,21 +290,21 @@ class PickPlace(Node):
     def _world_boxes(self):
         """Keep physical obstacles separate from selectable level supports."""
         from ament_index_python.packages import PackageNotFoundError, get_package_share_directory
-        from robot_lab_mujoco.arm_pick_place import Box, MeshObstacle, yaw_of
+        from robot_lab_mujoco.arm_pick_place import Box, MeshObstacle
         from robot_lab_utils.sdf_world import extract_dynamic_bodies, extract_static_shapes, uri_resolver
         path = self.get_parameter('world_path').value
         self.arm_obstacles = []
         self.drive_obstacles = []
+        self.compound_shapes, self.compound_poses = {}, {}
         self.scene_error = ''
         if not path or not os.path.isfile(path):
             return {}, {}
         sizes = {}
-        compound_models = []
         for body in extract_dynamic_bodies(path):
             shape = body['shape']
             name = body['name']
             if shape is None:
-                compound_models.append(name)
+                self.compound_shapes[name] = body['shapes']
                 continue
             if shape['type'] == 'box':
                 sizes[name] = list(shape['size'])
@@ -302,19 +323,12 @@ class PickPlace(Node):
         resolve = uri_resolver(model_dirs=model_dirs, package_share=get_package_share_directory)
         shapes, skipped = extract_static_shapes(path, resolve, collision_only=True, exclude_dynamic=True)
         self.scene_error = next((note for note in skipped if note.startswith('unresolved mesh ')), '')
-        if compound_models:
-            self.scene_error = ('Arm planning needs compound collision tracking for loose bodies: '
-                                + ', '.join(sorted(compound_models)))
         boxes = {}
         for index, shape in enumerate(shapes):
             kind = shape['type']
-            size = shape.get('size', [])
+            size = _primitive_collision_size(shape)
             name = shape['model']
-            if kind == 'sphere':
-                size = [2 * size[0]] * 3
-            elif kind == 'cylinder':
-                size = [2 * size[0], 2 * size[0], size[1]]
-            elif kind not in ('box', 'mesh'):
+            if kind not in ('box', 'sphere', 'cylinder', 'mesh'):
                 continue
             if kind == 'mesh':
                 try:
@@ -330,11 +344,7 @@ class PickPlace(Node):
             level = kind == 'box' and obstacle.rotation()[2, 2] >= math.cos(math.radians(.5))
             obstacle.floor = level and max(size[:2]) >= 2. and obstacle.top <= .03
             if not obstacle.floor:
-                yaw = yaw_of(obstacle.quaternion)
-                c, s = math.cos(yaw), math.sin(yaw)
-                footprint = [2*obstacle.half_extent(axis) for axis in ((c, s, 0.), (-s, c, 0.))]
-                self.drive_obstacles.append(Box(name, obstacle.position, (math.cos(yaw/2), 0., 0., math.sin(yaw/2)),
-                                                (*footprint, size[2])))
+                self.drive_obstacles.append(_drive_footprint(obstacle))
             if level and max(size[:2]) < 2. and size[2] < 1.2:
                 previous = boxes.get(name)
                 if previous is None or obstacle.top > previous.top:
@@ -374,8 +384,8 @@ class PickPlace(Node):
             return
         if not isinstance(poses, dict):
             return
-        truth = {}
-        for name, frame in self.object_collision_frames.items():
+        truth, compounds = {}, {}
+        for name in self.object_collision_frames.keys() | self.compound_shapes.keys():
             pose = poses.get(name)
             if not isinstance(pose, list) or len(pose) != 7:
                 continue
@@ -388,10 +398,47 @@ class PickPlace(Node):
             norm = np.linalg.norm(pose[3:])
             if not .99 <= norm <= 1.01:
                 continue
-            position, orientation = compose((pose[:3], pose[3:] / norm), frame)
-            truth[name] = [*position, *orientation]
+            pose[3:] /= norm
+            if name in self.compound_shapes:
+                compounds[name] = pose
+            else:
+                position, orientation = compose((pose[:3], pose[3:]), self.object_collision_frames[name])
+                truth[name] = [*position, *orientation]
         self.truth = truth
+        self.compound_poses = compounds
         self.truth_at = _now()
+
+    def _snapshot_compounds(self, task):
+        """Freeze measured collision geometry for planning this mission."""
+        from robot_lab_mujoco.arm_pick_place import Box
+        from robot_lab_utils.sdf_world import compose
+
+        obstacles, reference = [], {}
+        for name, shapes in self.compound_shapes.items():
+            pose = self.compound_poses[name]
+            radius = 0.
+            for index, shape in enumerate(shapes):
+                position, quat = compose((pose[:3], pose[3:]), (shape['position'], shape['orientation']))
+                size = _primitive_collision_size(shape)
+                obstacles.append(Box(f'compound/{name}/{index}', position, quat, size, shape['type']))
+                radius = max(radius, np.linalg.norm(shape['position']) + .5 * np.linalg.norm(size))
+            reference[name] = (pose, radius)
+        task['compound_reference'] = reference
+        task['arm_obstacles'] = [*self.arm_obstacles, *obstacles]
+        task['drive_obstacles'] = [*self.drive_obstacles, *map(_drive_footprint, obstacles)]
+        task['plan']['compound_obstacles'] = sorted(reference)
+
+    def _moved_compound(self, task):
+        for name, (reference, radius) in task.get('compound_reference', {}).items():
+            pose = self.compound_poses.get(name)
+            if pose is None:
+                return name
+            translation = math.dist(reference[:3], pose[:3])
+            cos_half_angle = min(1., abs(float(reference[3:] @ pose[3:])))
+            max_surface_motion = translation + 2. * radius * math.sqrt(1. - cos_half_angle**2)
+            if max_surface_motion > COMPOUND_MOTION_TOLERANCE_M:
+                return name
+        return ''
 
     def _on_link_poses(self, message):
         self.link_poses = json.loads(message.data)
@@ -441,6 +488,9 @@ class PickPlace(Node):
         now = _now()
         if self.scene_error:
             return self.scene_error
+        if self.compound_shapes and (now-self.truth_at > STATE_STALE or
+                                     self.compound_shapes.keys() - self.compound_poses.keys()):
+            return 'Waiting for measured poses of loose compound obstacles'
         if not self.state.get('initialized') or self.state.get('fault') or now-self.state_at > STATE_STALE:
             return 'Waiting for fresh articulation feedback'
         if self.spec.pad_geoms and 'grip_contacts' not in self.state:
@@ -522,6 +572,8 @@ class PickPlace(Node):
                     object_start=list(self.truth[name][:3]),
                     interlock=dict(max_base_speed_in_arm_phases=0.0, max_base_turn_in_arm_phases=0.0,
                                    drive_ticks_with_articulation_active=0, drive_ticks=0))
+        if self.compound_shapes:
+            self._snapshot_compounds(task)
         if not self.mobile:
             task['phases'] = [dict(kind='arm', name='pick_place')]
             if pose_source == 'rgbd':
@@ -602,7 +654,7 @@ class PickPlace(Node):
                       dict(x=x, y=y, yaw=yaw)]
         points.append(pre)
         points.append((x, y))
-        boxes = self.drive_obstacles
+        boxes = task.get('drive_obstacles', self.drive_obstacles)
         # Legs between turns keep ``clearance`` (the carried arm's sweep). The
         # straight back-off and the last leg in run along the arm, which stays
         # over the table, so they keep the base's own clearance.
@@ -651,7 +703,7 @@ class PickPlace(Node):
 
             out = (pose[0] - self.mobile['back_off'] * math.cos(pose[3]),
                    pose[1] - self.mobile['back_off'] * math.sin(pose[3]))
-            distance, obstacle = segment_clearance(self.drive_obstacles, pose, out)
+            distance, obstacle = segment_clearance(task.get('drive_obstacles', self.drive_obstacles), pose, out)
             if distance < self.mobile['base_radius']:
                 raise ValueError('Retreat blocked by %s' % obstacle)
             phase['waypoints'] = [dict(x=out[0], y=out[1], reverse=True)]
@@ -797,7 +849,8 @@ class PickPlace(Node):
         planned_joints = set(self.spec.arm_joints + self.spec.finger_joints)
         held = {c['name']: c['measured'] for c in self.state.get('channels', [])
                 if c.get('mode') == 'position' and c.get('measured') is not None and c['name'] not in planned_joints}
-        scene = ArmScene(self.robot_mjcf, self.spec, self.arm_obstacles, obj, base=base, held=held)
+        obstacles = task.get('arm_obstacles', self.arm_obstacles)
+        scene = ArmScene(self.robot_mjcf, self.spec, obstacles, obj, base=base, held=held)
         start = {n: float(measured[n]) for n in self.spec.arm_joints}
         previous = dict(start)
         options = dict(approach=task['approach'], lift=task['lift'], seeds=self.seeds)
@@ -877,20 +930,22 @@ class PickPlace(Node):
         if support is None or support.name != task['table']:
             return dict(passed=False, reason='payload has left the pickup support')
         samples = task.setdefault('grasp_alignment_samples', [])
-        if (actual_tcp is not None and now-min(self.link_poses_at, self.truth_at, self.base_at) <= PAD_SETTLE_MAX_GAP
+        stamps = (self.link_poses_at, self.truth_at)
+        if (actual_tcp is not None and now-min(*stamps, self.base_at) <= GRASP_ALIGN_FEEDBACK_AGE_S
                 and max(self.base_twist) < STILL_SPEED):
-            stamp = min(self.link_poses_at, self.truth_at)
-            if not samples or stamp != samples[-1][0]:
+            if not samples or all(new > previous for new, previous in zip(stamps, samples[-1][0])):
                 offset = np.asarray(self.truth[name][:2]) - actual_tcp[:2]
                 if np.isfinite(offset).all():
-                    samples.append((stamp, offset))
+                    samples.append((stamps, offset))
                     del samples[:-PAD_SETTLE_SAMPLES]
         else:
             samples.clear()
         elapsed = now-task.setdefault('grasp_alignment_started', now)
-        if (len(samples) < PAD_SETTLE_SAMPLES or samples[-1][0] - samples[0][0] > 2 * PAD_SETTLE_MAX_GAP
+        if (len(samples) < PAD_SETTLE_SAMPLES or now-min(samples[0][0]) > 3 * GRASP_ALIGN_FEEDBACK_AGE_S
                 or max(np.linalg.norm(offset-samples[-1][1]) for _, offset in samples) > .001):
-            return (dict(passed=False, reason='no stable measured tool alignment')
+            return (dict(passed=False, reason='no stable measured tool alignment', alignment_samples=len(samples),
+                         tool_feedback_age_s=round(now-self.link_poses_at, 3),
+                         base_twist=list(self.base_twist))
                     if elapsed > GRASP_ALIGN_TIMEOUT_S else None)
         shift = np.median([offset for _, offset in samples], axis=0)
         error = float(np.linalg.norm(shift))
@@ -930,7 +985,7 @@ class PickPlace(Node):
         held = {c['name']: c['measured'] for c in self.state.get('channels', [])
                 if c.get('mode') == 'position' and c.get('measured') is not None
                 and c['name'] not in current and c['name'] not in opened}
-        scene = ArmScene(self.robot_mjcf, self.spec, self.arm_obstacles, obj,
+        scene = ArmScene(self.robot_mjcf, self.spec, task.get('arm_obstacles', self.arm_obstacles), obj,
                          base=(bx + bias[0], by + bias[1], bz, yaw), held=held)
         scene.set_joints(dict(current, **opened))
         position, rotation = scene.tcp()
@@ -1028,6 +1083,8 @@ class PickPlace(Node):
             return self._finish('failed', 'articulation state stale or faulted: %s' % self.state.get('status'))
         if _now() - self.truth_at > STATE_STALE or task['object'] not in self.truth:
             return self._finish('failed', 'Selected object pose is unavailable or stale')
+        if obstacle := self._moved_compound(task):
+            return self._finish('failed', f'Loose compound obstacle {obstacle} moved or lost feedback')
         phase = task['phases'][task['phase_index']]
         if _now() - task.get('traced', -math.inf) >= TRACE_PERIOD:
             self._trace(task)
@@ -1200,7 +1257,8 @@ class PickPlace(Node):
         if precision and distance <= HOLONOMIC_DOCK_CAPTURE_M:
             from robot_lab_mujoco.arm_pick_place import segment_clearance
 
-            clearance, obstacle = segment_clearance(self.drive_obstacles, (x, y), (target['x'], target['y']))
+            boxes = task.get('drive_obstacles', self.drive_obstacles)
+            clearance, obstacle = segment_clearance(boxes, (x, y), (target['x'], target['y']))
             if clearance < self.mobile['base_radius']:
                 return self._finish('failed', f'Precision docking blocked by {obstacle}')
             yaw_error = _wrap(target['yaw'] - yaw)

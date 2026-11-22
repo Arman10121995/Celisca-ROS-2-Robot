@@ -245,9 +245,10 @@ with the same body in Gazebo, MuJoCo, PyBullet and Isaac. MuJoCo and Isaac
 keep friction per collider. PyBullet uses the lowest declared `mu` for the
 body. For compound models, the portable importers keep a positive diagonal
 inertia authored at the model origin. Offset or non-diagonal inertia is
-estimated from geometry using the backend's own method. Automatic URDF arm
-tasks require compound collision tracking before they can run in these
-worlds.
+estimated from geometry using the backend's own method. Automatic URDF
+arm tasks use the measured compound colliders as obstacles. If a compound
+moves or its pose feedback drops out during a task, the executor stops and
+reports the model name. A compound remains unavailable as a grasp target.
 
 ### Heightfield layout (measured, not assumed)
 
@@ -281,6 +282,15 @@ generated on October 5 contain 711/630 occupied and 4,781/4,626 free cells at
 are projection checks, not navigation acceptance or whole-building coverage.
 
 ## External worlds and terrain
+
+Regenerate a packaged MuJoCo world with
+`python3 src/robot_lab_maps/tools/gen_mjcf_worlds.py --map <map_id>` and use
+`--check` to compare the package's generated worlds to their SDF sources.
+The check reads the PNG contents, so installed relative paths and source
+checkout paths can both pass. The dedicated `gait_slip_patch.py` generator
+keeps the authored slip friction and priority. Fleet Ward's MuJoCo export
+shows the SDF door at its initial pose. Live doors and lifts use their
+backend-specific infrastructure workflow.
 
 1. Pin the source and record original/model-specific licenses. Download the
    complete include/mesh/texture closure on SSD. Detect unresolved resources,

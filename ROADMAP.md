@@ -498,8 +498,10 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
   - 2026-11-22: portable SDF import keeps a loose single-link compound as
     one rigid body with every box, sphere and cylinder collider in its
     authored frame. The MuJoCo compiler, PyBullet physics and render clients,
-    and an Isaac USD stage fixture preserve mass and geometry. Automatic
-    arm tasks still require compound collision tracking and grasp planning.
+    and an Isaac USD stage fixture preserve mass and geometry. The arm
+    executor now snapshots measured collider poses for collision checks
+    and stops if a compound moves or loses feedback during a task. Planning
+    a grasp of the compound itself remains open.
   - 2026-11-22: the MuJoCo fixed-arm workcell publishes a calibrated
     overhead RGB-D camera. The existing pick-and-place panel can plan a
     Panda cube grasp from three fresh camera estimates. The normal GUI
@@ -951,16 +953,21 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
   hulls stay exact. Unit-tested. Installing the Gazebo `polylines` example
   world and running a mission on it is the next step.
 - **Remaining implementation:**
-  - upper floors: the occupancy generator already slices any elevation
-    (`--height`), and the CELISCA floors are separate worlds. No installed
-    world has a second storey in one file, so nothing is open until one is
-    added;
+  - the occupancy generator slices any elevation (`--height`). CELISCA
+    floors use separate worlds. Fleet Facility has two floors in one SDF
+    and uses a registered occupancy layer for each floor;
   - the robot/sensor demos stay fixtures by design.
 - **Polylines world installed (2026-11-17):** `gazebo_example_polylines` is installed with 16 prism
   shapes, MJCF and an occupancy grid (now 20 of 20 example scenes). Its polyline models are
   authored 5 m up and fall in the Gazebo demo. The static snapshot keeps the authored poses, so the
   0.3 m slice is free floor, as for the other falling-object demos. Robot missions in the new world
   classes are V9.
+- **Packaged MuJoCo worlds (2026-11-22):** Fleet Ward, Swarm Arena, Marine
+  Open Water and Textured Marine Tank now resolve through the regular map
+  launcher. Fleet Facility matches the current SDF snapshot, and both
+  marine tanks load their wall texture from the package. Terrain Heightfield
+  uses a relative raster path. All seven worlds resolved and compiled.
+  Fleet infrastructure and mission acceptance remain backend-specific.
 - **Done when:** every requested source shows its status, and each new world
   class has one robot mission and a generated occupancy file.
 

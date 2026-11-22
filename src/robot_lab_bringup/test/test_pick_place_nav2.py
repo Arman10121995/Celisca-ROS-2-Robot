@@ -69,15 +69,15 @@ def test_live_alignment_checks_distinct_samples_and_refuses_remaining_offset(pic
         clock[0] = node.link_poses_at = node.truth_at = node.base_at = timestamp
         return node._check_grasp_alignment(task, stage, tcp)
 
-    for t in (1.0, 1.0, 1.1):
+    for t in (1.0, 1.0, 1.55):
         assert check('down_to_grasp', t) is None
-    result = check('down_to_grasp', 1.2)
+    result = check('down_to_grasp', 2.1)
     assert result['align'] and result['live_grasp_error_m'] == pytest.approx(.004)
     node._plan_grasp_alignment.assert_called_once()
     assert node._plan_grasp_alignment.call_args.args[3] == pytest.approx([-.004, 0.])
-    assert check('align_grasp', 1.3) is None
-    assert check('align_grasp', 1.4) is None
-    assert check('align_grasp', 1.5)['passed'] is False
+    assert check('align_grasp', 2.65) is None
+    assert check('align_grasp', 3.2) is None
+    assert check('align_grasp', 3.75)['passed'] is False
     node._plan_grasp_alignment.assert_called_once()
 
 
@@ -140,6 +140,40 @@ def test_pick_place_uses_authored_collision_pose_from_measured_model_pose(pick_p
     assert 'ball' not in node.truth
     node._on_truth(SimpleNamespace(data=json.dumps({'block': [2., 1., .5, 0., 0., 0., 0.]})))
     assert not node.truth
+
+
+def test_compound_colliders_enter_measured_scene_and_moved_geometry_blocks_motion(pick_place, tmp_path):
+    node = object.__new__(pick_place.PickPlace)
+    node.object_shapes, node.object_collision_frames = {}, {}
+    world = tmp_path / 'compound.world'
+    world.write_text('''<sdf version="1.7"><world name="lab">
+      <model name="fixture"><static>false</static><link name="body">
+        <inertial><mass>1</mass></inertial>
+        <collision name="base"><geometry><box><size>.10 .10 .10</size></box></geometry></collision>
+        <collision name="handle"><pose>0 .22 0 0 0 0</pose>
+          <geometry><cylinder><radius>.02</radius><length>.10</length></cylinder></geometry>
+        </collision>
+      </link></model>
+    </world></sdf>''')
+    node.get_parameter = lambda name: SimpleNamespace(value=str(world))
+    assert node._world_boxes() == ({}, {})
+    node.mobile = dict(pick_place.MOBILE_DEFAULTS)
+    node._on_truth(SimpleNamespace(data=json.dumps({'fixture': [1., 0., .5, 1., 0., 0., 0.]})))
+    task = dict(transit='straight', plan={})
+    node._snapshot_compounds(task)
+    assert not node.truth and task['plan']['compound_obstacles'] == ['fixture']
+    base, handle = task['arm_obstacles']
+    assert base.position == (1., 0., .5)
+    assert handle.position == (1., .22, .5) and handle.shape == 'cylinder'
+    assert not node._moved_compound(task)
+    with pytest.raises(ValueError, match='clear of compound/fixture/'):
+        node._route(task, (3., 0., 0.), (0., 0., 0., 0.), 0., .35)
+    node._on_truth(SimpleNamespace(data=json.dumps({'fixture': [1., 0., .5, -1., 0., 0., 0.]})))
+    assert not node._moved_compound(task)
+    node._on_truth(SimpleNamespace(data=json.dumps({'fixture': [1., 0., .5, .999, 0., 0., .0447]})))
+    assert node._moved_compound(task) == 'fixture'
+    node._on_truth(SimpleNamespace(data='{}'))
+    assert node._moved_compound(task) == 'fixture'
 
 
 def test_world_loads_scaled_mesh_parts_as_obstacles_and_reports_missing_meshes(pick_place, tmp_path):
@@ -320,6 +354,7 @@ def test_fixed_arm_starts_with_camera_and_plans_from_its_estimate(pick_place, mo
     node = object.__new__(pick_place.PickPlace)
     monkeypatch.setattr(pick_place, '_now', lambda: 10.)
     node.mobile, node.look, node.config = None, {}, {}
+    node.compound_shapes = {}
     node.truth, node.truth_at = {'cube': [.5, -.25, .32, 1., 0., 0., 0.]}, 10.
     node.supports = {'drop': object()}
     node.rgbd_enabled = True
