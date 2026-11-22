@@ -1,0 +1,120 @@
+{
+  "robot": "px4_x500",
+  "backend": "gazebo",
+  "map": "aerial_course",
+  "mode": "flight",
+  "passed": true,
+  "scope": "Normal owned Tk Run/Takeoff/seven direction buttons/altitude/release/Stop/publisher loss/Land. Native X500/PX4 and independent Gazebo body; one open static map, no obstacle planner.",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=px4_x500 simulator:=gazebo use_sim_time:=false map_name:=aerial_course world_package:=robot_lab_maps world_name:=aerial_course world_path:=maps/aerial_course/worlds/aerial_course.world map_yaml:=maps/aerial_course/maps/map.yaml mode:=flight spawn_z:=0.0 gui:=false aerial_obstacles:=none",
+  "owned_pid": 3777362,
+  "neutral": {
+    "commands": 0,
+    "displacement_m": 0.0,
+    "armed": false
+  },
+  "takeoff_check": {
+    "state": "clear",
+    "rise_m": 3.0,
+    "ceiling_limited": false,
+    "error": ""
+  },
+  "takeoff_height_m": 2.938624433412864,
+  "directions": {
+    "Turn Left": {
+      "yaw_rad": 0.643699012755839,
+      "net_xy_m": 0.05794322855118274,
+      "command_max_yaw_rad_s": 0.3,
+      "stop": {
+        "drift_m": 0.039303133100573,
+        "yaw_drift_rad": 0.0006430231346300497
+      }
+    },
+    "Turn Right": {
+      "yaw_rad": -0.6197805402495572,
+      "net_xy_m": 0.01456086115037666,
+      "command_max_yaw_rad_s": 0.3,
+      "stop": {
+        "drift_m": 0.010586243034094335,
+        "yaw_drift_rad": 0.0010302960854244219
+      }
+    },
+    "Forward": {
+      "body_frame_travel_m": [
+        0.6979082911704624,
+        -0.03928263140570518
+      ],
+      "stop": {
+        "drift_m": 0.01940048407045281,
+        "yaw_drift_rad": 0.0004428761292126662
+      }
+    },
+    "Reverse": {
+      "body_frame_travel_m": [
+        -0.665316843644007,
+        0.10029021984931939
+      ],
+      "stop": {
+        "drift_m": 0.04384226895683483,
+        "yaw_drift_rad": 0.0015016006444052397
+      }
+    },
+    "Strafe L": {
+      "body_frame_travel_m": [
+        0.05776743233007059,
+        0.7297503357784515
+      ],
+      "stop": {
+        "drift_m": 0.03223478347043879,
+        "yaw_drift_rad": 9.311698926114768e-05
+      }
+    },
+    "Strafe R": {
+      "body_frame_travel_m": [
+        -0.06021025561527234,
+        -0.7070019761989881
+      ],
+      "stop": {
+        "drift_m": 0.030440883832474935,
+        "yaw_drift_rad": 0.0004121989866349776
+      }
+    }
+  },
+  "altitude": {
+    "up": {
+      "height_change_m": 0.6742428681496779,
+      "stop": {
+        "drift_m": 0.02168592882099754,
+        "yaw_drift_rad": 8.423788709436414e-05
+      }
+    },
+    "down": {
+      "height_change_m": -0.6968505963960752,
+      "stop": {
+        "drift_m": 0.01849287656025144,
+        "yaw_drift_rad": 1.635589825711714e-05
+      }
+    }
+  },
+  "publisher_loss_drift_m": 0.03907796983799967,
+  "landing_height_error_m": 1.4423911390726296e-05,
+  "rotor_max_rad_s": 86.68589400432934,
+  "launch_returncode": 0,
+  "body_trace": {
+    "samples": 2263,
+    "initial_z": 0.23412,
+    "min_z": 0.22532996219031373,
+    "max_z": 3.9231734206765063
+  },
+  "derived_from": {
+    "original_report": {
+      "path": "docs/status/evidence/v5-px4-worlds-2026-11-21/aerial_course-fixed/report.json",
+      "bytes": 2935,
+      "sha256": "4f697c5dfabff1087a9e49e7e61b09788aba7eba70b301afbbe9ff057ffaf8bb"
+    },
+    "physical_trace": {
+      "path": "/workspace/molar/robot_lab_runtime/v5-px4-20261121/aerial_course-fixed/trace.json",
+      "bytes": 707099,
+      "sha256": "9ababf7fdb0c84ea21118d293ce27938d05c0aa14cd03145d9c28df39732b83e"
+    }
+  }
+}

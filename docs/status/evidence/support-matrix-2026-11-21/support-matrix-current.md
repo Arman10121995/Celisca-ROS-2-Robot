@@ -354,6 +354,12 @@ Unlisted combinations are untested. No row establishes full mission support.
 | oomwoo | small_house | pybullet | vacuum_spot /  | failed_screen |
 | oomwoo | small_house | isaac | vacuum_rooms /  | passed_screen |
 | oomwoo | small_house | isaac | vacuum_spot /  | passed_screen |
+| px4_x500 | aerial_indoor | gazebo | flight /  | passed_screen |
+| px4_x500 | nav_maze | gazebo | flight /  | passed_screen |
+| px4_x500 | nav_warehouse | gazebo | flight /  | passed_screen |
+| px4_x500 | celisca_floor_1 | gazebo | flight /  | passed_screen |
+| px4_x500 | outdoor_terrain | gazebo | flight /  | passed_screen |
+| px4_x500 | small_house | gazebo | flight /  | passed_screen |
 
 Full release blockers:
 

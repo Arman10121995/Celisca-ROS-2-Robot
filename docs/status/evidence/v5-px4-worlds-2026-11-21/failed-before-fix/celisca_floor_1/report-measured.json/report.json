@@ -1,0 +1,17 @@
+{
+  "robot": "px4_x500",
+  "backend": "gazebo",
+  "map": "celisca_floor_1",
+  "mode": "flight",
+  "passed": false,
+  "scope": "Normal owned Tk Run/Takeoff/seven direction buttons/altitude/release/Stop/publisher loss/Land. Native X500/PX4 and independent Gazebo body; one open static map, no obstacle planner.",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=px4_x500 simulator:=gazebo use_sim_time:=false map_name:=celisca_floor_1 world_package:=robot_lab_maps world_name:=celisca_floor_1 world_path:=maps/celisca_floor_1/worlds/celisca_floor_1.world map_yaml:=maps/celisca_floor_1/maps/map.yaml mode:=flight spawn_z:=0.0 gui:=false aerial_obstacles:=none",
+  "owned_pid": 3641179,
+  "neutral": {
+    "commands": 0,
+    "displacement_m": 0.0,
+    "armed": false
+  },
+  "error": "AssertionError(('Flight timeout', {'phase': 'idle', 'armed': False, 'position_ready': True, 'landed_state': 1, 'flight_enabled': True, 'position_enu': [0.0, 1.32, 0.24], 'target_enu': None, 'takeoff_ready': True, 'takeoff_target_z': None, 'control_clock': 'wall', 'estimator_parameters': {'CAL_BARO0_ID': 6619404.0, 'CAL_BARO0_OFF': 0.0, 'CAL_BARO0_PRIO': 50.0, 'UXRCE_DDS_DOM_ID': 117.0, 'COM_OBL_RC_ACT': 4.0, 'COM_OF_LOSS_T': 0.5, 'MPC_XY_VEL_MAX': 1.0, 'MPC_XY_CRUISE': 1.0, 'MPC_Z_VEL_MAX_UP': 1.0, 'MPC_Z_VEL_MAX_DN': 1.0, 'MPC_ACC_HOR': 1.0, 'MPC_VEL_MANUAL': 1.0, 'MPC_Z_V_AUTO_DN': 1.0, 'MPC_Z_V_AUTO_UP': 1.0}, 'range_sensor': None, 'global_altitude_m': 0.334, 'relative_altitude_m': 0.107, 'preflight_remaining_fcu_s': 0.0, 'heading_drift_deg_s': 0.0031016813035116666, 'estimator_restarts': 0, 'resting_height_moving': False, 'route_waypoints_remaining': 0, 'route_status': 'idle'}))",
+  "launch_returncode": 0
+}

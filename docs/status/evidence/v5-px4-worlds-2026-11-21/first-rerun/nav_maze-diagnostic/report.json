@@ -1,0 +1,34 @@
+{
+  "robot": "px4_x500",
+  "backend": "gazebo",
+  "map": "nav_maze",
+  "mode": "flight",
+  "passed": false,
+  "scope": "Normal owned Tk Run/Takeoff/seven direction buttons/altitude/release/Stop/publisher loss/Land. Native X500/PX4 and independent Gazebo body; one open static map, no obstacle planner.",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=px4_x500 simulator:=gazebo use_sim_time:=false map_name:=nav_maze world_package:=robot_lab_maps world_name:=nav_maze world_path:=maps/nav_maze/worlds/nav_maze.world map_yaml:=maps/nav_maze/maps/map.yaml mode:=flight spawn_z:=0.0 gui:=false aerial_obstacles:=none",
+  "owned_pid": 3872412,
+  "neutral": {
+    "commands": 0,
+    "displacement_m": 0.0,
+    "armed": false
+  },
+  "takeoff_check_pending": {
+    "reply": "Planner: idle \u00b7 0 waypoints",
+    "planning_state": {
+      "plant_id": "a3e8a2b14e80483ead376f63e254d94e",
+      "state": "idle",
+      "qualification": "implemented static aerial planning; validation pending",
+      "takeoff": {
+        "state": "unchecked"
+      },
+      "sensor_loss": {
+        "state": "ok"
+      },
+      "obstacles": {
+        "enabled": false
+      }
+    }
+  },
+  "error": "AssertionError(('Flight timeout', 'takeoff check result', {'phase': 'idle', 'armed': False, 'position_ready': True, 'landed_state': 1, 'flight_enabled': True, 'position_enu': [-7.0, -7.0, 0.24], 'target_enu': None, 'takeoff_ready': True, 'takeoff_target_z': None, 'control_clock': 'wall', 'estimator_parameters': {'COM_OBL_RC_ACT': 4.0, 'COM_OF_LOSS_T': 0.5, 'MPC_XY_VEL_MAX': 1.0, 'MPC_XY_CRUISE': 1.0, 'MPC_Z_VEL_MAX_UP': 1.0, 'MPC_Z_VEL_MAX_DN': 1.0, 'MPC_ACC_HOR': 1.0, 'MPC_VEL_MANUAL': 1.0, 'MPC_Z_V_AUTO_DN': 1.0, 'MPC_Z_V_AUTO_UP': 1.0}, 'range_sensor': None, 'global_altitude_m': 0.221, 'relative_altitude_m': -0.017, 'preflight_remaining_fcu_s': 0.0, 'heading_drift_deg_s': 0.00951052098066927, 'estimator_restarts': 0, 'resting_height_moving': False, 'route_waypoints_remaining': 0, 'route_status': 'idle'}))",
+  "launch_returncode": 0
+}

@@ -1,0 +1,3 @@
+$ ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=px4_x500 simulator:=gazebo use_sim_time:=false map_name:=terrain_rough world_package:=robot_lab_maps world_name:=terrain_rough world_path:=maps/terrain_rough/worlds/terrain_rough.world map_yaml:=maps/terrain_rough/maps/map.yaml mode:=flight spawn_z:=0.0 gui:=false aerial_obstacles:=none
+[full launch log: /workspace/molar/robot_lab_runtime/gui/runs/launch-1795308901358547702-3972473.log]
+

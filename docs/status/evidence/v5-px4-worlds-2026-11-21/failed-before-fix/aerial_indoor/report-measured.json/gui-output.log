@@ -1,0 +1,24 @@
+$ ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=px4_x500 simulator:=gazebo use_sim_time:=false map_name:=aerial_indoor world_package:=robot_lab_maps world_name:=aerial_indoor world_path:=maps/aerial_indoor/worlds/aerial_indoor.world map_yaml:=maps/aerial_indoor/maps/map.yaml mode:=flight spawn_z:=0.0 gui:=false aerial_obstacles:=none
+[full launch log: /workspace/molar/robot_lab_runtime/gui/runs/launch-1795282825968969539-3626594.log]
+[INFO] [launch]: All log files can be found below /workspace/molar/robot_lab_runtime/ros/log/2026-11-21-18-40-26-521666-molar1-3626594
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [python3-1]: process started with pid [3626676]
+[python3-1] PX4 runtime and logs: /workspace/molar/robot_lab_runtime/px4/ros-flight-20261121-184028-8bbc67
+[python3-1] [INFO] [1795282828.824576993] [robot_state_publisher]: got segment base_link
+[python3-1] [INFO] [1795282828.826638772] [robot_state_publisher]: got segment rotor_0
+[python3-1] [INFO] [1795282828.826664500] [robot_state_publisher]: got segment rotor_1
+[python3-1] [INFO] [1795282828.826674548] [robot_state_publisher]: got segment rotor_2
+[python3-1] [INFO] [1795282828.826683348] [robot_state_publisher]: got segment rotor_3
+[python3-1] [INFO] [1795282829.442631381] [rviz2]: Stereo is NOT SUPPORTED
+[python3-1] [INFO] [1795282829.442802129] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+[python3-1] [INFO] [1795282829.474848485] [rviz2]: Stereo is NOT SUPPORTED
+[python3-1] [INFO] [1795282829.699693029] [rviz2]: Stereo is NOT SUPPORTED
+[python3-1] [INFO] [1795282848.859680409] [px4_offboard_controller]: Flight state: idle
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [python3-1]: sending signal 'SIGINT' to process[python3-1]
+[python3-1] [INFO] [1795282911.479139171] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[python3-1] [INFO] [1795282912.094403560] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [python3-1]: process has finished cleanly [pid 3626676]
+
+[launch exited with code 0]
+

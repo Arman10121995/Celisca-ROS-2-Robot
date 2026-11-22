@@ -1,5 +1,5 @@
 schema_version: 1
-date: '2026-11-21'
+date: '2026-11-22'
 scope: "Exact hashed named simulation screens; unlisted cells remain untested."
 raw_artifact_root: /workspace/molar/robot_lab_runtime/r56-qualification-2026-10-05
 records:
@@ -14127,3 +14127,140 @@ records:
     compliance from the simulator-truth trail.'
   limitations:
   - One run per cell; the November 10 Gazebo start request
+- robot_id: px4_x500
+  environment_id: aerial_course
+  simulator: gazebo
+  task_type: flight
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: de9501a3 with the uncommitted takeoff_ready wait in the qualifier (exact producer.py beside the report);
+    ROS domain 117, display :0
+  report: docs/status/evidence/v5-px4-worlds-2026-11-21/aerial_course-fixed/report-measured.json
+  sha256: cec5f1a52ef30879f998c1dae9cd74d0d6c0cdd2f1b190016eecf5ad4cd76a0b
+  source_hashes: docs/status/evidence/v5-px4-worlds-2026-11-21/aerial_course-fixed/source-hashes-de9501a3.json
+  source_hashes_sha256: a7babe94239db18fb4fb6350af1f3077b0beb78904bff600ff512edc52a18c1e
+  report_kind: flight_manual_screen
+  scope: Normal owned Tk Run, Check takeoff clearance (clear), Takeoff, seven direction buttons, altitude, release,
+    Stop, publisher loss and Land with native X500/PX4 SITL in Gazebo Harmonic on the aerial_course world; independent
+    Gazebo body.
+  limitations:
+  - One run on this world
+  - No obstacle planner in the manual screen
+  - Static selected-world takeoff check; actors and contacts are not checked
+- robot_id: px4_x500
+  environment_id: aerial_indoor
+  simulator: gazebo
+  task_type: flight
+  steering_mode: ''
+  date: '2026-11-21'
+  revision: de9501a3 with the uncommitted takeoff_ready wait in the qualifier (exact producer.py beside the report);
+    ROS domain 117, display :0
+  report: docs/status/evidence/v5-px4-worlds-2026-11-21/aerial_indoor/report-measured.json
+  sha256: 74af121cd9495696cac9a8bd9c06f5875ba3d5338ae2cd49b3ad63c7e11b2174
+  source_hashes: docs/status/evidence/v5-px4-worlds-2026-11-21/aerial_indoor/source-hashes-de9501a3.json
+  source_hashes_sha256: a7babe94239db18fb4fb6350af1f3077b0beb78904bff600ff512edc52a18c1e
+  report_kind: flight_manual_screen
+  scope: Normal owned Tk Run, Check takeoff clearance (clear), Takeoff, seven direction buttons, altitude, release,
+    Stop, publisher loss and Land with native X500/PX4 SITL in Gazebo Harmonic on the aerial_indoor world; independent
+    Gazebo body.
+  limitations:
+  - One run on this world
+  - No obstacle planner in the manual screen
+  - Static selected-world takeoff check; actors and contacts are not checked
+- robot_id: px4_x500
+  environment_id: nav_maze
+  simulator: gazebo
+  task_type: flight
+  steering_mode: ''
+  date: '2026-11-22'
+  revision: 2a74f523 working tree (check retries, takeoff reply kept); ROS domain 117, display :0
+  report: docs/status/evidence/v5-px4-worlds-2026-11-21/nav_maze/report-measured.json
+  sha256: c28733662d4c4e67540d1acc554a1d833806ce2e54d23019c2abd69b1a95f3ac
+  source_hashes: docs/status/evidence/v5-px4-worlds-2026-11-21/nav_maze/source-hashes-2a74f523.json
+  source_hashes_sha256: fc363ef94fcb5be7e5ad7090739d4adc7674c6793fa45575daf522dd3e4d3554
+  report_kind: flight_manual_screen
+  scope: Normal owned Tk Run, Check takeoff clearance (clear), Takeoff, seven direction buttons, altitude, release,
+    Stop, publisher loss and Land with native X500/PX4 SITL in Gazebo Harmonic on the nav_maze world; independent
+    Gazebo body.
+  limitations:
+  - One run on this world
+  - No obstacle planner in the manual screen
+  - Static selected-world takeoff check; actors and contacts are not checked
+- robot_id: px4_x500
+  environment_id: nav_warehouse
+  simulator: gazebo
+  task_type: flight
+  steering_mode: ''
+  date: '2026-11-22'
+  revision: 2a74f523 working tree; ROS domain 117, display :0
+  report: docs/status/evidence/v5-px4-worlds-2026-11-21/nav_warehouse/report-measured.json
+  sha256: 7faa7a332980eb8fb8d200827af226ae3dea1dca42062ce26e031d5902129417
+  source_hashes: docs/status/evidence/v5-px4-worlds-2026-11-21/nav_warehouse/source-hashes-2a74f523.json
+  source_hashes_sha256: fc363ef94fcb5be7e5ad7090739d4adc7674c6793fa45575daf522dd3e4d3554
+  report_kind: flight_manual_screen
+  scope: Normal owned Tk Run, Check takeoff clearance (clear), Takeoff, seven direction buttons, altitude, release,
+    Stop, publisher loss and Land with native X500/PX4 SITL in Gazebo Harmonic on the nav_warehouse world; independent
+    Gazebo body.
+  limitations:
+  - One run on this world
+  - No obstacle planner in the manual screen
+  - Static selected-world takeoff check; actors and contacts are not checked
+- robot_id: px4_x500
+  environment_id: celisca_floor_1
+  simulator: gazebo
+  task_type: flight
+  steering_mode: ''
+  date: '2026-11-22'
+  revision: 2a74f523 plus the uncommitted resolver/model-path changes later committed as 54592a54; ROS domain 117,
+    Xvfb
+  report: docs/status/evidence/v5-px4-worlds-2026-11-21/celisca_floor_1/report-measured.json
+  sha256: 31324cbc7efbcd9926018a9676b300c3fb46e860b070f26d71350ee8b12ccf8b
+  source_hashes: docs/status/evidence/v5-px4-worlds-2026-11-21/celisca_floor_1/source-hashes-54592a54.json
+  source_hashes_sha256: 9806d0c5c52874fbe30628256eb98fb541fd9c9e9b90f56a09db69aa5451c28c
+  report_kind: flight_manual_screen
+  scope: Normal owned Tk Run, Check takeoff clearance (clear), Takeoff, seven direction buttons, altitude, release,
+    Stop, publisher loss and Land with native X500/PX4 SITL in Gazebo Harmonic on the celisca_floor_1 world; independent
+    Gazebo body.
+  limitations:
+  - One run on this world
+  - No obstacle planner in the manual screen
+  - Static selected-world takeoff check; actors and contacts are not checked
+- robot_id: px4_x500
+  environment_id: outdoor_terrain
+  simulator: gazebo
+  task_type: flight
+  steering_mode: ''
+  date: '2026-11-22'
+  revision: 2a74f523 plus the uncommitted resolver fix committed as 54592a54; ROS domain 117, Xvfb
+  report: docs/status/evidence/v5-px4-worlds-2026-11-21/outdoor_terrain/report-measured.json
+  sha256: 2d741d8da8ecc05c6f91758802ac2d7e87cc2b6a8094ede4246e386358ada137
+  source_hashes: docs/status/evidence/v5-px4-worlds-2026-11-21/outdoor_terrain/source-hashes-54592a54.json
+  source_hashes_sha256: 9806d0c5c52874fbe30628256eb98fb541fd9c9e9b90f56a09db69aa5451c28c
+  report_kind: flight_manual_screen
+  scope: Normal owned Tk Run, Check takeoff clearance (clear), Takeoff, seven direction buttons, altitude, release,
+    Stop, publisher loss and Land with native X500/PX4 SITL in Gazebo Harmonic on the outdoor_terrain world; independent
+    Gazebo body.
+  limitations:
+  - One run on this world
+  - No obstacle planner in the manual screen
+  - Static selected-world takeoff check; actors and contacts are not checked
+- robot_id: px4_x500
+  environment_id: small_house
+  simulator: gazebo
+  task_type: flight
+  steering_mode: ''
+  date: '2026-11-22'
+  revision: 54592a54 (models on the PX4 Gazebo path and in the aerial collision scene); ROS domain 117, Xvfb
+  report: docs/status/evidence/v5-px4-worlds-2026-11-21/small_house/report-measured.json
+  sha256: 30ac08273b7a13b99332042513cc29be6c644859275721787cb73e2f096d64f1
+  source_hashes: docs/status/evidence/v5-px4-worlds-2026-11-21/small_house/source-hashes-54592a54.json
+  source_hashes_sha256: 9806d0c5c52874fbe30628256eb98fb541fd9c9e9b90f56a09db69aa5451c28c
+  report_kind: flight_manual_screen
+  scope: Normal owned Tk Run, Check takeoff clearance (clear), Takeoff, seven direction buttons, altitude, release,
+    Stop, publisher loss and Land with native X500/PX4 SITL in Gazebo Harmonic on the small_house world; independent
+    Gazebo body.
+  limitations:
+  - One run on this world
+  - No obstacle planner in the manual screen
+  - Static selected-world takeoff check; actors and contacts are not checked
+  - Ceiling-limited takeoff (2.04 m checked rise) instead of 3 m

@@ -1195,6 +1195,7 @@ priority_patches:
       Up/Down and hold/waypoint/Drive/land/disarm pass in nav_empty and nav_obstacle;
       all selected worlds preserved. R5.10 covers remaining spawn/ceiling/flight cells
       and aerial planning.
+    validation_20261122: "Claude V5: manual GUI flight screen passed in 7 of 8 installed worlds (aerial_course, aerial_indoor, nav_maze, nav_warehouse, celisca_floor_1, outdoor_terrain, small_house); terrain_heightfield refused at takeoff (spawn 1.45 m under the heightmap). Moving-walker flight 3/3. Receipts docs/status/evidence/v5-px4-worlds-2026-11-21/README.md and docs/status/evidence/v5-drone-moving-2026-11-22/README.md"
     state: done
     title: PX4 X500 drone integration
 readiness_order:

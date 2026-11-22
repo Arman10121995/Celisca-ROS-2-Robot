@@ -1,0 +1,24 @@
+$ ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=px4_x500 simulator:=gazebo use_sim_time:=false map_name:=nav_maze world_package:=robot_lab_maps world_name:=nav_maze world_path:=maps/nav_maze/worlds/nav_maze.world map_yaml:=maps/nav_maze/maps/map.yaml mode:=flight spawn_z:=0.0 gui:=false aerial_obstacles:=none
+[full launch log: /workspace/molar/robot_lab_runtime/gui/runs/launch-1795285835720721651-3655787.log]
+[INFO] [launch]: All log files can be found below /workspace/molar/robot_lab_runtime/ros/log/2026-11-21-19-30-36-274917-molar1-3655787
+[INFO] [launch]: Default logging verbosity is set to INFO
+[INFO] [python3-1]: process started with pid [3655866]
+[python3-1] PX4 runtime and logs: /workspace/molar/robot_lab_runtime/px4/ros-flight-20261121-193038-c0349b
+[python3-1] [INFO] [1795285838.582350082] [robot_state_publisher]: got segment base_link
+[python3-1] [INFO] [1795285838.582489597] [robot_state_publisher]: got segment rotor_0
+[python3-1] [INFO] [1795285838.582507037] [robot_state_publisher]: got segment rotor_1
+[python3-1] [INFO] [1795285838.582516413] [robot_state_publisher]: got segment rotor_2
+[python3-1] [INFO] [1795285838.582523996] [robot_state_publisher]: got segment rotor_3
+[python3-1] [INFO] [1795285839.139575945] [rviz2]: Stereo is NOT SUPPORTED
+[python3-1] [INFO] [1795285839.139746979] [rviz2]: OpenGl version: 4.6 (GLSL 4.6)
+[python3-1] [INFO] [1795285839.179700768] [rviz2]: Stereo is NOT SUPPORTED
+[python3-1] [INFO] [1795285839.385052962] [rviz2]: Stereo is NOT SUPPORTED
+[python3-1] [INFO] [1795285858.678045866] [px4_offboard_controller]: Flight state: idle
+[WARNING] [launch]: user interrupted with ctrl-c (SIGINT)
+[INFO] [python3-1]: sending signal 'SIGINT' to process[python3-1]
+[python3-1] [INFO] [1795285921.325940213] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[python3-1] [INFO] [1795285921.840980924] [rclcpp]: signal_handler(SIGINT/SIGTERM)
+[INFO] [python3-1]: process has finished cleanly [pid 3655866]
+
+[launch exited with code 0]
+

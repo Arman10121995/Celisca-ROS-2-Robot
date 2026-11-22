@@ -1,0 +1,12 @@
+{
+  "robot": "px4_x500",
+  "backend": "gazebo",
+  "map": "small_house",
+  "mode": "flight",
+  "passed": false,
+  "scope": "Normal owned Tk Run/Takeoff/seven direction buttons/altitude/release/Stop/publisher loss/Land. Native X500/PX4 and independent Gazebo body; one open static map, no obstacle planner.",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=px4_x500 simulator:=gazebo use_sim_time:=false map_name:=small_house world_package:=robot_lab_maps world_name:=small_house world_path:=maps/small_house/worlds/small_house.world map_yaml:=maps/small_house/maps/map.yaml mode:=flight spawn_z:=0.0 gui:=false aerial_obstacles:=none",
+  "owned_pid": 3847845,
+  "error": "AssertionError(('Flight timeout', '', {'phase': 'waiting_for_fcu', 'armed': False, 'position_ready': False, 'landed_state': None, 'flight_enabled': True, 'position_enu': None, 'target_enu': None, 'takeoff_ready': False, 'takeoff_target_z': None, 'control_clock': 'wall', 'estimator_parameters': {}, 'range_sensor': None, 'global_altitude_m': None, 'relative_altitude_m': None, 'preflight_remaining_fcu_s': 8.0, 'heading_drift_deg_s': None, 'estimator_restarts': 0, 'resting_height_moving': False, 'route_waypoints_remaining': 0, 'route_status': 'idle'}))",
+  "launch_returncode": 0
+}

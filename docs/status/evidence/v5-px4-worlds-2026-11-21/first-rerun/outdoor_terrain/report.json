@@ -1,0 +1,12 @@
+{
+  "robot": "px4_x500",
+  "backend": "gazebo",
+  "map": "outdoor_terrain",
+  "mode": "flight",
+  "passed": false,
+  "scope": "Normal owned Tk Run/Takeoff/seven direction buttons/altitude/release/Stop/publisher loss/Land. Native X500/PX4 and independent Gazebo body; one open static map, no obstacle planner.",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=px4_x500 simulator:=gazebo use_sim_time:=false map_name:=terrain_rough world_package:=robot_lab_maps world_name:=terrain_rough world_path:=maps/terrain_rough/worlds/terrain_rough.world map_yaml:=maps/terrain_rough/maps/map.yaml mode:=flight spawn_z:=0.0 gui:=false aerial_obstacles:=none",
+  "owned_pid": 3839735,
+  "error": "AssertionError('Owned Flight launch exited')",
+  "launch_returncode": 1
+}

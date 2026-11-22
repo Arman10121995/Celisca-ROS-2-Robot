@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/workspace/molar/ros_ws/bumperbot_ws/scripts/qualify_px4_drive_gui.py", line 246, in <module>
+    main()
+  File "/workspace/molar/ros_ws/bumperbot_ws/scripts/qualify_px4_drive_gui.py", line 127, in main
+    until(lambda: body and states and states[-1].get('position_ready') and states[-1].get('phase') == 'idle', 100)
+  File "/workspace/molar/ros_ws/bumperbot_ws/scripts/qualify_px4_drive_gui.py", line 76, in until
+    assert predicate(), ('Flight timeout', stage, states[-1] if states else {})
+AssertionError: ('Flight timeout', '', {'phase': 'waiting_for_fcu', 'armed': False, 'position_ready': False, 'landed_state': None, 'flight_enabled': True, 'position_enu': None, 'target_enu': None, 'takeoff_ready': False, 'takeoff_target_z': None, 'control_clock': 'wall', 'estimator_parameters': {}, 'range_sensor': None, 'global_altitude_m': None, 'relative_altitude_m': None, 'preflight_remaining_fcu_s': 8.0, 'heading_drift_deg_s': None, 'estimator_restarts': 0, 'resting_height_moving': False, 'route_waypoints_remaining': 0, 'route_status': 'idle'})

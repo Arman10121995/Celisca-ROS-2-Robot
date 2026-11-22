@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "/workspace/molar/ros_ws/bumperbot_ws/scripts/qualify_px4_drive_gui.py", line 246, in <module>
+    main()
+  File "/workspace/molar/ros_ws/bumperbot_ws/scripts/qualify_px4_drive_gui.py", line 165, in main
+    assert takeoff_state().get('state') == 'clear', ('Takeoff check', takeoff_state())
+AssertionError: ('Takeoff check', {'state': 'failed', 'error': 'Selected world blocks the minimum 0.8 m takeoff corridor; choose a different spawn.'})

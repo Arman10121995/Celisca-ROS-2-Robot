@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/workspace/molar/ros_ws/bumperbot_ws/scripts/qualify_px4_drive_gui.py", line 246, in <module>
+    main()
+  File "/workspace/molar/ros_ws/bumperbot_ws/scripts/qualify_px4_drive_gui.py", line 127, in main
+    until(lambda: body and states and states[-1].get('position_ready') and states[-1].get('phase') == 'idle', 100)
+  File "/workspace/molar/ros_ws/bumperbot_ws/scripts/qualify_px4_drive_gui.py", line 74, in until
+    pump(plant)
+  File "/workspace/molar/ros_ws/bumperbot_ws/scripts/qualify_px4_drive_gui.py", line 68, in pump
+    assert app.process and app.process.poll() is None, 'Owned Flight launch exited'
+AssertionError: Owned Flight launch exited

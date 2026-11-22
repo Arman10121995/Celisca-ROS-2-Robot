@@ -1,0 +1,55 @@
+{
+  "robot": "px4_x500",
+  "backend": "gazebo",
+  "map": "celisca_floor_1",
+  "mode": "flight",
+  "passed": false,
+  "scope": "Normal owned Tk Run/Takeoff/seven direction buttons/altitude/release/Stop/publisher loss/Land. Native X500/PX4 and independent Gazebo body; one open static map, no obstacle planner.",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=px4_x500 simulator:=gazebo use_sim_time:=false map_name:=celisca_floor_1 world_package:=robot_lab_maps world_name:=celisca_floor_1 world_path:=maps/celisca_floor_1/worlds/celisca_floor_1.world map_yaml:=maps/celisca_floor_1/maps/map.yaml mode:=flight spawn_z:=0.0 gui:=false aerial_obstacles:=none",
+  "owned_pid": 3967755,
+  "neutral": {
+    "commands": 0,
+    "displacement_m": 0.0,
+    "armed": false
+  },
+  "takeoff_check_replies": [],
+  "takeoff_check": {
+    "state": "clear",
+    "rise_m": 3.0,
+    "ceiling_limited": false,
+    "error": ""
+  },
+  "takeoff_height_m": 3.1353356351112205,
+  "directions": {
+    "Turn Left": {
+      "yaw_rad": 0.5890737379729527,
+      "net_xy_m": 0.032676501612688875,
+      "command_max_yaw_rad_s": 0.3,
+      "stop": {
+        "drift_m": 0.05662649646917004,
+        "yaw_drift_rad": 0.003020715157459164
+      }
+    },
+    "Turn Right": {
+      "yaw_rad": -0.6108752471846394,
+      "net_xy_m": 0.024220889807545186,
+      "command_max_yaw_rad_s": 0.3,
+      "stop": {
+        "drift_m": 0.041677925445308836,
+        "yaw_drift_rad": 0.0025695650719649056
+      }
+    },
+    "Forward": {
+      "body_frame_travel_m": [
+        0.6353887492605738,
+        -0.04780415988645159
+      ],
+      "stop": {
+        "drift_m": 0.15152604067413378,
+        "yaw_drift_rad": 0.0023117794256443426
+      }
+    }
+  },
+  "error": "AssertionError(('Stopped drift', 0.2044429267542828, 0.0006821635519187047))",
+  "launch_returncode": 0
+}

@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-11-21T17:38:03.355991+00:00",
+  "generated_utc": "2026-11-22T01:18:02.282772+00:00",
   "task": "R9.3",
   "status": "partial",
   "qualification": "Exact hashed screens only; artifact validation does not rerun a mission",
@@ -7167,19 +7167,20 @@
       "task_type": "flight",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-11-10",
-      "revision": "1e229701 (queue T15, claude-v69; ROS domain 121)",
+      "last_tested": "2026-11-21",
+      "revision": "de9501a3 with the uncommitted takeoff_ready wait in the qualifier (exact producer.py beside the report); ROS domain 117, display :0",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/px4-2026-11-10/aerial_course/report-measured.json",
-        "docs/status/evidence/px4-2026-11-10/aerial_course/source-hashes-1e229701.json"
+        "docs/status/evidence/v5-px4-worlds-2026-11-21/aerial_course-fixed/report-measured.json",
+        "docs/status/evidence/v5-px4-worlds-2026-11-21/aerial_course-fixed/source-hashes-de9501a3.json"
       ],
       "limitations": [
-        "One run on one world; the other seven worlds of 2026-11-05 are not re-run",
+        "One run on this world",
         "No obstacle planner in the manual screen",
+        "Static selected-world takeoff check; actors and contacts are not checked",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
-      "notes": "Normal owned Tk Run, Check takeoff clearance (clear, 3.0 m rise), Takeoff, seven direction buttons, altitude, release, Stop, publisher loss and Land with native X500/PX4 SITL in Gazebo Harmonic on the aerial_course world; independent Gazebo body.",
+      "notes": "Normal owned Tk Run, Check takeoff clearance (clear), Takeoff, seven direction buttons, altitude, release, Stop, publisher loss and Land with native X500/PX4 SITL in Gazebo Harmonic on the aerial_course world; independent Gazebo body.",
       "steering_mode": ""
     },
     {
@@ -7817,6 +7818,145 @@
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
       "notes": "Repeats 2 and 3 of the spot job beside a furniture bar. Judged by cleaning_screen: completed, >= 85 % of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance from the simulator-truth trail.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "px4_x500",
+      "environment_id": "aerial_indoor",
+      "simulator": "gazebo",
+      "task_type": "flight",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-11-21",
+      "revision": "de9501a3 with the uncommitted takeoff_ready wait in the qualifier (exact producer.py beside the report); ROS domain 117, display :0",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/v5-px4-worlds-2026-11-21/aerial_indoor/report-measured.json",
+        "docs/status/evidence/v5-px4-worlds-2026-11-21/aerial_indoor/source-hashes-de9501a3.json"
+      ],
+      "limitations": [
+        "One run on this world",
+        "No obstacle planner in the manual screen",
+        "Static selected-world takeoff check; actors and contacts are not checked",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Normal owned Tk Run, Check takeoff clearance (clear), Takeoff, seven direction buttons, altitude, release, Stop, publisher loss and Land with native X500/PX4 SITL in Gazebo Harmonic on the aerial_indoor world; independent Gazebo body.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "px4_x500",
+      "environment_id": "nav_maze",
+      "simulator": "gazebo",
+      "task_type": "flight",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-11-22",
+      "revision": "2a74f523 working tree (check retries, takeoff reply kept); ROS domain 117, display :0",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/v5-px4-worlds-2026-11-21/nav_maze/report-measured.json",
+        "docs/status/evidence/v5-px4-worlds-2026-11-21/nav_maze/source-hashes-2a74f523.json"
+      ],
+      "limitations": [
+        "One run on this world",
+        "No obstacle planner in the manual screen",
+        "Static selected-world takeoff check; actors and contacts are not checked",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Normal owned Tk Run, Check takeoff clearance (clear), Takeoff, seven direction buttons, altitude, release, Stop, publisher loss and Land with native X500/PX4 SITL in Gazebo Harmonic on the nav_maze world; independent Gazebo body.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "px4_x500",
+      "environment_id": "nav_warehouse",
+      "simulator": "gazebo",
+      "task_type": "flight",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-11-22",
+      "revision": "2a74f523 working tree; ROS domain 117, display :0",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/v5-px4-worlds-2026-11-21/nav_warehouse/report-measured.json",
+        "docs/status/evidence/v5-px4-worlds-2026-11-21/nav_warehouse/source-hashes-2a74f523.json"
+      ],
+      "limitations": [
+        "One run on this world",
+        "No obstacle planner in the manual screen",
+        "Static selected-world takeoff check; actors and contacts are not checked",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Normal owned Tk Run, Check takeoff clearance (clear), Takeoff, seven direction buttons, altitude, release, Stop, publisher loss and Land with native X500/PX4 SITL in Gazebo Harmonic on the nav_warehouse world; independent Gazebo body.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "px4_x500",
+      "environment_id": "celisca_floor_1",
+      "simulator": "gazebo",
+      "task_type": "flight",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-11-22",
+      "revision": "2a74f523 plus the uncommitted resolver/model-path changes later committed as 54592a54; ROS domain 117, Xvfb",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/v5-px4-worlds-2026-11-21/celisca_floor_1/report-measured.json",
+        "docs/status/evidence/v5-px4-worlds-2026-11-21/celisca_floor_1/source-hashes-54592a54.json"
+      ],
+      "limitations": [
+        "One run on this world",
+        "No obstacle planner in the manual screen",
+        "Static selected-world takeoff check; actors and contacts are not checked",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Normal owned Tk Run, Check takeoff clearance (clear), Takeoff, seven direction buttons, altitude, release, Stop, publisher loss and Land with native X500/PX4 SITL in Gazebo Harmonic on the celisca_floor_1 world; independent Gazebo body.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "px4_x500",
+      "environment_id": "outdoor_terrain",
+      "simulator": "gazebo",
+      "task_type": "flight",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-11-22",
+      "revision": "2a74f523 plus the uncommitted resolver fix committed as 54592a54; ROS domain 117, Xvfb",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/v5-px4-worlds-2026-11-21/outdoor_terrain/report-measured.json",
+        "docs/status/evidence/v5-px4-worlds-2026-11-21/outdoor_terrain/source-hashes-54592a54.json"
+      ],
+      "limitations": [
+        "One run on this world",
+        "No obstacle planner in the manual screen",
+        "Static selected-world takeoff check; actors and contacts are not checked",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Normal owned Tk Run, Check takeoff clearance (clear), Takeoff, seven direction buttons, altitude, release, Stop, publisher loss and Land with native X500/PX4 SITL in Gazebo Harmonic on the outdoor_terrain world; independent Gazebo body.",
+      "steering_mode": ""
+    },
+    {
+      "robot_id": "px4_x500",
+      "environment_id": "small_house",
+      "simulator": "gazebo",
+      "task_type": "flight",
+      "support_level": "partially_supported",
+      "evidence_level": "runtime_evidence",
+      "last_tested": "2026-11-22",
+      "revision": "54592a54 (models on the PX4 Gazebo path and in the aerial collision scene); ROS domain 117, Xvfb",
+      "test_result": "passed_screen",
+      "artifacts": [
+        "docs/status/evidence/v5-px4-worlds-2026-11-21/small_house/report-measured.json",
+        "docs/status/evidence/v5-px4-worlds-2026-11-21/small_house/source-hashes-54592a54.json"
+      ],
+      "limitations": [
+        "One run on this world",
+        "No obstacle planner in the manual screen",
+        "Static selected-world takeoff check; actors and contacts are not checked",
+        "Ceiling-limited takeoff (2.04 m checked rise) instead of 3 m",
+        "Screen evidence; full ROADMAP mission acceptance remains separate"
+      ],
+      "notes": "Normal owned Tk Run, Check takeoff clearance (clear), Takeoff, seven direction buttons, altitude, release, Stop, publisher loss and Land with native X500/PX4 SITL in Gazebo Harmonic on the small_house world; independent Gazebo body.",
       "steering_mode": ""
     }
   ],

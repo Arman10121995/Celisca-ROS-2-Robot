@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/workspace/molar/ros_ws/bumperbot_ws/scripts/qualify_px4_drive_gui.py", line 246, in <module>
+    main()
+  File "/workspace/molar/ros_ws/bumperbot_ws/scripts/qualify_px4_drive_gui.py", line 189, in main
+    report['directions'][label] = dict(body_frame_travel_m=relative, stop=stop())
+  File "/workspace/molar/ros_ws/bumperbot_ws/scripts/qualify_px4_drive_gui.py", line 97, in stop
+    assert drift < .2 and angle < .06, ('Stopped drift', drift, angle)
+AssertionError: ('Stopped drift', 0.2044429267542828, 0.0006821635519187047)

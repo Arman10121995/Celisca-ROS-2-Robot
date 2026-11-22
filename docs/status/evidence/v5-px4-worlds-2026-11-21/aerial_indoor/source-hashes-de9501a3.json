@@ -1,0 +1,15 @@
+{
+ "revision": "de9501a3",
+ "derived": "sha256 of each file as git stores it at this revision, computed 2026-11-22 after the run; uncommitted working-tree changes at run time are not captured",
+ "files": {
+  "scripts/qualify_px4_drive_gui.py": "f9c1ba352370bb280c0f9d8d3b7967b10086ab500dc7db5046233be31509b2cb",
+  "src/robot_lab_adapter/robot_lab_adapter/px4_planning.py": "90f6b99dc8891431d50f42822cc0ab21cbea6baf7f5bd4886017b7d80ee284f2",
+  "src/robot_lab_adapter/robot_lab_adapter/px4_ros_controller.py": "9e08d12d8cf328dca99ed17a61537e0d9041ca24111850057ef5e130a7c1201a",
+  "src/robot_lab_adapter/robot_lab_adapter/px4_sitl_runtime.py": "d944b54e3c8eb501cb71735bf9bb46db73f229c73311029a64d411e4dfafd91e",
+  "src/robot_lab_adapter/robot_lab_adapter/resolver.py": "b327fbb752828a3e60d9ceb38820bf8554053d1f9893de11c1c12031cec40085",
+  "src/robot_lab_gui/robot_lab_gui/drone_planning_controls.py": "77b64fde6548bb3cbfae3cc148dc1ce975dc1e57443b0f36d3ff3e74678b48e5",
+  "src/robot_lab_robots/config/robots.yaml": "7c8ed7e0392c36f7b23ad5c95e194f85ecf70a4540c046bc22b099a2f58a7915",
+  "src/robot_lab_utils/robot_lab_utils/aerial_planning.py": "0c2d053e45fa3a44a6e6eb853cab74bf614659ff7c549291a6a8d875ef2aac06",
+  "src/robot_lab_utils/robot_lab_utils/aerial_takeoff.py": "2bb00dc8f4a889d159fed74f4779d7e12c6818c6a5a8103f0160206c5db2d4a6"
+ }
+}
