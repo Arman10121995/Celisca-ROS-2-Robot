@@ -58,6 +58,10 @@ ESCAPE_LIMIT = 6
 # bumps left are not trustworthy, so they are forgotten and the robot tries
 # a freeing manoeuvre; the third time in a job it stops and asks for help.
 WEDGE_BUMPS, WEDGE_WINDOW_S, WEDGE_LIMIT = 6, 30.0, 3
+# Docking: the in-place align must have stopped turning (rad/s) before the
+# straight entry; an entry that passes beside the dock beyond the tolerance
+# backs off and aligns again, at most DOCK_RETRIES times, then reports it.
+DOCK_SETTLED_RATE, DOCK_TOLERANCE_M, DOCK_RETRIES = 0.05, 0.06, 3
 WORK_KINDS = ('lane', 'edge', 'spot')
 
 
@@ -349,6 +353,7 @@ class Mission:
         self.resume_after_dock = ''
         self.home_reason = ''
         self.dock_phase = ''
+        self.dock_retries, self.dock_last_yaw = 0, None
         self.target_mask: Optional[np.ndarray] = None
         self.last_now: Optional[float] = None
         self.last_paint: Optional[Point] = None
@@ -1152,6 +1157,7 @@ class Mission:
         if math.dist(self.pose[:2], dock[:2]) < 0.12:
             self.state = 'docking'
             self.dock_phase = 'align'
+            self.dock_retries, self.dock_last_yaw = 0, None
             return True, 'At the dock'
         path = self.pmap.astar(self.pose[:2], pre) or self.pmap.astar(self.pose[:2], dock[:2])
         if path is None and self.grid is not None:
@@ -1344,6 +1350,7 @@ class Mission:
         if task.kind == 'dock':
             self.state = 'docking'
             self.dock_phase = 'align'
+            self.dock_retries, self.dock_last_yaw = 0, None
             self.dock_blocks = 0
         elif task.kind == 'explore':
             self.explore_blacklist.append(task.points[-1])
@@ -1472,6 +1479,11 @@ class Mission:
         if dock is None:
             self.state = 'idle'
             return 0.0, 0.0
+        # Heading rate since the last docking step: a spin that is still
+        # coasting when the align phase ends (Bullet wheels, 2026-11-21) sends
+        # the robot in on a curve.
+        last, self.dock_last_yaw = self.dock_last_yaw, yaw
+        rate = abs(wrap(yaw - last)) / dt if last is not None and dt > 0 else math.inf
         if self.dock_phase == 'align':
             bearing = math.atan2(dock[1] - y, dock[0] - x)
             dist = math.dist((x, y), dock[:2])
@@ -1479,12 +1491,29 @@ class Mission:
             err = wrap(goal - yaw)
             if abs(err) > 0.06:
                 return 0.0, max(-1.0, min(1.0, 2.0 * err))
+            if rate > DOCK_SETTLED_RATE:
+                return 0.0, 0.0
             self.dock_phase = 'enter' if dist > 0.04 else 'final'
             return 0.0, 0.0
         if self.dock_phase == 'enter':
             dist = math.dist((x, y), dock[:2])
             bearing = math.atan2(dock[1] - y, dock[0] - x)
             err = wrap(bearing - yaw)
+            if abs(err) > 1.2 and dist > DOCK_TOLERANCE_M:
+                # Passing beside the dock is a miss, not a dock: back off and
+                # align again, a bounded number of times.
+                self.dock_retries += 1
+                if self.dock_retries > DOCK_RETRIES:
+                    self.dock_phase = ''
+                    self.state = 'error'
+                    self.error = 'Could not dock (%.2f m from the dock by its estimate)' % dist
+                    self.log('error', self.error)
+                    return 0.0, 0.0
+                self.log('warn', 'Missed the dock by %.2f m; backing off to align again (%d/%d)'
+                         % (dist, self.dock_retries, DOCK_RETRIES))
+                self.maneuvers.append([-0.08, 0.0, 2.5])
+                self.dock_phase = 'align'
+                return 0.0, 0.0
             if dist < 0.03 or abs(err) > 1.2:
                 self.dock_phase = 'final'
                 return 0.0, 0.0

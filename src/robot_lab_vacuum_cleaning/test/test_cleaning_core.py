@@ -489,6 +489,46 @@ def test_vacuuming_boosts_suction_on_carpet(tmp_path):
     assert record['mopped_m2'] == 0.0 and mission.consumables['mop_pad'] == 0.0
 
 
+def docking_mission(tmp_path, pose, phase):
+    mission = make_mission(tmp_path, two_rooms(), pose)
+    mission.layout['dock'] = [1.0, 1.0, 0.0]
+    mission.state, mission.dock_phase = 'docking', phase
+    mission.dock_retries, mission.dock_last_yaw = 0, None
+    return mission
+
+
+def test_dock_entry_waits_for_the_align_spin_to_stop(tmp_path):
+    mission = docking_mission(tmp_path, (0.6, 1.0, 0.0), 'align')
+    mission.step(1.0, (0.6, 1.0, 0.0), Sense())
+    mission.step(1.1, (0.6, 1.0, 0.04), Sense())      # within 0.06 rad, still turning 0.4 rad/s
+    assert mission.dock_phase == 'align'
+    mission.step(1.2, (0.6, 1.0, 0.04), Sense())      # stopped
+    assert mission.dock_phase == 'enter'
+
+
+def test_dock_entry_passing_beside_the_dock_backs_off_then_reports(tmp_path):
+    mission = docking_mission(tmp_path, (1.0, 1.15, 0.0), 'enter')
+    t = 1.0
+    for attempt in range(1, 4):
+        mission.maneuvers.clear()
+        mission.dock_phase = 'enter'
+        mission.step(t, (1.0, 1.15, 0.0), Sense())     # 0.15 m beside it, bearing error pi/2
+        t += 0.1
+        assert mission.dock_phase == 'align' and mission.dock_retries == attempt
+        assert mission.maneuvers and mission.maneuvers[0][0] < 0
+        assert not any(e['text'] == 'Docked' for e in mission.events)
+    mission.maneuvers.clear()
+    mission.dock_phase = 'enter'
+    mission.step(t, (1.0, 1.15, 0.0), Sense())
+    assert mission.state == 'error' and 'Could not dock' in mission.error
+
+
+def test_dock_entry_close_beside_the_dock_still_docks(tmp_path):
+    mission = docking_mission(tmp_path, (1.0, 1.04, 0.0), 'enter')
+    mission.step(1.0, (1.0, 1.04, 0.0), Sense())       # within the 0.06 m tolerance
+    assert mission.dock_phase == 'final' and mission.dock_retries == 0
+
+
 def test_empty_water_tank_refills_at_the_dock_and_resumes(tmp_path):
     grid = two_rooms()
     mission = mop_mission(tmp_path, grid, (1.0, 1.0, 0.0), tank=4.0)   # about 2 m2 at medium flow
