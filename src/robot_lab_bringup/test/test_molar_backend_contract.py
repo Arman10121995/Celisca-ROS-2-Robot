@@ -373,11 +373,12 @@ def test_isaac_wheel_loss_port_preserves_torque_units_and_motor_envelope(monkeyp
     assert attrs['armature'] == .005 and values['drive:maxForce'] == 6.
 
 
-def test_isaac_grip_contacts_keep_only_named_pads_and_free_objects():
+def test_isaac_grip_contacts_separate_named_pads_from_distal_jaw_hulls():
     from robot_lab_isaac.grip_contacts import GripContacts
 
     receiver = object.__new__(GripContacts)
     receiver.pads = {1: 'left', 2: 'right'}
+    receiver.jaws = {10: 'left', 20: 'right'}
     receiver.objects = {3: 'block'}
     receiver.dt = .02
     receiver.begin_step()
@@ -387,13 +388,17 @@ def test_isaac_grip_contacts_keep_only_named_pads_and_free_objects():
                             contact_data_offset=1, num_contact_data=1)
     hull = SimpleNamespace(collider0=4, actor1=3, collider1=30, actor0=10,
                            contact_data_offset=1, num_contact_data=1)
-    receiver._on_contacts([left, right, hull], [
+    other = SimpleNamespace(collider0=4, actor1=99, collider1=30, actor0=10,
+                            contact_data_offset=1, num_contact_data=1)
+    receiver._on_contacts([left, right, hull, other], [
         SimpleNamespace(impulse=(.04, .08, 0.), normal=(1., 0., 0.)),
         SimpleNamespace(impulse=(0., .06, .09), normal=(0., 1., 0.)),
     ])
     assert receiver.measure(1.)['normal_force_n']['block'] == {'left': 2., 'right': 3.}
+    assert receiver.measure(1.)['non_pad_jaw_normal_force_n']['block'] == {'left': 3., 'right': 0.}
     receiver.begin_step()
     assert receiver.measure(1.02)['normal_force_n']['block'] == {'left': 0., 'right': 0.}
+    assert receiver.measure(1.02)['non_pad_jaw_normal_force_n']['block'] == {'left': 0., 'right': 0.}
 
 
 def test_isaac_watchdog_hold_retains_gravity_budget():
