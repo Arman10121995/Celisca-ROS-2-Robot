@@ -23,7 +23,7 @@ from sensor_msgs.msg import JointState
 from .px4_ros_controller import PX4Controller
 
 
-def prepare_world(source, destination, upstream):
+def prepare_world(source, destination, upstream, *, takeoff_pad=None):
     root = ET.parse(source if source else upstream/'worlds/default.sdf').getroot()
     world = root.find('world')
     if world is None:
@@ -47,6 +47,24 @@ def prepare_world(source, destination, upstream):
             uri.text = str(Path(get_package_share_directory(package))/tail)
         elif value and not value.startswith(('model://', 'file://', 'http://', 'https://')):
             uri.text = str((Path(source).parent/value).resolve()) if source else value
+    if takeoff_pad is not None:
+        x, y, top, width, base = takeoff_pad
+        if not all(math.isfinite(v) for v in takeoff_pad) or width <= 0.0 or top <= base:
+            raise ValueError('The takeoff pad needs finite bounds and a positive width and height.')
+        if world.find("model[@name='robot_lab_takeoff_pad']") is not None:
+            raise ValueError('The selected world already defines robot_lab_takeoff_pad.')
+        model = ET.SubElement(world, 'model', name='robot_lab_takeoff_pad')
+        ET.SubElement(model, 'static').text = 'true'
+        ET.SubElement(model, 'pose').text = f'{x} {y} {(base + top) / 2.0} 0 0 0'
+        link = ET.SubElement(model, 'link', name='pad')
+        for kind in ('collision', 'visual'):
+            shape = ET.SubElement(link, kind, name=kind)
+            box = ET.SubElement(ET.SubElement(shape, 'geometry'), 'box')
+            ET.SubElement(box, 'size').text = f'{width} {width} {top - base}'
+            if kind == 'visual':
+                material = ET.SubElement(shape, 'material')
+                ET.SubElement(material, 'ambient').text = '.18 .39 .43 1'
+                ET.SubElement(material, 'diffuse').text = '.25 .55 .59 1'
     root.set('version', '1.9')
     ET.ElementTree(root).write(destination, encoding='unicode', xml_declaration=True)
 
@@ -394,6 +412,8 @@ def main():
     parser.add_argument('--spawn-x', type=float, default=0.0)
     parser.add_argument('--spawn-y', type=float, default=0.0)
     parser.add_argument('--spawn-z', type=float, default=0.0)
+    parser.add_argument('--takeoff-pad', type=float, nargs=5, metavar=('X', 'Y', 'TOP_Z', 'WIDTH', 'BASE_Z'),
+                        help='physical launch/landing platform in the prepared Gazebo world')
     parser.add_argument('--rviz', default='false', choices=('true', 'false'))
     parser.add_argument('--log-limit-mb', type=float, default=256.)
     parser.add_argument('--vehicle', default='x500', choices=('x500', 'x500_depth'),
@@ -447,7 +467,8 @@ def main():
     signal.signal(signal.SIGTERM, _interrupt)
     for folder in ('rootfs', 'worlds', 'models'):
         (run/folder).mkdir()
-    prepare_world(args.world, run/'worlds/robot_lab_flight.sdf', upstream)
+    prepared_world = run/'worlds/robot_lab_flight.sdf'
+    prepare_world(args.world, prepared_world, upstream, takeoff_pad=args.takeoff_pad)
     mujoco_plant = args.plant == 'mujoco'
     prepare_model(run/'models/x500', upstream)
     _copy_config(upstream/'models/x500/model.config', run/'models/x500/model.config', 'x500')
@@ -571,7 +592,8 @@ def main():
         if camera:
             from robot_lab_utils.aerial_takeoff import extend_envelope
             envelope = extend_envelope(envelope, camera_collision_corners(), camera_model)
-        planner = PX4Planning(controller, args.world or str(upstream/'worlds/default.sdf'), envelope,
+        planning_world = str(prepared_world) if args.takeoff_pad else args.world or str(upstream/'worlds/default.sdf')
+        planner = PX4Planning(controller, planning_world, envelope,
             observed_obstacles=args.obstacles != 'none')
         executor.add_node(planner)
         while rclpy.ok() and fcu.poll() is None:

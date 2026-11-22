@@ -3022,6 +3022,7 @@ tasks:
         state: done
         title: Qualify Bumperbot and Labbot mobile tasks
       R5.10:
+        terrain_flight_spawn_owner_20261122: 'Codex added the X500 Terrain Heightfield site and 1.6 m physical pad with a 1.72 m top. PX4 spawns on the pad and the same prepared SDF supplies takeoff clearance. The authored terrain sample maximum around the pad is 1.6235 m. The static clearance test permits 3 m ascent and rejects the old underground site. Ground configuration stays separate. Normal GUI flight verification is pending.'
         acceptance_ref: ROADMAP.md
         active_scope: '2026-10-12 claude (continuing codex, user request): aerial
           sensing and saved 3D mapping - the upstream PX4 x500_depth airframe (OakD-Lite)

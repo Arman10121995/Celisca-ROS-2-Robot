@@ -686,6 +686,12 @@ maps:
       y: '-6.0'
       yaw: '0.0'
       z: '0.02'
+    flight_spawn:
+      x: -6.0
+      y: -6.0
+      z: 1.72
+      pad_width: 1.6
+      pad_base_z: 1.2
   gait_low_relief:
     gazebo:
       world_name: gait_low_relief

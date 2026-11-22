@@ -807,6 +807,10 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
   - `nav_empty`, `nav_obstacle` and `aerial_course` manual flights pass.
   - Mapped and live-depth obstacle route planning (`aerial_obstacles.py`,
     [mapped drone planning](docs/tutorials/mapped-drone-planning.md)).
+  - Terrain Heightfield has an X500 launch site at the top of a level
+    1.6 m Gazebo platform. The selected-world clearance checker reads
+    the same prepared SDF. At the 1.72 m pad the static check clears a
+    3 m ascent. The physical flight screen is pending.
 - **Remaining implementation:** world-specific fixes found during validation.
 - **Done when:** each world: display, takeoff, hold, manual XYZ, land/disarm and
   reset artifacts; actor/plugin failures reported.

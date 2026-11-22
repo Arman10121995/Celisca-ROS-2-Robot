@@ -2,6 +2,7 @@
 
 import math
 import os
+from pathlib import Path
 import sys
 from types import SimpleNamespace
 
@@ -49,6 +50,34 @@ def test_a_blocked_corridor_is_rejected():
     beam = _box([0.3, 0, 0.9], [0.2, 2, 0.2])  # crosses the rotor sweep 0.6 m up
     with pytest.raises(ValueError, match="minimum 0.8 m"):
         check_takeoff(_scene(beam), [0, 0, 0.3], ENVELOPE)
+
+
+def test_terrain_flight_pad_is_a_shared_physical_support(tmp_path):
+    pytest.importorskip("rclpy")
+    pytest.importorskip("pymavlink")
+    import yaml
+    from robot_lab_adapter.px4_sitl_runtime import prepare_world
+    from robot_lab_utils.aerial_planning import StaticScene
+
+    profiles = Path(_HERE).parent / "config" / "sim_maps.yaml"
+    profile = yaml.safe_load(profiles.read_text())["maps"]["terrain_heightfield"]
+    world = profiles.parents[2] / "robot_lab_maps" / profile["gazebo"]["world_path"]
+    site = profile["flight_spawn"]
+    pad = tuple(site[key] for key in ("x", "y", "z", "pad_width", "pad_base_z"))
+    fixtures = tmp_path / "worlds"
+    fixtures.mkdir()
+    (fixtures / "default.sdf").write_text('<sdf version="1.9"><world name="default"/></sdf>')
+    prepared = tmp_path / "prepared.sdf"
+    prepare_world(world, prepared, tmp_path, takeoff_pad=pad)
+
+    scene = StaticScene(prepared)
+    support = next(shape for shape in scene.shapes if shape["model"] == "robot_lab_takeoff_pad")
+    assert support["position"][2] + support["size"][2] / 2 == pytest.approx(site["z"])
+    assert support["size"][:2] == [site["pad_width"]] * 2
+    assert check_takeoff(scene, (*pad[:2], site["z"] + .24), ENVELOPE)["rise_m"] == 3.
+    with pytest.raises(ValueError, match="minimum 0.8 m"):
+        check_takeoff(scene, (*pad[:2], .24), ENVELOPE)
+    assert float(profile["spawn"]["z"]) == .02
 
 
 @pytest.mark.parametrize("feet_z", [0.013, 0.0, -0.02])

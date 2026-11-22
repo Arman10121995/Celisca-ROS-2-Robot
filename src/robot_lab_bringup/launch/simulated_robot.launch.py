@@ -827,6 +827,7 @@ def _build_simulation_actions(context):
                 _launch_file(bringup_share, 'auv_simulator.launch.py' if robot_model == 'tethys_auv' else 'marine_simulator.launch.py')), launch_arguments=marine_args.items())]
         if robot_model in ('px4_x500', 'px4_iris'):
             spawn = map_config.get('spawn', {})
+            flight_spawn = map_config.get('flight_spawn', {}) if robot_model == 'px4_x500' else {}
             python = os.environ.get('PX4_PYTHON', '/workspace/molar/robot_lab_runtime/px4/venv/bin/python3')
             if not Path(python).is_file():
                 raise RuntimeError('PX4 Python environment is missing: '+python+'; see docs/tutorials/px4_x500.md')
@@ -859,11 +860,18 @@ def _build_simulation_actions(context):
             command += ['--obstacles', obstacles]
             if database:
                 command += ['--map-database', database]
-            for axis in ('x', 'y', 'z'):
-                # Upstream X500 already places its landing gear on the floor.
-                # Wheeled map defaults (often z=0.5) must not be added to it.
-                default = '0.0' if axis == 'z' else spawn.get(axis, '0.0')
-                command.extend(['--spawn-'+axis, _config_value(context, 'spawn_'+axis, default)])
+            spawn_xy = [_config_value(context, 'spawn_'+axis, flight_spawn.get(axis, spawn.get(axis, '0.0')))
+                        for axis in ('x', 'y')]
+            on_flight_pad = flight_spawn and all(float(value) == float(flight_spawn[axis])
+                                                for axis, value in zip(('x', 'y'), spawn_xy))
+            # Upstream landing gear sits on the selected floor or pad. Ground
+            # robot base-height offsets are irrelevant to the drone model.
+            spawn_z = _config_value(context, 'spawn_z', flight_spawn['z'] if on_flight_pad else '0.0')
+            for axis, value in zip(('x', 'y', 'z'), (*spawn_xy, spawn_z)):
+                command.extend(['--spawn-'+axis, str(value)])
+            if flight_spawn.get('pad_width') is not None:
+                command.extend(['--takeoff-pad', *(str(flight_spawn[key]) for key in
+                                                 ('x', 'y', 'z', 'pad_width', 'pad_base_z'))])
             # The runtime lands the vehicle and stops PX4/Gazebo on SIGINT;
             # give that cleanup time before launch escalates.  This branch
             # used to return before the run id was set: on 12 October a
