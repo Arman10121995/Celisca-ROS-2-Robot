@@ -130,6 +130,9 @@ GRASP_ALIGN_TOLERANCE_M = .002
 GRASP_ALIGN_MAX_M = .008
 GRASP_ALIGN_FEEDBACK_AGE_S = .8
 GRASP_ALIGN_TIMEOUT_S = 4.
+GRASP_ALIGN_MIN_IMPROVEMENT_M = .001
+GRASP_ALIGN_MAX_CORRECTIONS = 2
+GRASP_ALIGN_OPEN_TOLERANCE_RAD = .005
 COMPOUND_MOTION_TOLERANCE_M = .005
 CARRY_DRIFT = 0.03      # m of object motion relative to the base while carrying
 NAV2_MIN_LEG = 0.5      # m: shorter transit legs stay straight (DWB circles on tiny paths)
@@ -953,7 +956,10 @@ class PickPlace(Node):
                       correction_xy_m=shift.tolist())
         if error <= GRASP_ALIGN_TOLERANCE_M:
             return dict(passed=True, **checks)
-        if error > GRASP_ALIGN_MAX_M or stage == 'align_grasp':
+        corrections = task.get('grasp_alignment_corrections', 0)
+        previous_error = task.get('grasp_alignment_previous_error', math.inf)
+        if (error > GRASP_ALIGN_MAX_M or corrections >= GRASP_ALIGN_MAX_CORRECTIONS
+                or error + GRASP_ALIGN_MIN_IMPROVEMENT_M >= previous_error):
             return dict(passed=False, reason='measured TCP is outside the grasp alignment tolerance', **checks)
         from robot_lab_mujoco.arm_pick_place import PlanningError
 
@@ -961,9 +967,10 @@ class PickPlace(Node):
             self._plan_grasp_alignment(task, tcp, actual_tcp, shift)
         except (PlanningError, ValueError) as exc:
             return dict(passed=False, reason=str(exc), **checks)
+        task.update(grasp_alignment_corrections=corrections + 1, grasp_alignment_previous_error=error)
         task.pop('grasp_alignment_started')
         samples.clear()
-        return dict(passed=True, align=True, **checks)
+        return dict(passed=True, align=True, alignment_correction=corrections + 1, **checks)
 
     def _plan_grasp_alignment(self, task, tcp, actual_tcp, shift):
         """Replace closure and lift with a collision-checked aligned continuation."""
@@ -1485,6 +1492,12 @@ class PickPlace(Node):
             return False
         if self.spec.pad_geoms and stage['name'] in ('close', 'lift', 'over_support', 'lower'):
             return self._pads_settled(stage)
+        if stage['name'] == 'align_grasp':
+            # Six calibrated open joints can settle slightly short of the
+            # endpoint. Closure still uses its measured bilateral-load gate.
+            return not self.state.get('coupling_inhibited') and all(
+                abs(measured[name] - goal) <= GRASP_ALIGN_OPEN_TOLERANCE_RAD
+                for name, goal in stage['finger_goal'].items())
         # Fingers settle on target, or once stopped (held by the object) after
         # they had time to start moving. Stopped is judged from positions:
         # Bullet's reported finger velocities jitter while squeezing.
