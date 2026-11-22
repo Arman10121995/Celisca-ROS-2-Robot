@@ -4459,6 +4459,7 @@ tasks:
         title: Mobile manipulator missions and combined control
     title: Robot-class qualification
   R6:
+    validation_20261122: 'Claude V9: Bumperbot MuJoCo nav_obstacle mission clean vs seeded scan noise 0.05 m + 20 percent dropout and a 20-50 s half-scan occlusion, seeds 1-3, 9/9 passed; no failure, so recovery time not yet measured. docs/status/evidence/v9-sensor-faults-2026-11-22/README.md'
     owner: cline-agent
     state: partial
     tasks:

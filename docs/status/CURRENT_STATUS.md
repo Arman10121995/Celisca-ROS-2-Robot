@@ -359,6 +359,8 @@ November 20: **R7 `dijkstra_planner` is its own planner (implemented, experiment
 
 November 20: **R6.5 the repo `small_house` world projects to an occupancy grid.** Its AWS RoboMaker furniture now resolves from the installed world dataset, and its grid agrees with the dataset copy of the same house (occupied-cell IoU 0.846, free-space IoU 0.949). [Receipt](evidence/r65-small-house-occupancy-2026-11-20/README.md).
 
+November 22: **V9 Nav2 missions under seeded scan faults: 9 of 9 passed.** The Bumperbot `nav_obstacle` mission on MuJoCo, clean and with the sensor-fault relay adding 5 cm range noise plus 20 % dropout, or occluding half the scan for 30 s, reached every goal within 0.13 m on goal seeds 1–3. Resume A was 1–5 s slower under faults; the faults caused no failure, so recovery time still needs harder scenarios. [Round](evidence/v9-sensor-faults-2026-11-22/README.md)
+
 November 22: **V7 fleet lift transport repeated: 3 of 3 passed.** MOLAR (twice) and Bumperbot ride L0 → L1 → L0 in Gazebo `fleet_facility` from two Facility transport requests, with settled exits within 3 cm of November 20 and MOLAR keeping its arrival heading; each took 10–20 s longer than then. [Round](evidence/v7-fleet-transport-2026-11-22/README.md)
 
 November 22: **V7 lab ROV on four backends, repeated: 8 of 8.** Surge within 1.5 % and yaw within 2 % of November 18–19 on Gazebo, MuJoCo, PyBullet and Isaac; the current feedforward holds within a few centimetres and every run disarms. The ported plants now hold 0.5–1.1 cm while arming (5.7–8.2 cm before; cause not identified). [Round](evidence/v7-marine-rov-2026-11-22/README.md)

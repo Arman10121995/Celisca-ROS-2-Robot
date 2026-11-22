@@ -1,0 +1,8 @@
+# V9: half the scan occluded from 20 s to 50 s of simulation time, then clean.
+seed: 7
+relays:
+- input: /scan_clean
+  output: /scan
+  type: LaserScan
+  faults:
+  - {kind: occlusion, fraction: 0.5, start_s: 20, end_s: 50}

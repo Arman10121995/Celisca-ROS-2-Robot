@@ -1,0 +1,9 @@
+# V9: persistent scan degradation for the whole mission.
+seed: 7
+relays:
+- input: /scan_clean
+  output: /scan
+  type: LaserScan
+  faults:
+  - {kind: noise, std: 0.05}
+  - {kind: dropout, probability: 0.2}
