@@ -394,3 +394,37 @@ value the executor accepts).
 The next blocker is the `align_grasp` settle: one arm joint 1.3 mrad over
 its tolerance while the measured alignment holds. Closure, lift, carry and
 place remain unmeasured live.
+
+### Alignment, closure and carry (Claude, November 22, later)
+
+The runs below use the 5 mm dock profile. Each change was measured on the
+next run (`claude-isaac-dock5mm-<time>.json`, with `-task.json` task
+records):
+
+| Run | Change before it | Furthest stage | Result |
+|---|---|---|---|
+| 1307 | 5 mm dock | `align_grasp` | joint 4 0.0113 rad over the 0.01 settle while the arm rested still; the block had moved 2.5 mm sideways with 0 N on the sensed pads and jaws |
+| 1315 | the lateral correction rises by the approach height, shifts and descends | `down_to_grasp` | open-jaw settle timeout (all arm joints in tolerance) |
+| 1321 | open-jaw 5 mrad settle in `above_object` / `down_to_grasp` | `down_to_grasp` | no IK for the 60 mm rise |
+| 1327 | lateral move kept when the raised path has no IK | `align_grasp` | lateral fallback; joint 4 0.0122 rad |
+| **1333** | 25 mm rise; a stopped arm within 0.02 rad settles `align_grasp` | **`carry`** | raised alignment, residual **1.05 mm**; **closure with both pads loaded (2.77 / 4.34 N); lift 40.3 mm, 0.1 mm hold drift**; carry with steady 2.7 N on both pads; drive timed out on the **wall** clock at 0.58 m back and 1.10 of 1.57 rad turned (Isaac at about 4 % of real time) |
+| 1346 | drive phases on the simulation clock; qualifier `--task-timeout` 2000 s | approach | articulation state stale (not repeated) |
+| 1351 | (retry) | `down_to_grasp` | joint 4 at the 0.0100 rad edge |
+| 1358 | stopped-arm settle in all open-jaw approach stages | `align_grasp` | corrections 6.6 → 3.2 → 2.3 mm; the second improved by less than 1 mm |
+| 1404 | three corrections, 0.5 mm minimum improvement | `align_grasp` | 6.2 → 3.2 → 2.1 → 2.4 mm |
+| 1410 | a residual up to 3 mm accepted once corrections stop improving | `close` | accepted 2.69 mm; **one-sided closure** (5.15 N left, 0 N right), as in Codex's run; this acceptance was **reverted** |
+
+Kept in code: the raised 25 mm alignment with its lateral fallback, the
+open-jaw and stopped-arm settle rules for the open-jaw approach stages,
+three corrections at 0.5 mm minimum improvement with the 2 mm tolerance
+unchanged, and drive phases on the simulation clock.
+
+**State.** Run 1333 is the first Isaac F100 run with a bilateral closure
+and a lift. The remaining blockers:
+- alignment levels off at about 2–3 mm in most runs, and a residual above
+  about 1 mm gives a one-sided closure;
+- the loaded carry to the drop table has not yet completed: it is slow at
+  Isaac's real-time factor, and its earlier failure was the wall-clock
+  limit;
+- place has not been reached.
+

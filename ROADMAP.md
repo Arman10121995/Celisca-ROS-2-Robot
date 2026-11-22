@@ -1871,7 +1871,12 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
   With a 5 mm dock tolerance the base docked about 3 mm off, the replan, the
   live 6.6 mm alignment and `down_to_grasp` passed, and `align_grasp` then
   timed out with joint 4 at 0.0113 rad (limit 0.01). The F100 profile now
-  docks to 5 mm. Closure, carry and place are still unmeasured live.
+  docks to 5 mm. Later that day a raised 25 mm alignment gave the first Isaac
+  F100 bilateral closure (2.77 / 4.34 N) and a 40 mm lift; its carry hit the
+  wall-clock drive limit, and drives now time on the simulation clock.
+  Alignment levels off at 2–3 mm in most runs, which closes one-sided, and
+  the carry and place remain unfinished
+  ([runs](docs/status/evidence/r143-pro630-f100-2026-11-20/README.md)).
   [GUI evidence](docs/status/evidence/r143-pro630-f100-2026-11-20/isaac-gui-gripper-confirmed.json).
 - **Remaining implementation:** qualify loaded PyBullet and Isaac missions,
   including measured pad contacts and custody. The physical linkage on

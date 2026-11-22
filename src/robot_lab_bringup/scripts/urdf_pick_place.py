@@ -131,8 +131,8 @@ GRASP_ALIGN_TOLERANCE_M = .002
 GRASP_ALIGN_MAX_M = .008
 GRASP_ALIGN_FEEDBACK_AGE_S = .8
 GRASP_ALIGN_TIMEOUT_S = 4.
-GRASP_ALIGN_MIN_IMPROVEMENT_M = .001
-GRASP_ALIGN_MAX_CORRECTIONS = 2
+GRASP_ALIGN_MIN_IMPROVEMENT_M = .0005  # Isaac F100: a second correction improved 3.23 -> 2.34 mm (2026-11-22)
+GRASP_ALIGN_MAX_CORRECTIONS = 3
 GRASP_ALIGN_OPEN_TOLERANCE_RAD = .005
 OPEN_JAW_APPROACH_STAGES = ('above_object', 'down_to_grasp', 'align_grasp')
 GRASP_ALIGN_RISE_M = .025          # raised alignment: the F100 has no IK 60 mm above the grasp at full reach
@@ -1534,7 +1534,7 @@ class PickPlace(Node):
         final = stage['targets'][-1]
         if any(abs(measured[n] - final[n]) > SETTLE_TOLERANCE for n in final):
             stage.pop('pad_settle', None)
-            if not (self.spec.pad_geoms and stage['name'] == 'align_grasp' and self._arm_stopped(final)):
+            if not (self.spec.pad_geoms and stage['name'] in OPEN_JAW_APPROACH_STAGES and self._arm_stopped(final)):
                 return False
         if self.spec.pad_geoms and stage['name'] in ('close', 'lift', 'over_support', 'lower'):
             return self._pads_settled(stage)
@@ -1560,9 +1560,10 @@ class PickPlace(Node):
 
     def _arm_stopped(self, final):
         """The arm has held still within GRASP_ALIGN_STOPPED_TOLERANCE of its align
-        target for FINGER_STILL_WINDOW. The lateral alignment can rest against the
-        payload (Isaac F100 joint 4 held 1.3-2.2 mrad past tolerance, 2026-11-22);
-        closure still has to pass the measured bilateral pad load."""
+        target for FINGER_STILL_WINDOW, in the open-jaw approach stages. The lateral
+        alignment can rest against the payload, and Isaac's F100 joint 4 settles
+        at the 0.01 rad edge in down_to_grasp (2026-11-22); the live alignment
+        measures the tool afterwards and closure needs bilateral pad load."""
         measured = self.measured()
         if any(abs(measured[n] - final[n]) > GRASP_ALIGN_STOPPED_TOLERANCE for n in final):
             self.task.pop('align_arm_history', None)
