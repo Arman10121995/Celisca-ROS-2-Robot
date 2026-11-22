@@ -1,4 +1,4 @@
-pybullet rooms_office exit=0
-pybullet spot exit=0
-pybullet zone_keepout exit=0
+mujoco rooms_office exit=1
+mujoco spot exit=0
+mujoco zone_keepout exit=0
 ALLDONE

@@ -63,8 +63,28 @@ still coasting when the entry began, so the robot curved in. Commit
 Before the fix the same jobs ended 0.14–0.18 m off. The re-runs are in
 `runs-docking-fix/`, indexed by `docking-fix-batch.yaml`, which now
 controls the three PyBullet cells. With them, the round passes 8 of 9: all
-of Isaac and PyBullet, and MuJoCo 2 of 3. The MuJoCo, Isaac and Gazebo
-cells ran before the fix and have not been re-run with it.
+of Isaac and PyBullet, and MuJoCo 2 of 3. The Isaac and Gazebo cells ran before the fix
+and have not been re-run with it.
+
+The three MuJoCo jobs were re-run with the fix (`docking-fix-mujoco-batch.yaml`):
+- spot passed (90.6 %, docked 0.037 m);
+- keep-out passed (99.6 %, docked 0.038 m);
+- the rooms job froze again, at 27 % in the kitchen, at a different place
+  (9.13, 0.07). Its truth did not change by even 1 mm for 25 s while all
+  three freeing manoeuvres commanded reverse and turn-in-place. No cliff,
+  bumper or safety stop was logged.
+
+The robot is jammed in the MuJoCo scene, not stopped by its controller.
+`runs-mujoco-stuck/` repeats the job with static world flex culling off
+and on. Both froze at x = 9.13:
+- culling off: at (9.13, 0.22) after 26.9 %;
+- culling on: at (9.13, 0.41) after 91.8 %.
+
+So culling is not the cause. Three of four MuJoCo rooms runs froze within
+0.4 m of x = 9.13, between the kitchen table and the window wall. What
+holds the robot there in the MuJoCo scene is still open; an offline mesh
+probe did not reproduce the scene's include poses, so it is not used. The
+MuJoCo rooms cell remains failed.
 
 ## MuJoCo rooms job
 

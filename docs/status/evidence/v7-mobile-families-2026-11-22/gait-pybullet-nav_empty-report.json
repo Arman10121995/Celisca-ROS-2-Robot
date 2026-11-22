@@ -1,0 +1,149 @@
+[
+ {
+  "robot": "hexapod_ros2",
+  "map": "nav_empty",
+  "spawn": null,
+  "simulator": "pybullet",
+  "acquisition": {
+   "run": "/workspace/molar/robot_lab_runtime/v7-mobile-families-20261122/gait-pybullet-nav_empty/runs/b07e804a9ca54f0496b3ba35fea44e03",
+   "success": true,
+   "reason": "Actual travel and nonempty acquired map archived",
+   "map_yaml": "/workspace/molar/robot_lab_runtime/gait_sessions/hexapod_ros2-nx213ak_/saved_maps/map-b67675e5ff/map.yaml",
+   "known_cells": 37829,
+   "start": [
+    -0.2748080790042877,
+    -0.5007754564285278,
+    -0.0013915758879980977
+   ]
+  },
+  "navigation": {
+   "run": "/workspace/molar/robot_lab_runtime/v7-mobile-families-20261122/gait-pybullet-nav_empty/runs/a82e2f1998b4466e9271ed510b4b09ed",
+   "goal": [
+    0.22519143687492738,
+    -0.5014712441479633,
+    -0.0013915758879980977
+   ],
+   "success": true,
+   "reason": "Every native goal physically settled",
+   "measurements": [
+    {
+     "requested": [
+      0.22519143687492738,
+      -0.5014712441479633,
+      -0.0013915758879980977
+     ],
+     "physical_pose": [
+      0.07940588146448135,
+      -0.4944275915622711,
+      0.001719285393352088
+     ],
+     "linear_m_s": 0.00033363368951057777,
+     "angular_rad_s": 0.001598929718152174,
+     "settled_sim_s": 1.0,
+     "member_id": "body",
+     "index": 0,
+     "native_terminal": true,
+     "nav2_status": 4
+    }
+   ]
+  }
+ },
+ {
+  "robot": "lab_octopod",
+  "map": "nav_empty",
+  "spawn": null,
+  "simulator": "pybullet",
+  "acquisition": {
+   "run": "/workspace/molar/robot_lab_runtime/v7-mobile-families-20261122/gait-pybullet-nav_empty/runs/243ee65799e84b7f90ccd34580853872",
+   "success": true,
+   "reason": "Actual travel and nonempty acquired map archived",
+   "map_yaml": "/workspace/molar/robot_lab_runtime/gait_sessions/lab_octopod-50tv9y1j/saved_maps/map-b9a129a621/map.yaml",
+   "known_cells": 37589,
+   "start": [
+    -0.27949288487434387,
+    -0.49989306926727295,
+    -0.0014838636720880026
+   ]
+  },
+  "navigation": {
+   "run": "/workspace/molar/robot_lab_runtime/v7-mobile-families-20261122/gait-pybullet-nav_empty/runs/21fd187eec8d4639ba45638cc8ed8d8f",
+   "goal": [
+    0.2205065646629078,
+    -0.5006350008310464,
+    -0.0014838636720880026
+   ],
+   "success": true,
+   "reason": "Every native goal physically settled",
+   "measurements": [
+    {
+     "requested": [
+      0.2205065646629078,
+      -0.5006350008310464,
+      -0.0014838636720880026
+     ],
+     "physical_pose": [
+      0.12212931364774704,
+      -0.49493032693862915,
+      -0.0009677543898338741
+     ],
+     "linear_m_s": 3.547895691291373e-07,
+     "angular_rad_s": -2.2728610371269034e-07,
+     "settled_sim_s": 1.0179999990000042,
+     "member_id": "body",
+     "index": 0,
+     "native_terminal": true,
+     "nav2_status": 4
+    }
+   ]
+  }
+ },
+ {
+  "robot": "lab_centipede",
+  "map": "nav_empty",
+  "spawn": null,
+  "simulator": "pybullet",
+  "acquisition": {
+   "run": "/workspace/molar/robot_lab_runtime/v7-mobile-families-20261122/gait-pybullet-nav_empty/runs/0e08f643135f49ce8d7be9eb2ee4d88a",
+   "success": true,
+   "reason": "Actual travel and nonempty acquired map archived",
+   "map_yaml": "/workspace/molar/robot_lab_runtime/gait_sessions/lab_centipede-6obq2hnd/saved_maps/map-dd2bcc695a/map.yaml",
+   "known_cells": 41161,
+   "start": [
+    -0.2762174904346466,
+    -0.4884212911128998,
+    0.010835833793176522
+   ]
+  },
+  "navigation": {
+   "run": "/workspace/molar/robot_lab_runtime/v7-mobile-families-20261122/gait-pybullet-nav_empty/runs/26d4cd28c5ec498d901d3ab4d2bee708",
+   "goal": [
+    0.2237531560290696,
+    -0.4830034802400733,
+    0.010835833793176522
+   ],
+   "success": true,
+   "reason": "Every native goal physically settled",
+   "measurements": [
+    {
+     "requested": [
+      0.2237531560290696,
+      -0.4830034802400733,
+      0.010835833793176522
+     ],
+     "physical_pose": [
+      0.13103362917900085,
+      -0.4602353870868683,
+      -0.024748853884013933
+     ],
+     "linear_m_s": 1.0159627131815808e-05,
+     "angular_rad_s": 0.00010371120928432923,
+     "settled_sim_s": 1.0179999990000042,
+     "member_id": "body",
+     "index": 0,
+     "native_terminal": true,
+     "nav2_status": 4
+    }
+   ]
+  }
+ }
+]

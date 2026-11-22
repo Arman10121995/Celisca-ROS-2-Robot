@@ -162,7 +162,7 @@ Blocked: [R9.4](#r94--optional-physical-bumperbot-hil) physical hardware
 | V4 | R5.2, R5.3, R12, P7 | Legged walking, turning, navigation and terrain, per backend |
 | V5 | R5.4, R5.10, R5.11, P8 | PX4 flight in every installed world; mapped-obstacle flight. **2026-11-22:** manual GUI flight screen in 7 of 8 worlds (terrain_heightfield refused at takeoff: its spawn lies 1.45 m under the heightmap) ([round](docs/status/evidence/v5-px4-worlds-2026-11-21/README.md)); moving-walker flight 3/3 ([round](docs/status/evidence/v5-drone-moving-2026-11-22/README.md)); other backends and reacting people remain |
 | V6 | R5.7, R5.8, R5.9 | Arm, hand and mobile-manipulation missions per backend |
-| V7 | R10.1–R10.8 | Fleet, swarm, marine, multi-leg and form missions, loss and reset |
+| V7 | R10.1–R10.8 | Fleet, swarm, marine, multi-leg and form missions, loss and reset. **2026-11-22:** multi-leg saved-map goals (MuJoCo nav_obstacle, PyBullet nav_empty) 6/6 and tracked Nav2 route and command loss on MuJoCo/PyBullet 8/8 ([round](docs/status/evidence/v7-mobile-families-2026-11-22/README.md)); fleet, swarm, marine, forms and resets remain |
 | V8 | R11 | MOLAR repeats and identified dynamics |
 | V9 | R6.2–R6.7 | World geometry, actors, disturbances, terrain contact on all backends |
 | V10 | R7.1–R7.8 | Fair five-method comparisons per category |

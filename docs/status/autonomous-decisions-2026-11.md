@@ -213,3 +213,6 @@ choices.
 | 11-22 | V11 | Made the matrix flight verdict expect the clear takeoff check's rise instead of always 3 m | Indoors the gate limits the climb to the ceiling; the old verdict would mark a correct ceiling-limited flight failed |
 | 11-22 | V5 | Repeated celisca_floor_1 once after a 0.204 m stop drift (limit 0.20) and kept the first run | A 4 mm margin on one stop; the repeat passed and both are in the receipt |
 | 11-22 | V1 | Re-ran only the three PyBullet jobs after the docking fix and indexed them in a separate batch after the original | They were the failing cells; MuJoCo/Isaac/Gazebo passed and are noted as run before the fix |
+| 11-22 | V7 | Took V7 (my R10 families) before V6 | V6 runs through the arm/pick-place scripts that Codex is editing uncommitted; results would be tied to unknown code |
+| 11-22 | V7 | Repeated only protocols with existing runners (gait saved map, tracked Nav2 and command loss) and did not index them into the support matrix | No matrix report kind exists for these reports; the receipt lists every run, and adding kinds is a separate R9.3 change |
+| 11-22 | V1 | Recorded the MuJoCo rooms freeze as open after ruling out static flex culling, instead of continuing to probe offline | Culling off froze too; the offline mesh probe misplaced the include poses, so further work needs an instrumented MuJoCo run |

@@ -14316,3 +14316,52 @@ records:
   limitations:
   - One run per cell; the November 10 Gazebo start request
   - Two of three jobs needed one dock retry (missed by 0.11 and 0.13 m)
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: mujoco
+  task_type: vacuum_rooms
+  steering_mode: ''
+  date: '2026-11-22'
+  revision: 42f6a13d (docking settle gate and missed-entry retry; installed build)
+  report: docs/status/evidence/v1-vacuum-backends-2026-11-21/runs-docking-fix/mujoco_rooms_office.json
+  sha256: 9644a239c90dfcc531501bb4b2614841f5f9e99346d55232b26e3a7e6c971210
+  source_hashes: docs/status/evidence/v1-vacuum-backends-2026-11-21/runs-docking-fix/source-hashes-42f6a13d.json
+  source_hashes_sha256: ee72c30536e022e05e760fbb481f90421838a854ee94c2d29a927b5b999ab99a
+  report_kind: cleaning_screen
+  scope: Second building, two rooms by points, with the escape, wedge, rejoin and headless-report fixes.
+  limitations:
+  - One run per cell; the November 10 Gazebo start request
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: mujoco
+  task_type: vacuum_spot
+  steering_mode: ''
+  date: '2026-11-22'
+  revision: 42f6a13d (docking settle gate and missed-entry retry; installed build)
+  report: docs/status/evidence/v1-vacuum-backends-2026-11-21/runs-docking-fix/mujoco_spot.json
+  sha256: 5d976fb3ab23640a784e553ec23965c890c1237b60edebf8e8a8c8de8838faf0
+  source_hashes: docs/status/evidence/v1-vacuum-backends-2026-11-21/runs-docking-fix/source-hashes-42f6a13d-32ea56b8.json
+  source_hashes_sha256: 32ea56b8d842ed010b81f14d1d620ae5dd9361a0dee02918ed5ffa9b4461e9df
+  report_kind: cleaning_screen
+  scope: 'Repeats 2 and 3 of the spot job beside a furniture bar. Judged by cleaning_screen: completed, >= 85 %
+    of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance
+    from the simulator-truth trail.'
+  limitations:
+  - One run per cell; the November 10 Gazebo start request
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: mujoco
+  task_type: vacuum_zone_keepout
+  steering_mode: ''
+  date: '2026-11-22'
+  revision: 42f6a13d (docking settle gate and missed-entry retry; installed build)
+  report: docs/status/evidence/v1-vacuum-backends-2026-11-21/runs-docking-fix/mujoco_zone_keepout.json
+  sha256: edd998dcb4c62158a62e28d14aefcee51fb29a7559645e5ed720aab4403d37f8
+  source_hashes: docs/status/evidence/v1-vacuum-backends-2026-11-21/runs-docking-fix/source-hashes-42f6a13d-32ea56b8.json
+  source_hashes_sha256: 32ea56b8d842ed010b81f14d1d620ae5dd9361a0dee02918ed5ffa9b4461e9df
+  report_kind: cleaning_screen
+  scope: 'Repeats 2 and 3 of the zone job with a 1 m no-go box and a 1.6 m virtual wall. Judged by cleaning_screen:
+    completed, >= 85 % of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall
+    compliance from the simulator-truth trail.'
+  limitations:
+  - One run per cell; the November 10 Gazebo start request

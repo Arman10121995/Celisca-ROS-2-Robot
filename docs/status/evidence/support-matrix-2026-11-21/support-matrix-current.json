@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-11-22T01:59:06.573994+00:00",
+  "generated_utc": "2026-11-22T02:55:12.447308+00:00",
   "task": "R9.3",
   "status": "partial",
   "qualification": "Exact hashed screens only; artifact validation does not rerun a mission",
@@ -7122,12 +7122,12 @@
       "task_type": "vacuum_zone_keepout",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-11-21",
-      "revision": "e9189e7f (installed build of 0f918f21; later commits only docs)",
+      "last_tested": "2026-11-22",
+      "revision": "42f6a13d (docking settle gate and missed-entry retry; installed build)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/mujoco_zone_keepout.json",
-        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/source-hashes-e9189e7f-7dadd39c.json"
+        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs-docking-fix/mujoco_zone_keepout.json",
+        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs-docking-fix/source-hashes-42f6a13d-32ea56b8.json"
       ],
       "limitations": [
         "One run per cell; the November 10 Gazebo start request",
@@ -7702,12 +7702,12 @@
       "task_type": "vacuum_rooms",
       "support_level": "experimental",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-11-21",
-      "revision": "e9189e7f (installed build of 0f918f21; later commits only docs)",
+      "last_tested": "2026-11-22",
+      "revision": "42f6a13d (docking settle gate and missed-entry retry; installed build)",
       "test_result": "failed_screen",
       "artifacts": [
-        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/mujoco_rooms_office.json",
-        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/source-hashes-e9189e7f.json"
+        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs-docking-fix/mujoco_rooms_office.json",
+        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs-docking-fix/source-hashes-42f6a13d.json"
       ],
       "limitations": [
         "One run per cell; the November 10 Gazebo start request",
@@ -7723,12 +7723,12 @@
       "task_type": "vacuum_spot",
       "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-11-21",
-      "revision": "e9189e7f (installed build of 0f918f21; later commits only docs)",
+      "last_tested": "2026-11-22",
+      "revision": "42f6a13d (docking settle gate and missed-entry retry; installed build)",
       "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/mujoco_spot.json",
-        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/source-hashes-e9189e7f-7dadd39c.json"
+        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs-docking-fix/mujoco_spot.json",
+        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs-docking-fix/source-hashes-42f6a13d-32ea56b8.json"
       ],
       "limitations": [
         "One run per cell; the November 10 Gazebo start request",
