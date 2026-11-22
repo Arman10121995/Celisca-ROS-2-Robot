@@ -1,0 +1,7 @@
+schema_version: 1
+map: fleet_facility
+rgbd: true
+members:
+  - id: alpha
+    model: bumperbot
+    spawn: {x: 2.5, y: 0.0, z: 0.1, yaw: 0.0}
