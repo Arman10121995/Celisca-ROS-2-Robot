@@ -242,3 +242,5 @@ choices.
 | 11-22 | R14.3 | Moved the F100 lateral alignment off the block (25 mm rise) after the sideways move pushed it with unsensed jaw parts | The measured block shift and stalled joint pointed to contact; the rise keeps the 2 mm target and the pad-load closure gate |
 | 11-22 | R14.3 | Timed drive phases on the simulation clock | Isaac ran the loaded F100 at about 4 % of real time, so the wall-clock limit failed a carry that was still progressing |
 | 11-22 | R14.3 | Reverted accepting a 2.69 mm residual after it produced a one-sided closure | The only bilateral closure started from 1.05 mm; the 2 mm tolerance stays |
+| 11-22 | V4 | Restored the G1 policy gains that a MOLAR commit (1c665db4) had changed, after measuring that they alone return the October gait | The commit message does not cover the G1 and the change regressed it on two backends; the restore is a measured revert, not new tuning |
+| 11-22 | V4 | Left the Go2W policy config changes in the same commit untouched | No Go2W regression was measured; reverting without evidence could undo intended work |

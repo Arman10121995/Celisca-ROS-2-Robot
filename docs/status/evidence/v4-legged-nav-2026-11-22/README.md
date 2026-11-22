@@ -1,7 +1,8 @@
 # V4: legged Nav2 missions repeated on current code (November 22, 2026)
 
 **Status: 13 of 24 cells passed at the default goal radius; A1 kept
-6/6, while G1 and B2 regressed.** With the radius that October's goals
+6/6, while G1 and B2 regressed. The G1 regression is now found and fixed:
+after the fix, G1 passes 6/6.** With the radius that October's goals
 imply, B2 passed 2/3, as in October.
 
 `run_round.sh` repeats the [October 13–16 P7 mission](../p7-legged-navigation-2026-10-13/README.md):
@@ -87,6 +88,48 @@ A bisect needs older revisions of the spawner and robot configs:
   host.
 
 It is left open.
+
+## G1 regression found: the walking policy's PD gains
+
+Several checks of the leg-odometry screen ruled out the obvious causes
+(`g1-diagnosis/`):
+
+| Check | Walked | Leg drift |
+|---|---|---|
+| today's code, `nav_obstacle` | 6.61 m | 8.7 % |
+| the seven gait-path files at October's 80b52f0 | 6.37 m | 8.0 % |
+| the MuJoCo package, `robot_lab_utils`, the adapter and the robot configs at 80b52f0 | — | 9.25 % |
+| MuJoCo 3.12.0 first on `PYTHONPATH` | 6.59 m | 11.6 % |
+| today's code, `nav_empty` | 7.41 m | 7.1 % |
+| **today's code with the G1 policy gains from before 1c665db4** | **9.15 m** | **3.8 %** |
+
+The MuJoCo check turned out to be moot: the spawner runs the system
+Python, whose user site-packages hold MuJoCo 3.12.0, the version October
+used. The venv's 3.17 never reached the simulations.
+
+**Cause.** Commit 1c665db4 (November 11, "updated molar robot and map
+charger for celisca") also changed
+`src/robot_lab_adapter/policies/rl_sar/g1_robomimic_locomotion/config.yaml`:
+- the first three `rl_kp` entries, 200 → 80;
+- the first nine `rl_kd` entries, 5 → 2.
+
+The commit message does not mention the G1. With the softer gains, the
+policy walks a third less ground on the same screen, and its leg odometry
+drifts two to three times more on MuJoCo and Isaac.
+
+**Fix.** The October gains are restored (implemented, experimental). The
+same commit also rewrote the Go2W policy config; that was not touched
+here.
+
+**G1 Nav2 mission with the restored gains** (`run_round.sh g1_gains`):
+
+| Backend | Result | Resume A / goal B (truth) | Estimate − truth |
+|---|---|---|---|
+| MuJoCo | **3/3** | 0.101 / 0.114, 0.067 / 0.038, 0.089 / 0.054 m | 0.05–0.15 m |
+| Isaac | **3/3** | 0.177 / 0.060, 0.013 / 0.105, 0.060 / 0.182 m | 0.05–0.10 m |
+
+October scored 3/3 on MuJoCo and 2/3 on Isaac; before the fix today
+scored 0/3 and 1/3.
 
 ## Limits
 

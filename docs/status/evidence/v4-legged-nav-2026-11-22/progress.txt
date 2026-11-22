@@ -30,3 +30,10 @@ ALLDONE-B2
 mujoco unitree_g1_29dof leg_odometry exit=0
 isaac unitree_g1_29dof leg_odometry exit=0
 ALLDONE-LEGODOM
+mujoco unitree_g1_29dof gains seed1 exit=0
+isaac unitree_g1_29dof gains seed1 exit=0
+mujoco unitree_g1_29dof gains seed2 exit=0
+isaac unitree_g1_29dof gains seed2 exit=0
+mujoco unitree_g1_29dof gains seed3 exit=0
+isaac unitree_g1_29dof gains seed3 exit=0
+ALLDONE-G1GAINS

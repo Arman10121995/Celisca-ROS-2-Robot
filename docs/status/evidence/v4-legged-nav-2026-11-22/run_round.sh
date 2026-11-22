@@ -34,3 +34,12 @@ if [ "$1" = g1_legodom ]; then
     echo "$sim unitree_g1_29dof leg_odometry exit=$?" >> "$DIR/progress.txt"; sleep 3
   done; echo ALLDONE-LEGODOM >> "$DIR/progress.txt"
 fi
+# After restoring the G1 policy gains (added 11-22): the G1 cells again.
+if [ "$1" = g1_gains ]; then
+  for seed in 1 2 3; do for sim in mujoco isaac; do
+    out="$RUN/${sim}_unitree_g1_29dof_gains_seed${seed}_nav_obstacle.json"
+    [ -s "$out" ] || CHECK_ARGS="--base pelvis --max-yaw-error-deg 0 --seed $seed" flock -w 1800 "$LOCK" \
+      timeout --signal=INT 1800 "$HERE/scripts/sim_nav_mission.sh" $sim unitree_g1_29dof nav_obstacle "$out" > "$out.run.log" 2>&1
+    echo "$sim unitree_g1_29dof gains seed$seed exit=$?" >> "$DIR/progress.txt"; sleep 3
+  done; done; echo ALLDONE-G1GAINS >> "$DIR/progress.txt"
+fi
