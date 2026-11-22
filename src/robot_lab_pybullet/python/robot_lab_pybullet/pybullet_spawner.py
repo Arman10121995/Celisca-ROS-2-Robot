@@ -531,30 +531,12 @@ class PyBulletSpawner(Node):
                len(self._free_bodies) if client == 0 else 0))
 
     def _create_dynamic_body(self, body):
-        """One loose primitive object (sdf_world.extract_dynamic_bodies) as a free body."""
-        shape, size = body["shape"], [float(v) for v in body["shape"].get("size") or []]
-        colour = DYNAMIC_BODY_COLOUR
+        """Build one physical object with all its colliders in the model frame."""
         try:
-            if shape["type"] == "box":
-                half = [max(v, 1e-6) / 2.0 for v in size[:3]]
-                collision = p.createCollisionShape(p.GEOM_BOX, halfExtents=half,
-                                                   collisionFramePosition=shape["position"],
-                                                   collisionFrameOrientation=_xyzw(shape["orientation"]))
-                visual = p.createVisualShape(p.GEOM_BOX, halfExtents=half, rgbaColor=colour,
-                                             visualFramePosition=shape["position"],
-                                             visualFrameOrientation=_xyzw(shape["orientation"]))
-            elif shape["type"] == "sphere":
-                collision = p.createCollisionShape(p.GEOM_SPHERE, radius=size[0],
-                                                   collisionFramePosition=shape["position"])
-                visual = p.createVisualShape(p.GEOM_SPHERE, radius=size[0], rgbaColor=colour,
-                                             visualFramePosition=shape["position"])
-            else:
-                collision = p.createCollisionShape(p.GEOM_CYLINDER, radius=size[0], height=size[1],
-                                                   collisionFramePosition=shape["position"],
-                                                   collisionFrameOrientation=_xyzw(shape["orientation"]))
-                visual = p.createVisualShape(p.GEOM_CYLINDER, radius=size[0], length=size[1], rgbaColor=colour,
-                                             visualFramePosition=shape["position"],
-                                             visualFrameOrientation=_xyzw(shape["orientation"]))
+            collision = self._free_body_shape(body["shapes"], visual=False, client=0)
+            visual = self._free_body_shape(body["shapes"], visual=True, client=0)
+            if min(collision, visual) < 0:
+                raise ValueError("could not create both collision and visual shapes")
             uid = p.createMultiBody(baseMass=float(body["mass"]), baseCollisionShapeIndex=collision,
                                     baseVisualShapeIndex=visual, basePosition=body["position"],
                                     baseOrientation=_xyzw(body["orientation"]))
@@ -578,24 +560,45 @@ class PyBulletSpawner(Node):
 
     def _create_mirror_body(self, body, client):
         """A visual-only copy of a loose object in the mirror render client."""
-        shape, size = body["shape"], [float(v) for v in body["shape"].get("size") or []]
-        frame = dict(visualFramePosition=shape["position"], physicsClientId=client)
         try:
-            if shape["type"] == "box":
-                visual = p.createVisualShape(p.GEOM_BOX, halfExtents=[max(v, 1e-6) / 2.0 for v in size[:3]],
-                                             rgbaColor=DYNAMIC_BODY_COLOUR,
-                                             visualFrameOrientation=_xyzw(shape["orientation"]), **frame)
-            elif shape["type"] == "sphere":
-                visual = p.createVisualShape(p.GEOM_SPHERE, radius=size[0], rgbaColor=DYNAMIC_BODY_COLOUR, **frame)
-            else:
-                visual = p.createVisualShape(p.GEOM_CYLINDER, radius=size[0], length=size[1],
-                                             rgbaColor=DYNAMIC_BODY_COLOUR,
-                                             visualFrameOrientation=_xyzw(shape["orientation"]), **frame)
+            visual = self._free_body_shape(body["shapes"], visual=True, client=client)
+            if visual < 0:
+                raise ValueError("could not create visual shape")
             self._mirror_free_bodies[body["name"]] = p.createMultiBody(
                 baseMass=0.0, baseVisualShapeIndex=visual, basePosition=body["position"],
                 baseOrientation=_xyzw(body["orientation"]), physicsClientId=client)
         except Exception as exc:
             self.get_logger().warn("Free body %s not mirrored for the camera: %s" % (body["name"], exc))
+
+    @staticmethod
+    def _free_body_shape(shapes, *, visual, client):
+        shape_types = {"box": p.GEOM_BOX, "sphere": p.GEOM_SPHERE, "cylinder": p.GEOM_CYLINDER}
+        frame = "visualFrame" if visual else "collisionFrame"
+        if len(shapes) == 1:
+            shape, = shapes
+            size = shape["size"]
+            dims = {"halfExtents": [max(v, 1e-6) / 2.0 for v in size]} if shape["type"] == "box" else {
+                "radius": size[0]}
+            if shape["type"] == "cylinder":
+                dims["length" if visual else "height"] = size[1]
+            dims[frame + "Position"] = shape["position"]
+            if shape["type"] != "sphere":
+                dims[frame + "Orientation"] = _xyzw(shape["orientation"])
+            if visual:
+                return p.createVisualShape(shape_types[shape["type"]], rgbaColor=DYNAMIC_BODY_COLOUR,
+                                           physicsClientId=client, **dims)
+            return p.createCollisionShape(shape_types[shape["type"]], physicsClientId=client, **dims)
+        params = dict(shapeTypes=[shape_types[s["type"]] for s in shapes],
+                      halfExtents=[[v / 2.0 for v in s["size"]] if s["type"] == "box" else [0., 0., 0.]
+                                   for s in shapes],
+                      radii=[s["size"][0] if s["type"] != "box" else 0.0 for s in shapes],
+                      lengths=[s["size"][1] if s["type"] == "cylinder" else 0.0 for s in shapes],
+                      physicsClientId=client)
+        params[frame + "Positions"] = [s["position"] for s in shapes]
+        params[frame + "Orientations"] = [_xyzw(s["orientation"]) for s in shapes]
+        if visual:
+            return p.createVisualShapeArray(rgbaColors=[DYNAMIC_BODY_COLOUR] * len(shapes), **params)
+        return p.createCollisionShapeArray(**params)
 
     def _pub_free_bodies(self):
         poses = {}

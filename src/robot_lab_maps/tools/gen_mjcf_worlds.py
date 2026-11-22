@@ -45,6 +45,7 @@ Usage::
 checked-in MJCF differs, which is what CI runs.
 """
 import argparse
+import math
 import os
 import sys
 import xml.etree.ElementTree as ET
@@ -252,15 +253,22 @@ def convert_world(world_path, name=None, asset_dir=None):
             "name": body["name"], "pos": "%.6g %.6g %.6g" % tuple(body["position"]),
             "quat": "%.6g %.6g %.6g %.6g" % tuple(body["orientation"])})
         ET.SubElement(element, "freejoint", {"name": body["name"] + "_free"})
-        inertial = {"pos": "0 0 0", "mass": "%.6g" % body["mass"]}
         if body["inertia"]:
-            inertial["diaginertia"] = " ".join("%.6g" % v for v in body["inertia"])
-        ET.SubElement(element, "inertial", inertial)
-        geom = _geom(body["shape"], meshes, hfields, asset_dir)
-        geom["rgba"] = "0.85 0.2 0.15 1"
-        if body["mu"] is not None:
-            geom["friction"] = "%.6g 0.005 0.0001" % body["mu"]
-        ET.SubElement(element, "geom", geom)
+            ET.SubElement(element, "inertial", {
+                "pos": "0 0 0", "mass": "%.6g" % body["mass"],
+                "diaginertia": " ".join("%.6g" % v for v in body["inertia"])})
+        volumes = [_primitive_volume(shape) for shape in body["shapes"]]
+        total_volume = sum(volumes)
+        for shape, volume in zip(body["shapes"], volumes):
+            geom = _geom(shape, meshes, hfields, asset_dir)
+            geom["rgba"] = "0.85 0.2 0.15 1"
+            if not body["inertia"]:
+                # With no explicit inertial element, the compiler infers
+                # the COM and inertia from geoms with a uniform density.
+                geom["mass"] = "%.12g" % (body["mass"] * volume / total_volume)
+            if "mu" in shape:
+                geom["friction"] = "%.6g 0.005 0.0001" % shape["mu"]
+            ET.SubElement(element, "geom", geom)
     ET.SubElement(worldbody, "light",
                   {"diffuse": "0.8 0.8 0.8", "pos": "0 0 10",
                    "dir": "0 0 -1", "castshadow": "true"})
@@ -274,6 +282,15 @@ def convert_world(world_path, name=None, asset_dir=None):
     if marine:
         header += '<!-- Static marine geometry only; native water/vehicle force adapters are not supplied by this conversion. -->\n'
     return header + ET.tostring(mujoco, encoding="unicode") + "\n", skipped
+
+
+def _primitive_volume(shape):
+    size = shape["size"]
+    if shape["type"] == "box":
+        return math.prod(size)
+    if shape["type"] == "sphere":
+        return 4.0 / 3.0 * math.pi * size[0] ** 3
+    return math.pi * size[0] ** 2 * size[1]
 
 
 def _indent(element, level=0):

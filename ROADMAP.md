@@ -493,8 +493,13 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
     planner as per-collider convex hulls. Direct mobile legs check their
     projected bounds. Compiled tests cover scaled and rotated mesh parts,
     moving-arm contact, payload containment and missing mesh diagnostics.
-    Concave decomposition, dynamic compound payloads and heightfields
-    remain open. [MuJoCo mesh geometry](https://mujoco.readthedocs.io/en/stable/XMLreference.html#asset-mesh).
+    Concave decomposition and heightfields remain open.
+    [MuJoCo mesh geometry](https://mujoco.readthedocs.io/en/stable/XMLreference.html#asset-mesh).
+  - 2026-11-22: portable SDF import keeps a loose single-link compound as
+    one rigid body with every box, sphere and cylinder collider in its
+    authored frame. The MuJoCo compiler, PyBullet physics and render clients,
+    and an Isaac USD stage fixture preserve mass and geometry. Automatic
+    arm tasks still require compound collision tracking and grasp planning.
   - 2026-11-22: the MuJoCo fixed-arm workcell publishes a calibrated
     overhead RGB-D camera. The existing pick-and-place panel can plan a
     Panda cube grasp from three fresh camera estimates. The normal GUI

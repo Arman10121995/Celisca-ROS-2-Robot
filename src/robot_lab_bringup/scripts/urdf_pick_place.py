@@ -269,9 +269,13 @@ class PickPlace(Node):
         if not path or not os.path.isfile(path):
             return {}, {}
         sizes = {}
+        compound_models = []
         for body in extract_dynamic_bodies(path):
             shape = body['shape']
             name = body['name']
+            if shape is None:
+                compound_models.append(name)
+                continue
             if shape['type'] == 'box':
                 sizes[name] = list(shape['size'])
             elif shape['type'] == 'cylinder':
@@ -289,6 +293,9 @@ class PickPlace(Node):
         resolve = uri_resolver(model_dirs=model_dirs, package_share=get_package_share_directory)
         shapes, skipped = extract_static_shapes(path, resolve, collision_only=True, exclude_dynamic=True)
         self.scene_error = next((note for note in skipped if note.startswith('unresolved mesh ')), '')
+        if compound_models:
+            self.scene_error = ('Arm planning needs compound collision tracking for loose bodies: '
+                                + ', '.join(sorted(compound_models)))
         boxes = {}
         for index, shape in enumerate(shapes):
             kind = shape['type']

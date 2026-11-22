@@ -236,6 +236,19 @@ sliced by the same plane. A single-height static slice is not a multilevel
 floor map or aerial planner; a terrain sample at or above the slice height is
 marked solid, so one slice cannot represent a multilevel floor.
 
+### Loose bodies with several colliders
+
+Declare a top-level SDF model with `<static>false</static>`, one link, a
+positive inertial mass and one or more box, sphere or cylinder collisions.
+Give each collision its own pose relative to the link. All colliders move
+with the same body in Gazebo, MuJoCo, PyBullet and Isaac. MuJoCo and Isaac
+keep friction per collider. PyBullet uses the lowest declared `mu` for the
+body. For compound models, the portable importers keep a positive diagonal
+inertia authored at the model origin. Offset or non-diagonal inertia is
+estimated from geometry using the backend's own method. Automatic URDF arm
+tasks require compound collision tracking before they can run in these
+worlds.
+
 ### Heightfield layout (measured, not assumed)
 
 `<heightmap>` terrain is converted once in

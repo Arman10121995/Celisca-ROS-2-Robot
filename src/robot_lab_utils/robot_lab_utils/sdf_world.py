@@ -322,8 +322,7 @@ def _walk_model(model, frame, base_dir, resolve, shapes, skipped,
 
 
 def _dynamic_body(model):
-    """A loose primitive object: explicit <static>false</static>, one link with
-    a declared mass and one box/sphere/cylinder collision; else None."""
+    """A loose single-link body with positive mass and primitive colliders."""
     if _text(model, "static").strip().lower() not in ("false", "0"):
         return None
     links = _children(model, "link")
@@ -333,28 +332,50 @@ def _dynamic_body(model):
     inertial = _child(link, "inertial")
     collisions = _children(link, "collision")
     mass = _floats(_text(inertial, "mass"), 1, 0.0)[0] if inertial is not None else 0.0
-    if mass <= 0.0 or len(collisions) != 1 or _child(collisions[0], "geometry") is None:
+    if not math.isfinite(mass) or mass <= 0.0 or not collisions:
         return None
-    shape = _shape(_child(collisions[0], "geometry"), compose(frame_of(link), frame_of(collisions[0])),
-                   "", lambda uri, base: "", model.get("name", "model"), [])
-    if not isinstance(shape, dict) or shape["type"] not in ("box", "sphere", "cylinder"):
-        return None
+    name = model.get("name", "model")
+    link_frame = frame_of(link)
+    shapes = []
+    for collision in collisions:
+        geometry = _child(collision, "geometry")
+        if geometry is None:
+            return None
+        shape = _shape(geometry, compose(link_frame, frame_of(collision)),
+                       "", lambda uri, base: "", name, [])
+        if (not isinstance(shape, dict) or shape["type"] not in ("box", "sphere", "cylinder")
+                or not all(math.isfinite(v) and v > 0.0 for v in shape["size"])):
+            return None
+        ode = _child(_child(_child(collision, "surface"), "friction"), "ode")
+        if _text(ode, "mu"):
+            mu = _floats(_text(ode, "mu"), 1, 0.0)[0]
+            if math.isfinite(mu) and mu >= 0.0:
+                shape["mu"] = mu
+        shapes.append(shape)
     inertia = _child(inertial, "inertia")
-    diagonal = [_floats(_text(inertia, key), 1, 0.0)[0] for key in ("ixx", "iyy", "izz")] if inertia is not None else []
-    ode = _child(_child(_child(collisions[0], "surface"), "friction"), "ode")
-    mu = _floats(_text(ode, "mu"), 1, 0.0)[0] if _text(ode, "mu") else None
+    diagonal = [_floats(_text(inertia, key), 1, 0.0)[0] for key in ("ixx", "iyy", "izz")]
+    if not all(math.isfinite(v) and v > 0 for v in diagonal):
+        diagonal = None
+    elif len(shapes) > 1:
+        # These adapters share a diagonal in model coordinates. A general
+        # tensor or offset COM requires a separate inertial frame.
+        products = [_floats(_text(inertia, key), 1, 0.0)[0] for key in ("ixy", "ixz", "iyz")]
+        if any(products) or compose(link_frame, frame_of(inertial)) != _IDENTITY:
+            diagonal = None
     position, orientation = frame_of(model)
-    return dict(name=model.get("name", "model"), position=list(position), orientation=list(orientation),
-                shape=shape, mass=mass, inertia=diagonal if len(diagonal) == 3 and min(diagonal) > 0 else None,
-                mu=mu)
+    return dict(name=name, position=list(position), orientation=list(orientation), shapes=shapes,
+                shape=shapes[0] if len(shapes) == 1 else None, mass=mass, inertia=diagonal,
+                mu=min((shape["mu"] for shape in shapes if "mu" in shape), default=None))
 
 
 def extract_dynamic_bodies(world_path):
     """Loose primitive objects of a world (see _dynamic_body), in model order.
 
-    Each is {name, position, orientation (w, x, y, z), shape (as
-    extract_static_shapes, in the model frame), mass, inertia [ixx, iyy, izz]
-    or None, mu or None}. Importers that build them as free bodies call
+    Each has a model pose, a mass, and a list of collision shapes in the
+    model frame. `shape` aliases the sole collider for single primitives.
+    Each collider can carry `mu`. The common `mu` is the lowest declared
+    coefficient, for backends with one material per body. `inertia` is a
+    model-frame diagonal when available. Importers building free bodies call
     extract_static_shapes(..., exclude_dynamic=True) for everything else.
     """
     root = ET.parse(world_path).getroot()

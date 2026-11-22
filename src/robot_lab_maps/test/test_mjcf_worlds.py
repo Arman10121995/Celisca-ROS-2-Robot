@@ -11,6 +11,8 @@ import sys
 import unittest
 import xml.etree.ElementTree as ET
 
+import pytest
+
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _PACKAGE = os.path.dirname(_HERE)
 sys.path.insert(0, os.path.join(_PACKAGE, "tools"))
@@ -28,6 +30,51 @@ def _source_worlds():
         if os.path.isfile(path):
             worlds[name] = path
     return worlds
+
+
+def test_compound_has_one_free_joint_and_keeps_all_collision_frames(tmp_path):
+    from robot_lab_utils.sdf_world import extract_dynamic_bodies, extract_static_shapes
+
+    world = tmp_path / "compound.world"
+    world.write_text("""<sdf version="1.7"><world name="fixture">
+        <model name="tool"><static>false</static><pose>1 2 3 0 0 0</pose>
+          <link name="body"><pose>0.1 0 0 0 0 0</pose>
+            <inertial><mass>0.45</mass></inertial>
+            <collision name="block">
+              <geometry><box><size>0.2 0.3 0.4</size></box></geometry>
+              <surface><friction><ode><mu>0.6</mu></ode></friction></surface>
+            </collision>
+            <collision name="knob"><pose>0.3 0 0.1 0 0 0</pose>
+              <geometry><sphere><radius>0.04</radius></sphere></geometry>
+            </collision>
+            <collision name="handle"><pose>0 0.2 0 0 1.5707963267948966 0</pose>
+              <geometry><cylinder><radius>0.05</radius><length>0.3</length></cylinder></geometry>
+            </collision>
+          </link>
+        </model>
+        <model name="mixed"><static>false</static><link name="body">
+          <inertial><mass>1</mass></inertial>
+          <collision name="base"><geometry><box><size>1 1 1</size></box></geometry></collision>
+          <collision name="unsupported"><geometry><plane><size>1 1</size></plane></geometry></collision>
+        </link></model>
+    </world></sdf>""")
+    body, = extract_dynamic_bodies(world)
+    assert body["name"] == "tool" and body["shape"] is None
+    assert body["mu"] == 0.6 and body["inertia"] is None
+    shapes, _ = extract_static_shapes(world, lambda _uri, _base: "", exclude_dynamic=True)
+    assert {shape["model"] for shape in shapes} == {"mixed"}
+
+    generated, _ = gen_mjcf_worlds.convert_world(world)
+    compiled = ET.fromstring(generated).find("worldbody/body")
+    assert compiled.get("pos") == "1 2 3"
+    assert compiled.find("freejoint").get("name") == "tool_free"
+    assert compiled.find("inertial") is None
+    geoms = compiled.findall("geom")
+    assert [geom.get("type") for geom in geoms] == ["box", "sphere", "cylinder"]
+    assert [geom.get("pos") for geom in geoms] == ["0.1 0 0", "0.4 0 0.1", "0.1 0.2 0"]
+    assert geoms[2].get("quat") == "0.707107 0 0.707107 0"
+    assert sum(float(geom.get("mass")) for geom in geoms) == pytest.approx(0.45)
+    assert geoms[0].get("friction") == "0.6 0.005 0.0001"
 
 
 class MjcfWorldTests(unittest.TestCase):

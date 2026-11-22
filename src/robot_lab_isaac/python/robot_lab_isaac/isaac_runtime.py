@@ -1306,8 +1306,8 @@ def _off_ground_plane(verts, tris, shape, tolerance=0.005):
     return [tri for tri, flat in zip(tris, on_plane) if not flat], int(on_plane.sum())
 
 
-def _author_offset_free_body(stage, path, body, material):
-    """Author one rigid model frame and a separately transformed collider."""
+def _author_offset_free_body(stage, path, body, materials):
+    """Author a rigid model frame with individually transformed colliders."""
     from pxr import Gf, UsdGeom, UsdPhysics, UsdShade
 
     def add_pose(prim, position, orientation):
@@ -1318,27 +1318,37 @@ def _author_offset_free_body(stage, path, body, material):
     model = UsdGeom.Xform.Define(stage, path)
     add_pose(model, body['position'], body['orientation'])
     UsdPhysics.RigidBodyAPI.Apply(model.GetPrim())
-    UsdPhysics.MassAPI.Apply(model.GetPrim()).CreateMassAttr(float(body['mass']))
-    shape = body['shape']
-    if shape['type'] == 'cylinder':
-        collider = UsdGeom.Cylinder.Define(stage, path + '/collision')
-        collider.CreateRadiusAttr(float(shape['size'][0]))
-        collider.CreateHeightAttr(float(shape['size'][1]))
-        collider.CreateAxisAttr('Z')
-    else:
-        collider = UsdGeom.Cube.Define(stage, path + '/collision')
-        collider.CreateSizeAttr(1.)
-    add_pose(collider, shape['position'], shape['orientation'])
-    if shape['type'] == 'box':
-        collider.AddScaleOp().Set(Gf.Vec3f(*shape['size']))
-    collider.CreateDisplayColorAttr([Gf.Vec3f(.85, .2, .15)])
-    UsdPhysics.CollisionAPI.Apply(collider.GetPrim())
-    UsdShade.MaterialBindingAPI.Apply(collider.GetPrim()).Bind(
-        material, UsdShade.Tokens.strongerThanDescendants, 'physics')
+    mass = UsdPhysics.MassAPI.Apply(model.GetPrim())
+    mass.CreateMassAttr(float(body['mass']))
+    shapes = body['shapes']
+    if len(shapes) > 1 and body['inertia']:
+        mass.CreateCenterOfMassAttr(Gf.Vec3f(0.))
+        mass.CreateDiagonalInertiaAttr(Gf.Vec3f(*body['inertia']))
+        mass.CreatePrincipalAxesAttr(Gf.Quatf(1., Gf.Vec3f(0.)))
+    for index, shape in enumerate(shapes):
+        collider_path = path + ('/collision' if len(shapes) == 1 else f'/collision_{index}')
+        if shape['type'] == 'cylinder':
+            collider = UsdGeom.Cylinder.Define(stage, collider_path)
+            collider.CreateRadiusAttr(float(shape['size'][0]))
+            collider.CreateHeightAttr(float(shape['size'][1]))
+            collider.CreateAxisAttr('Z')
+        elif shape['type'] == 'sphere':
+            collider = UsdGeom.Sphere.Define(stage, collider_path)
+            collider.CreateRadiusAttr(float(shape['size'][0]))
+        else:
+            collider = UsdGeom.Cube.Define(stage, collider_path)
+            collider.CreateSizeAttr(1.)
+        add_pose(collider, shape['position'], shape['orientation'])
+        if shape['type'] == 'box':
+            collider.AddScaleOp().Set(Gf.Vec3f(*shape['size']))
+        collider.CreateDisplayColorAttr([Gf.Vec3f(.85, .2, .15)])
+        UsdPhysics.CollisionAPI.Apply(collider.GetPrim())
+        UsdShade.MaterialBindingAPI.Apply(collider.GetPrim()).Bind(
+            materials[shape.get('mu', 1.)], UsdShade.Tokens.strongerThanDescendants, 'physics')
 
 
 def _add_free_bodies(world, bodies):
-    """Loose boxes and cylinders from ``sdf_world.extract_dynamic_bodies``.
+    """Loose primitive bodies from ``sdf_world.extract_dynamic_bodies``.
 
     Each keeps its world-file pose, mass and friction. Returns {name: prim object}.
     """
@@ -1353,30 +1363,34 @@ def _add_free_bodies(world, bodies):
 
     created = {}
     for body in bodies:
-        shape = body.get("shape") or {}
-        if shape.get("type") not in ('box', 'cylinder'):
-            _emit({"event": "log", "msg": "Free body %s skipped: expected a box or cylinder (%s)"
-                   % (body.get("name"), shape.get("type"))})
-            continue
+        shape = body["shape"]
         name = re.sub(r"[^A-Za-z0-9_]", "_", str(body["name"]))
-        mu = float(body["mu"]) if body.get("mu") is not None else 1.0
-        material = PhysicsMaterial(prim_path="/World/PhysicsMaterials/free_" + name,
-                                   static_friction=mu, dynamic_friction=mu, restitution=0.0)
+        materials = {}
+        for index, mu in enumerate(dict.fromkeys(s.get('mu', 1.) for s in body['shapes'])):
+            path = "/World/PhysicsMaterials/free_" + name
+            if shape is None:
+                path += f'/surface_{index}'
+            materials[mu] = PhysicsMaterial(prim_path=path,
+                                            static_friction=mu, dynamic_friction=mu, restitution=0.0)
         params = dict(prim_path='/World/objects/' + name, name='free_' + name,
                       position=[float(v) for v in body['position']],
                       orientation=[float(v) for v in body['orientation']],   # w, x, y, z
-                      mass=float(body['mass']), color=np.array([.85, .2, .15]), physics_material=material)
-        if (not np.allclose(shape['position'], (0., 0., 0.))
+                      mass=float(body['mass']), color=np.array([.85, .2, .15]))
+        if (shape is None or shape['type'] == 'sphere'
+                or not np.allclose(shape['position'], (0., 0., 0.))
                 or not np.allclose(shape['orientation'], (1., 0., 0., 0.))):
             stage = get_current_stage()
-            _author_offset_free_body(stage, params['prim_path'], body,
-                                     UsdShade.Material(stage.GetPrimAtPath(material.prim_path)))
+            materials_by_mu = {mu: UsdShade.Material(stage.GetPrimAtPath(mat.prim_path))
+                               for mu, mat in materials.items()}
+            _author_offset_free_body(stage, params['prim_path'], body, materials_by_mu)
             obj = SingleRigidPrim(prim_path=params['prim_path'], name=params['name'], reset_xform_properties=False)
         elif shape['type'] == 'cylinder':
             radius, length = (float(v) for v in shape['size'][:2])
-            obj = DynamicCylinder(radius=radius, height=length, **params)
+            obj = DynamicCylinder(radius=radius, height=length,
+                                  physics_material=materials[shape.get('mu', 1.)], **params)
         else:
-            obj = DynamicCuboid(scale=[float(v) for v in shape['size']], size=1., **params)
+            obj = DynamicCuboid(scale=list(shape['size']), size=1.,
+                                physics_material=materials[shape.get('mu', 1.)], **params)
         world.scene.add(obj)
         created[str(body['name'])] = obj
     if created:
