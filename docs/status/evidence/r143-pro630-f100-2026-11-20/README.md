@@ -193,6 +193,13 @@ motor. The private portable profile can apply those settings for a GUI run.
 [Fixed-base transmission sweep](bullet-loaded-transmission-sweep.json) ·
 [Bullet inertia API](https://github.com/bulletphysics/bullet3/blob/master/examples/SharedMemory/grpc/proto/pybullet.proto).
 
+The first normal GUI run with those settings stopped above the block. The
+pregrasp replan reduced projected tool drift from 17.63 mm to 4.97 mm, with
+no measurable payload motion. The second estimate remained outside the 4 mm
+descent tolerance. The experimental check now permits one additional replan
+when the measured drift improves by at least 2 mm.
+[Mobile retry](bullet-gui-reanchor-drift.json).
+
 An Isaac Sim 6.0.1 loaded trial reached the block in the same world. Its
 right pad peaked at 5.89 N and its left pad recorded zero in all 46 closure
 samples. The largest sampled follower error was 0.0082 rad. The run
@@ -206,8 +213,8 @@ block before the pad. Only bilateral load on the named pads can authorize lift.
 The base shifted 0.0091 rad in yaw between docking and the steady grip
 phase. A replay at the measured tool reach projects about 4 mm of position
 error. The optional pregrasp check waits for a stopped base, fresh object
-pose, and original pickup support. It can rebuild the plan once before
-descent and stops if the correction moves outside the declared tolerance.
+pose, and original pickup support. It allows up to two replans before
+descent, with a measured improvement required for the second correction.
 
 ### Complete GUI fetch
 

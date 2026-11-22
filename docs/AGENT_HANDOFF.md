@@ -5,8 +5,8 @@ transmission inertia, 100 solver iterations, four non-contact iterations
 and gear ERP 0.35 produced 19/19 bilateral samples below 0.01 rad follower
 error. The private GUI candidate uses one 0.8 N m motor. Isaac's previous
 run had about 4 mm of sideways tool error after a 0.0091 rad base heading
-change. The optional pregrasp check can replan once from fresh settled
-measurements. Preserve both force gates, custody and the supported release
+change. The optional pregrasp check can replan twice from fresh settled
+measurements if the second estimate improves. Preserve both force gates, custody and the supported release
 claim. [F100 evidence](status/evidence/r143-pro630-f100-2026-11-20/README.md).
 
 November 21 F100 Navigation passed one normal GUI fetch on

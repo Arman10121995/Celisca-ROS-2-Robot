@@ -1813,6 +1813,10 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
   tuned gear solving. The private launch can apply those settings without
   adding follower motors. A mobile fetch is still required.
   [Transmission sweep](docs/status/evidence/r143-pro630-f100-2026-11-20/bullet-loaded-transmission-sweep.json).
+  The first mobile retry stopped above the block. One replan reduced the
+  projected tool drift from 17.63 mm to 4.97 mm. The bounded check now allows
+  a second correction if drift is measurably decreasing.
+  [Mobile retry](docs/status/evidence/r143-pro630-f100-2026-11-20/bullet-gui-reanchor-drift.json).
   [GUI evidence](docs/status/evidence/r143-pro630-f100-2026-11-20/bullet-gui-gripper-confirmed.json).
 - **Isaac Display:** the F100 imported with one powered shaft and five
   passive followers. The normal GUI on `nav_empty` reached both presets
@@ -1822,7 +1826,7 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
   [Loaded trial](docs/status/evidence/r143-pro630-f100-2026-11-20/isaac-gui-loaded-closure-timeout.json).
   The base settled 0.0091 rad from the heading frozen into the pickup plan.
   An optional check above the block waits for fresh feedback from a stopped
-  base and can replan once from the measured pose and supported payload.
+  base and can replan from the measured pose and supported payload.
   [GUI evidence](docs/status/evidence/r143-pro630-f100-2026-11-20/isaac-gui-gripper-confirmed.json).
 - **Remaining implementation:** qualify loaded PyBullet and Isaac missions,
   including measured pad contacts and custody. The physical linkage on

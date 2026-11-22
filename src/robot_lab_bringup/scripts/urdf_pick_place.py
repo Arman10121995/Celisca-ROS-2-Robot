@@ -125,6 +125,7 @@ HOLONOMIC_DOCK_TURN_RPS = .12
 PREGRASP_REPLAN_M = .002  # Account for millimetre-scale drift during approach.
 PREGRASP_RECHECK_M = .004
 PREGRASP_MAX_DRIFT_M = .03
+PREGRASP_MAX_REPLANS = 2
 CARRY_DRIFT = 0.03      # m of object motion relative to the base while carrying
 NAV2_MIN_LEG = 0.5      # m: shorter transit legs stay straight (DWB circles on tiny paths)
 NAV2_HANDOFF = 0.15      # m: localization this close to the run-up point hands over to docking
@@ -899,10 +900,13 @@ class PickPlace(Node):
         support = self._table_under(task['object'])
         if support is None or support.name != task['table']:
             return dict(passed=False, reason='payload has left the pickup support', **diagnostics)
-        limit = PREGRASP_RECHECK_M if task.get('pregrasp_replanned') else PREGRASP_MAX_DRIFT_M
+        replans = task.get('pregrasp_replans', 0)
+        previous_drift = task.get('pregrasp_previous_drift', math.inf)
+        can_replan = replans < PREGRASP_MAX_REPLANS and drift + PREGRASP_REPLAN_M < previous_drift
+        limit = PREGRASP_MAX_DRIFT_M if can_replan else PREGRASP_RECHECK_M
         if drift > limit:
             return dict(passed=False, reason='base or payload drifted beyond the pregrasp tolerance', **diagnostics)
-        return dict(passed=True, replan=not task.get('pregrasp_replanned') and drift > PREGRASP_REPLAN_M,
+        return dict(passed=True, replan=can_replan and drift > PREGRASP_REPLAN_M,
                     **diagnostics)
 
     def _advance(self):
@@ -977,7 +981,8 @@ class PickPlace(Node):
         if not check.get('passed', True):
             return self._finish('failed', '%s: %s' % (stage['name'], check.get('reason')))
         if check.get('replan'):
-            task['pregrasp_replanned'] = True
+            task['pregrasp_replans'] = task.get('pregrasp_replans', 0) + 1
+            task['pregrasp_previous_drift'] = max(check['projected_tool_drift_m'], check['payload_drift_m'])
             task.pop('pregrasp_still_since', None)
             task.pop('finger_history', None)
             return self._plan_arm(task, phase)

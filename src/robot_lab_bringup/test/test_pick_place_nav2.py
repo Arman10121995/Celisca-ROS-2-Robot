@@ -206,7 +206,9 @@ def test_pregrasp_anchor_catches_heading_drift_after_base_stops(pick_place, monk
     first = node._check_pregrasp_anchor(task, [1.361, 0., .60])
     assert first['passed'] and first['replan']
     assert first['projected_tool_drift_m'] == pytest.approx(.00417, abs=.0001)
-    task['pregrasp_replanned'] = True
+    task.update(pregrasp_replans=1, pregrasp_previous_drift=.01763)
+    assert node._check_pregrasp_anchor(task, [1.361, 0., .60])['replan']
+    task.update(pregrasp_replans=2, pregrasp_previous_drift=.00417)
     assert not node._check_pregrasp_anchor(task, [1.361, 0., .60])['passed']
     task['scene'].base = node.base_pose
     second = node._check_pregrasp_anchor(task, [1.361, 0., .60])

@@ -1,0 +1,121 @@
+{
+  "robot": "asset_elephant_myagv_pro_pro630_f100",
+  "simulator": "pybullet",
+  "mode": "display",
+  "map": "mobile_fetch_lab_f100",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=display map_name:=mobile_fetch_lab_f100 robot_model:=asset_elephant_myagv_pro_pro630_f100 simulator:=pybullet gui:=false perception:=none allow_experimental_assets:=true",
+  "model_sha256": "bf9ef87b82586316cb4ff59956cd87179c1f681bd352f46777468aebd2bb082d",
+  "passed": false,
+  "launch_returncode": 0,
+  "feature_commit": "5a3e188c4c0f8a64e267aa163db99265c1489537",
+  "private_settings": {
+    "solver_iterations": 100,
+    "noncontact_iterations": 4,
+    "gear_erp": 0.35,
+    "added_inertia_kg_m2": {
+      "driver": 0.003,
+      "each_follower": 0.00015
+    },
+    "holonomic_docking": true,
+    "pregrasp_replan_max": 1
+  },
+  "task_seconds": 50.53,
+  "message": "above_object: base or payload drifted beyond the pregrasp tolerance",
+  "stage": "pick",
+  "stages": [
+    {
+      "phase": "to_object_arrived",
+      "final_pose": [
+        0.8804,
+        0.0009,
+        -0.0019,
+        -0.0051
+      ],
+      "dock_recaptures": 0
+    },
+    {
+      "phase": "to_object",
+      "seconds": 26.96
+    },
+    {
+      "stage": "open",
+      "seconds": 4.87,
+      "object_truth": [
+        1.36,
+        -0.0,
+        0.545
+      ],
+      "tcp_estimate": [
+        0.882,
+        0.2862,
+        1.0729
+      ],
+      "passed": true
+    },
+    {
+      "stage": "above_object",
+      "seconds": 14.15,
+      "object_truth": [
+        1.36,
+        -0.0,
+        0.545
+      ],
+      "tcp_estimate": [
+        1.3599,
+        -0.0003,
+        0.605
+      ],
+      "passed": true,
+      "replan": true,
+      "pregrasp_base": [
+        0.8978232741355896,
+        0.008414600975811481,
+        -0.002006672555580735,
+        -0.015071120934759083
+      ],
+      "projected_tool_drift_m": 0.01763,
+      "payload_drift_m": 1e-05
+    },
+    {
+      "stage": "open",
+      "seconds": 0.11,
+      "object_truth": [
+        1.36,
+        0.0,
+        0.545
+      ],
+      "tcp_estimate": [
+        1.3773,
+        0.0024,
+        0.6049
+      ],
+      "passed": true
+    },
+    {
+      "stage": "above_object",
+      "seconds": 2.42,
+      "object_truth": [
+        1.36,
+        -0.0,
+        0.545
+      ],
+      "tcp_estimate": [
+        1.3603,
+        0.0,
+        0.6053
+      ],
+      "passed": false,
+      "reason": "base or payload drifted beyond the pregrasp tolerance",
+      "pregrasp_base": [
+        0.8958500623703003,
+        0.01249515637755394,
+        -0.0018584884237498045,
+        -0.014038418546841566
+      ],
+      "projected_tool_drift_m": 0.00497,
+      "payload_drift_m": 0.0
+    }
+  ],
+  "raw_report_ssd_relative": "bullet-loaded-transmission-drLl34/gui/report.json",
+  "raw_report_sha256": "f805e304165566d4a1537de0c21c2777bd4edf5cbae5e5c76b1d407954a150ad"
+}
