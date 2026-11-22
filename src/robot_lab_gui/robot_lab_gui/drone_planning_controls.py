@@ -12,6 +12,7 @@ class DronePlanningControls(ttk.LabelFrame):
         self.app, self.node, self.state, self.position = app, None, {}, None
         self.received, self.pose_received = -math.inf, -math.inf
         self.flight_state, self.flight_received = {}, -math.inf
+        self.takeoff_reply = ''
         self.status = tk.StringVar(value='Check takeoff clearance, then Takeoff. Once airborne, edit a measured target and Plan / Execute.')
         self.takeoff_status = tk.StringVar(value='Takeoff clearance has not been checked.')
         self.obstacle_status = tk.StringVar(value='Route observations are off; canonical static world only.')
@@ -129,10 +130,18 @@ class DronePlanningControls(ttk.LabelFrame):
             from std_srvs.srv import Trigger
             def completed(future):
                 try:
-                    self.status.set(future.result().message)
+                    result = future.result()
+                    message = result.message if result.success or name != 'takeoff_check' else 'refused: '+result.message
                 except Exception as exc:
-                    self.status.set(str(exc))
+                    message = str(exc)
+                self.status.set(message)
+                if name == 'takeoff_check':
+                    # Kept on the takeoff line: the planner status poll replaces the general status.
+                    self.takeoff_reply = message
             self.clients[name].call_async(Trigger.Request()).add_done_callback(completed)
+            return
+        if name == 'takeoff_check':
+            self.takeoff_reply = 'refused: the owned Flight launch or its takeoff check service is not ready'
 
     def target_matches_plan(self):
         try:
@@ -157,6 +166,8 @@ class DronePlanningControls(ttk.LabelFrame):
         takeoff_message = 'Takeoff: '+takeoff.get('state', 'unchecked')
         if takeoff.get('error'):
             takeoff_message += ' · '+takeoff['error']
+        elif takeoff.get('state', 'unchecked') == 'unchecked' and self.takeoff_reply.startswith('refused'):
+            takeoff_message += ' · '+self.takeoff_reply
         if takeoff.get('rise_m') is not None:
             takeoff_message += ' · climb %.2f m%s' % (takeoff['rise_m'], ' (ceiling limited)' if takeoff.get('ceiling_limited') else '')
         self.takeoff_status.set(takeoff_message)

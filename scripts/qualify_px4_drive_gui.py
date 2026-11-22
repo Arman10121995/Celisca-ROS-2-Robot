@@ -11,6 +11,7 @@ import math
 import os
 from pathlib import Path
 import subprocess
+import threading
 import time
 
 import rclpy
@@ -67,11 +68,12 @@ def main():
             assert app.process and app.process.poll() is None, 'Owned Flight launch exited'
         time.sleep(.005)
 
-    def until(predicate, budget=20, plant=True):
+    def until(predicate, budget=20, plant=True, stage=''):
         deadline = time.monotonic()+budget
         while not predicate() and time.monotonic() < deadline:
             pump(plant)
-        assert predicate(), ('Flight timeout', states[-1] if states else {})
+        # The stage names which wait expired; the flight state alone did not.
+        assert predicate(), ('Flight timeout', stage, states[-1] if states else {})
 
     def interval(seconds):
         deadline = time.monotonic()+seconds
@@ -133,14 +135,37 @@ def main():
         planning = app.drone_planning_controls
         takeoff_state = lambda: (planning.state or {}).get('takeoff', {})  # noqa: E731
         until(lambda: getattr(planning, 'clients', {}).get('takeoff_check') is not None
-              and planning.clients['takeoff_check'].service_is_ready(), 30)
-        planning.check_button.invoke()
-        until(lambda: takeoff_state().get('state') in ('clear', 'failed', 'invalidated'), 60)
+              and planning.clients['takeoff_check'].service_is_ready(), 90, stage='takeoff check service')
+        # The controller accepts Takeoff once its resting estimate has held
+        # steady (px4_ros_controller.heading_settled, 2026-11-13); an operator
+        # waits for that readiness, which the flight state publishes, before
+        # the fresh clearance check that Takeoff consumes. Pressing earlier was
+        # refused and left every 11-21 run idle (never armed).
+        until(lambda: states and states[-1].get('takeoff_ready'), 120, stage='takeoff ready')
+        # An operator reads the takeoff line and presses Check again when it
+        # was refused (the GUI now keeps the reply there); a refused press
+        # leaves the planner 'unchecked'. Each reply is recorded.
+        report['takeoff_check_replies'] = []
+        for _ in range(5):
+            planning.takeoff_reply = ''
+            planning.check_button.invoke()
+            try:
+                until(lambda: takeoff_state().get('state', 'unchecked') != 'unchecked', 10, stage='takeoff check accepted')
+                break
+            except AssertionError:
+                report['takeoff_check_replies'].append(planning.takeoff_reply)
+        try:
+            until(lambda: takeoff_state().get('state') in ('clear', 'failed', 'invalidated'), 60, stage='takeoff check result')
+        except AssertionError:
+            # The service reply and the planner status say why no result came.
+            report['takeoff_check_pending'] = dict(reply=planning.takeoff_reply, status=planning.status.get(),
+                                                   planning_state=planning.state)
+            raise
         report['takeoff_check'] = {k: v for k, v in takeoff_state().items() if k in ('state', 'error', 'rise_m', 'ceiling_limited')}
         assert takeoff_state().get('state') == 'clear', ('Takeoff check', takeoff_state())
         expected_rise = float(takeoff_state().get('rise_m') or 3.)
         app.flight_buttons[0].invoke()
-        until(lambda: states and states[-1].get('phase') == 'flying', 55)
+        until(lambda: states and states[-1].get('phase') == 'flying', 55, stage='flying after Takeoff')
         interval(3.)
         report['takeoff_height_m'] = body[-1]['z']-initial['z']
         assert abs(report['takeoff_height_m']-expected_rise) < .35
@@ -209,6 +234,9 @@ def main():
         (out/'report.json').write_text(json.dumps(report, indent=2)+'\n')
         (out/'trace.json').write_text(json.dumps(dict(body=body, commands=commands, states=states, rotors=rotors))+'\n')
         (out/'gui-output.log').write_text(app.output.get('1.0', 'end'))
+        # The reports are written; GUI/rclpy teardown has hung past the
+        # run timeout (every 11-21 world, passed or not), so bound it.
+        threading.Timer(30., lambda: os._exit(0 if report['passed'] else 1)).start()
         executor.shutdown(); node.destroy_node(); app._on_close()
         if rclpy.ok():
             rclpy.shutdown()
