@@ -1,0 +1,285 @@
+{
+  "passed": true,
+  "crossing": {
+    "outcomes": [
+      {
+        "member": "beta",
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "source": "operator"
+      },
+      {
+        "member": "alpha",
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "source": "operator"
+      },
+      {
+        "member": "alpha",
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "source": "operator"
+      },
+      {
+        "member": "beta",
+        "state": "succeeded",
+        "reason": "Actual Nav2 success and measured settled arrival",
+        "source": "operator"
+      }
+    ],
+    "closest_approach": {
+      "distance": 1.014198442001259,
+      "wall": 19.413958967023063,
+      "alpha": [
+        -1.0920992654049804,
+        0.6376023056226734
+      ],
+      "beta": [
+        -1.0840964600593077,
+        -0.3765645617440242
+      ]
+    },
+    "radii_sum_m": 0.298,
+    "contacts": [],
+    "zone_waits": [
+      {
+        "event": "zone_wait",
+        "wall": 1795337430.4394553,
+        "monotonic": 517343.689596834,
+        "sim_time": 17.536,
+        "member": "alpha",
+        "zone": "door:ward",
+        "holder": "beta",
+        "entry_m": 0.993,
+        "suspended_task": "8fc226738a3c4214b6f915b2657c4772",
+        "holding": false
+      }
+    ],
+    "door_modes_seen": [
+      [
+        "ward",
+        0
+      ],
+      [
+        "ward",
+        1
+      ],
+      [
+        "ward",
+        2
+      ]
+    ]
+  },
+  "docking": {
+    "docked_after_s": {
+      "alpha": 19.334604881994892,
+      "beta": 19.43558266601758
+    },
+    "energy": {
+      "alpha": {
+        "first": {
+          "fraction": 0.7988145593589343,
+          "power_W": 3.0,
+          "charging_W": 0.0,
+          "source_verified": true,
+          "coverage_complete": true,
+          "reason": "Observed simulation actuator power",
+          "source": "Authored battery model + sampled wheel effort/rate; no regeneration or hardware battery telemetry"
+        },
+        "at": 517397.975228102,
+        "after_10s": {
+          "fraction": 0.8052852260256718,
+          "power_W": 3.0,
+          "charging_W": 120.0,
+          "source_verified": true,
+          "coverage_complete": true,
+          "reason": "Observed simulation actuator power",
+          "source": "Authored battery model + sampled wheel effort/rate; no regeneration or hardware battery telemetry"
+        }
+      },
+      "beta": {
+        "first": {
+          "fraction": 0.7987992061453283,
+          "power_W": 3.0,
+          "charging_W": 0.0,
+          "source_verified": true,
+          "coverage_complete": true,
+          "reason": "Observed simulation actuator power",
+          "source": "Authored battery model + sampled wheel effort/rate; no regeneration or hardware battery telemetry"
+        },
+        "at": 517398.076205886,
+        "after_10s": {
+          "fraction": 0.8052113728120651,
+          "power_W": 3.0,
+          "charging_W": 120.0,
+          "source_verified": true,
+          "coverage_complete": true,
+          "reason": "Observed simulation actuator power",
+          "source": "Authored battery model + sampled wheel effort/rate; no regeneration or hardware battery telemetry"
+        }
+      }
+    },
+    "charging": {
+      "alpha": true,
+      "beta": true
+    }
+  },
+  "phase": "done",
+  "session_directory": "/workspace/molar/robot_lab_runtime/fleet_sessions/session-zub5062h",
+  "events": [
+    {
+      "event": "zone_wait",
+      "wall": 1795337430.4394553,
+      "monotonic": 517343.689596834,
+      "sim_time": 17.536,
+      "member": "alpha",
+      "zone": "door:ward",
+      "holder": "beta",
+      "entry_m": 0.993,
+      "suspended_task": "8fc226738a3c4214b6f915b2657c4772",
+      "holding": false
+    },
+    {
+      "event": "zone_granted",
+      "wall": 1795337439.5376353,
+      "monotonic": 517352.787776769,
+      "sim_time": 26.426000000000002,
+      "member": "alpha",
+      "zone": "door:ward",
+      "task": "8fc226738a3c4214b6f915b2657c4772",
+      "waited_s": 9.099
+    },
+    {
+      "event": "task_finished",
+      "wall": 1795337456.1875165,
+      "monotonic": 517369.437657838,
+      "sim_time": 42.690000000000005,
+      "member": "beta",
+      "task": "0958ce6e5505494c9059c52304f78825",
+      "source": "operator",
+      "goal": {
+        "x": -2.8,
+        "y": -1.0,
+        "yaw": 3.141592653589793,
+        "timeout": 300.0,
+        "not_before": 0.0,
+        "floor": "L0"
+      },
+      "state": "succeeded",
+      "reason": "Actual Nav2 success and measured settled arrival",
+      "finished": 517369.437648942,
+      "observation": {
+        "x": -2.769210197828099,
+        "y": -0.9612043833948555,
+        "z": -2.070312415751218e-08,
+        "yaw": 3.0696298005273337,
+        "linear": 0.0,
+        "angular": 0.0,
+        "velocity_source": "finite difference of measured stamped Gazebo poses",
+        "source_reported_twist": {
+          "linear": 0.0,
+          "angular": 0.0
+        }
+      }
+    },
+    {
+      "event": "task_finished",
+      "wall": 1795337465.3876941,
+      "monotonic": 517378.637835292,
+      "sim_time": 51.742000000000004,
+      "member": "alpha",
+      "task": "8fc226738a3c4214b6f915b2657c4772",
+      "source": "operator",
+      "goal": {
+        "x": 2.8,
+        "y": 1.0,
+        "yaw": 0.0,
+        "timeout": 300.0,
+        "not_before": 0.0,
+        "floor": "L0"
+      },
+      "state": "succeeded",
+      "reason": "Actual Nav2 success and measured settled arrival",
+      "finished": 517378.637826748,
+      "observation": {
+        "x": 2.75632554711071,
+        "y": 0.9938162385658174,
+        "z": 1.8120891319029793e-06,
+        "yaw": 0.00791456226648399,
+        "linear": 0.0,
+        "angular": 0.0,
+        "velocity_source": "finite difference of measured stamped Gazebo poses",
+        "source_reported_twist": {
+          "linear": 0.0,
+          "angular": 0.0
+        }
+      }
+    },
+    {
+      "event": "task_finished",
+      "wall": 1795337484.0865362,
+      "monotonic": 517397.336677409,
+      "sim_time": 70.06400000000001,
+      "member": "alpha",
+      "task": "be4dc6b289ae444ca1e9dc03c7e69e05",
+      "source": "operator",
+      "goal": {
+        "x": 3.8,
+        "y": 2.3,
+        "yaw": 3.14159,
+        "timeout": 180.0,
+        "not_before": 0.0,
+        "floor": "L0"
+      },
+      "state": "succeeded",
+      "reason": "Actual Nav2 success and measured settled arrival",
+      "finished": 517397.336668449,
+      "observation": {
+        "x": 3.723491789468418,
+        "y": 2.2726716763321124,
+        "z": 1.8120782416342578e-06,
+        "yaw": 3.1380095214082053,
+        "linear": 0.0,
+        "angular": 0.0,
+        "velocity_source": "finite difference of measured stamped Gazebo poses",
+        "source_reported_twist": {
+          "linear": 0.0,
+          "angular": 0.0
+        }
+      }
+    },
+    {
+      "event": "task_finished",
+      "wall": 1795337484.0870023,
+      "monotonic": 517397.33714361,
+      "sim_time": 70.06400000000001,
+      "member": "beta",
+      "task": "36ebf50b525e45ca8ed0e01dffe2c804",
+      "source": "operator",
+      "goal": {
+        "x": -3.8,
+        "y": -2.3,
+        "yaw": 0.0,
+        "timeout": 180.0,
+        "not_before": 0.0,
+        "floor": "L0"
+      },
+      "state": "succeeded",
+      "reason": "Actual Nav2 success and measured settled arrival",
+      "finished": 517397.337138042,
+      "observation": {
+        "x": -3.7283798800327888,
+        "y": -2.218177909183403,
+        "z": -2.1671351107626132e-08,
+        "yaw": -0.00043273728684193333,
+        "linear": 0.0,
+        "angular": 0.0,
+        "velocity_source": "finite difference of measured stamped Gazebo poses",
+        "source_reported_twist": {
+          "linear": 0.0,
+          "angular": 0.0
+        }
+      }
+    }
+  ]
+}

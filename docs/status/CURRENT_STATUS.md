@@ -359,6 +359,8 @@ November 20: **R7 `dijkstra_planner` is its own planner (implemented, experiment
 
 November 20: **R6.5 the repo `small_house` world projects to an occupancy grid.** Its AWS RoboMaker furniture now resolves from the installed world dataset, and its grid agrees with the dataset copy of the same house (occupied-cell IoU 0.846, free-space IoU 0.949). [Receipt](evidence/r65-small-house-occupancy-2026-11-20/README.md).
 
+November 22: **V7 fleet_ward repeated: 3 of 3 passed.** Bumperbot and Labbot cross the one door in opposite directions (alpha waits for the reservation each time, closest approach 1.00–1.01 m, no contacts), then dock at the far chargers in 19–20 s with modeled charge rising at 120 W, as on November 18. [Round](evidence/v7-fleet-ward-2026-11-22/README.md)
+
 November 22: **V7 swarm aggregation repeated: the spread Bumperbots gathered in 3 of 3 runs.** The November 18 run-6 protocol (Gazebo `swarm_arena`, members 3.6–4.0 m apart, 180 s local aggregation on their own scans) brought all three within 1.5 m after 22–30 s each time; they then stayed together 33–71 % of the phase (56 % on November 18), and only one run ended all together. [Round](evidence/v7-swarm-aggregation-2026-11-22/README.md)
 
 November 22: **V7 catamaran USV on four backends, repeated: 8 of 8.** The November 20 surge, coast, yaw, current-drift and operator-loss probe reproduces within 2 % on Gazebo, MuJoCo, PyBullet and Isaac, two runs each, and every run disarms on operator loss. [Round](evidence/v7-marine-usv-2026-11-22/README.md)

@@ -1547,6 +1547,7 @@ tasks:
         title: Make CI bootstrap and doctor trustworthy
     title: Trustworthy development baseline
   R10:
+    validation_ward_20261122: 'Claude V7: fleet_ward door crossing, docking and modeled charge (11-18 run 3 protocol) 3/3 passed, closest approach 1.00-1.01 m, no contacts. docs/status/evidence/v7-fleet-ward-2026-11-22/README.md'
     validation_swarm_20261122: 'Claude V7: swarm aggregation (11-18 run 6 protocol) 3/3 gathered within 22-30 s; together 33/43/71 percent (11-18 56 percent), 1/3 ended all within 1.5 m. docs/status/evidence/v7-swarm-aggregation-2026-11-22/README.md'
     validation_usv_20261122: 'Claude V7: lab_usv surge/coast/yaw/current/operator-loss probe on Gazebo, MuJoCo, PyBullet, Isaac, 2 runs each, 8/8 within 2 percent of 2026-11-20. docs/status/evidence/v7-marine-usv-2026-11-22/README.md'
     acceptance_ref: ROADMAP.md R10
