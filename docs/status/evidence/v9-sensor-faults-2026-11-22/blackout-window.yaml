@@ -1,0 +1,8 @@
+# V9 harder stratum: the whole scan occluded (no returns) from 20 s to 35 s of simulation time.
+seed: 7
+relays:
+- input: /scan_clean
+  output: /scan
+  type: LaserScan
+  faults:
+  - {kind: occlusion, fraction: 1.0, start_s: 20, end_s: 35}

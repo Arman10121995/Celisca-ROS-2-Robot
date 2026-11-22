@@ -1,0 +1,8 @@
+# V9 harder stratum: every range reads 0.3 m long from 20 s to 60 s of simulation time.
+seed: 7
+relays:
+- input: /scan_clean
+  output: /scan
+  type: LaserScan
+  faults:
+  - {kind: bias, value: 0.3, start_s: 20, end_s: 60}

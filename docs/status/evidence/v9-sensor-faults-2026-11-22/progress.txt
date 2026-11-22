@@ -8,3 +8,10 @@ clean seed3 exit=0
 noise-dropout seed3 exit=0
 occlusion-window seed3 exit=0
 ALLDONE
+bias-window seed1 exit=0
+blackout-window seed1 exit=0
+bias-window seed2 exit=0
+blackout-window seed2 exit=0
+bias-window seed3 exit=0
+blackout-window seed3 exit=0
+ALLDONE bias-window blackout-window

@@ -1,7 +1,7 @@
 # V9: Nav2 missions under seeded scan faults (November 22, 2026)
 
-**Status: 9 of 9 passed. These faults did not cost the mission any
-goal.** `run_round.sh` runs the Bumperbot `nav_obstacle` mission
+**Status: 15 of 15 passed, including a harder stratum. No fault cost a
+goal; a 15 s scan blackout cost up to 36 s and pushed one goal to 0.28 m.** `run_round.sh` runs the Bumperbot `nav_obstacle` mission
 (`scripts/sim_nav_mission.sh`) on MuJoCo for goal seeds 1–3. The steps
 are a detour goal, a cancel after 1 m, a resume, and a goal near an
 obstacle; each goal must end within 0.30 m of truth.
@@ -35,9 +35,35 @@ A passed in every run.
   near-obstacle approach. Three seeds do not separate a small fault cost
   from that variation.
 - **Not a recovery-time measurement yet.** No condition caused a failure or
-  a recovery behaviour, so there was nothing to recover from. Harder
-  scenarios (bias, odometry drift, longer occlusion) are needed to measure
-  recovery time.
+  a recovery behaviour, so there was nothing to recover from (see the
+  harder stratum below).
+
+## Harder stratum (same protocol, revision 8c8e8599)
+
+- **bias-window** (`bias-window.yaml`): every range reads 0.3 m long from
+  20 s to 60 s.
+- **blackout-window** (`blackout-window.yaml`): the whole scan is occluded
+  (no returns) from 20 s to 35 s.
+
+| Seed | Bias: resume A | Bias: goal B | Blackout: resume A | Blackout: goal B |
+|---|---|---|---|---|
+| 1 | 25.6 s / 0.157 m | 29.6 s / 0.073 m | 23.8 s / **0.281 m** | 27.2 s / 0.054 m |
+| 2 | 27.7 s / 0.099 m | 51.2 s / 0.132 m | **62.5 s** / 0.133 m | 59.1 s / 0.107 m |
+| 3 | 24.2 s / 0.155 m | 43.0 s / 0.100 m | 23.0 s / 0.116 m | 43.3 s / 0.119 m |
+
+- **All 6 passed.** None of the launch logs shows a progress failure, a
+  spin/back-up/wait recovery or a lethal start (count 0 each).
+- **Bias** raised the resume error to 0.10–0.16 m (clean 0.04–0.13 m),
+  with times close to clean.
+- **Blackout** has the largest effects:
+  - seed 2's resume took 62.5 s against 26.9 s clean, 36 s spent
+    re-acquiring after the scan came back;
+  - seed 1 ended its resume 0.281 m from the goal, near the 0.30 m limit.
+  - Nav2 kept the goal through the blackout without any recovery
+    behaviour.
+- So the measurable cost of these faults is time and end error, not a
+  recovery sequence. A fault that forces Nav2's recoveries still has to be
+  found.
 
 ## Limits
 
