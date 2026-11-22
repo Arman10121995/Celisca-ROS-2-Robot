@@ -128,6 +128,16 @@ Pursuit took 38.9 s median with 6.6 cm RMS in the R7.7 runs.
   Multi-threaded BLAS made it much worse (2% misses), so BLAS is pinned to
   one thread.
 
+### Repeat at one revision (2026-11-22)
+
+V10 re-ran the Gazebo round on the same goals: all six controllers again
+reached 15/15, with median times within 0.4 s of October. Cross-track RMS
+was 3–14 % higher (5.96–6.79 cm), and the ranking barely changed. The
+offline benchmark reproduced October's numbers exactly, so the rise comes
+from the Gazebo loop and is not yet explained
+([round](../status/evidence/v10-control-comparison-2026-11-22/README.md),
+[offline](../status/evidence/v10-offline-benchmarks-2026-11-22/README.md)).
+
 ## Limits
 
 - The model plant has no wheel slip, delay or sensor noise. The gains were
