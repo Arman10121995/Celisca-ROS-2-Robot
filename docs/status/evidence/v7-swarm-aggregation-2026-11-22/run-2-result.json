@@ -1,0 +1,21 @@
+{
+  "phases": {
+    "local_aggregation": {
+      "samples": 671,
+      "mean_start_m": 3.8832599439724986,
+      "mean_end_m": 2.003924916513966,
+      "min_pair_m": 0.5113531307619014,
+      "end_pairs": {
+        "alpha-beta": 3.0010935090191744,
+        "alpha-gamma": 1.1149523863450053,
+        "beta-gamma": 1.8957288541777182
+      },
+      "duration_s": 179.93660356698092,
+      "states": [
+        "Waiting for measured feedback",
+        "swarm command active"
+      ]
+    }
+  },
+  "ready_s": 16.500541832007002
+}
