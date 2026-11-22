@@ -57,16 +57,27 @@ def pick_place(app, page, args, report, press, settle, until, pump, screenshot):
     if page.pick_state.get('phase') != 'executing':
         report['pick_place'] = dict(result=page.pick_state.get('last_result'), page_status=page.pick_status.get())
         return
+    deadline = time.monotonic() + 600
+
+    def finished():
+        return (page.pick_state.get('phase') == 'idle'
+                and json.dumps(page.pick_state.get('last_result')) != previous)
+
     if page.pick_state.get('mobile'):
         # A fetch drives first: photograph it carrying, mid-route.
-        until(lambda: page.pick_state.get('stage') == 'carry' or page.pick_state.get('phase') == 'idle', 300, 'carrying')
-        pump(12.)
+        until(lambda: page.pick_state.get('stage') == 'carry' or finished(),
+              max(0., deadline - time.monotonic()), 'carrying or task finished')
+        if not finished():
+            pump(12.)
+            if not finished():
+                screenshot(args.output / 'carrying.png')
+                pump(1.)
     else:
         pump(8.)
-    screenshot(args.output / 'carrying.png')
-    pump(1.)
-    until(lambda: page.pick_state.get('phase') == 'idle' and json.dumps(page.pick_state.get('last_result')) != previous,
-          600, 'task finished')
+        screenshot(args.output / 'carrying.png')
+        pump(1.)
+    if not finished():
+        until(finished, max(0., deadline - time.monotonic()), 'task finished')
     result = page.pick_state.get('last_result') or {}
     report['pick_place'] = dict(result=result, page_status=page.pick_status.get())
     screenshot(args.output / 'placed.png')
