@@ -227,3 +227,5 @@ choices.
 | 11-22 | V11 | Kept the failed E1/E2/F Gazebo runs and proved the fix with a same-revision before/after (F, F2) | The other agent committed mid-round; the same-revision pair isolates the change |
 | 11-22 | V8 | Added a third CELISCA Nav2 run after goal B aborted in run 1, and kept the failure | One more run gives a rate instead of a single pass/fail; no setting was changed between runs |
 | 11-22 | V8 | Left "identified dynamics" for real-robot data | Identifying MOLAR dynamics from the simulator would only fit the model to itself |
+| 11-22 | V4 | Ran the legged repeat at the mission's default goal radius and added a B2 run at the radius its October goals imply (0.6) instead of guessing radii for every robot | The October receipt does not record the radius; only B2's goal clearances are outside the default window |
+| 11-22 | V4 | Recorded the G1 drift and forward-arc goal-B failures as regressions with candidate causes instead of tuning during validation | Validation measures current code; the deliberate changes since October are listed for a later bisect |
