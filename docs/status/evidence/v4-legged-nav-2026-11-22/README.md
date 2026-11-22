@@ -131,6 +131,19 @@ here.
 October scored 3/3 on MuJoCo and 2/3 on Isaac; before the fix today
 scored 0/3 and 1/3.
 
+## Go2 forward-arc goal B (diagnosis)
+
+MuJoCo seed 2 was repeated with Go2's October 15 global inflation (0.45 m)
+instead of 26b961e4's 0.7 m at cost scaling 2.0
+(`g1-diagnosis/go2-mujoco-seed2-inflation045.json`). Resume A passed
+(0.051 m), and goal B again had no path. That goal lies 0.35 m from an
+obstacle, the tight end of the mission's near-obstacle window.
+
+So the inflation does not cause these failures. Forward-only Hybrid-A*
+with Go2's turning radius has no way into such a goal, and whether a seed
+draws one varies. A forward-arc robot needs a goal-B window scaled to its
+turning radius, or an in-place turn near the goal. This is open.
+
 ## Limits
 
 - One map, three seeds per cell.
