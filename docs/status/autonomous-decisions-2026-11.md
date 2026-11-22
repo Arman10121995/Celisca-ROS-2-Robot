@@ -225,3 +225,5 @@ choices.
 | 11-22 | V11 | Extended the October concurrency repeat with Gazebo + MuJoCo + PyBullet at once instead of only repeating the pair | October listed heavier pairs as remaining; Isaac is left out because three plants already fill the host |
 | 11-22 | V11 | Fixed `enable_joystick:=false` to drop only the joystick nodes, keeping twist_mux/twist_relay, instead of removing the flag from the GUI queue | The flag exists to keep queued jobs from reading a shared joystick; the mux is velocity plumbing, not joystick input |
 | 11-22 | V11 | Kept the failed E1/E2/F Gazebo runs and proved the fix with a same-revision before/after (F, F2) | The other agent committed mid-round; the same-revision pair isolates the change |
+| 11-22 | V8 | Added a third CELISCA Nav2 run after goal B aborted in run 1, and kept the failure | One more run gives a rate instead of a single pass/fail; no setting was changed between runs |
+| 11-22 | V8 | Left "identified dynamics" for real-robot data | Identifying MOLAR dynamics from the simulator would only fit the model to itself |
