@@ -327,7 +327,7 @@ Unlisted combinations are untested. No row establishes full mission support.
 | oomwoo | small_house | gazebo | vacuum_mapping_run /  | passed_screen |
 | oomwoo | small_house | gazebo | vacuum_gui_room_pause_resume /  | passed_screen |
 | oomwoo | small_house | gazebo | vacuum_gui_zone_keepout /  | passed_screen |
-| oomwoo | small_house | pybullet | vacuum_zone_keepout /  | failed_screen |
+| oomwoo | small_house | pybullet | vacuum_zone_keepout /  | passed_screen |
 | oomwoo | small_house | isaac | vacuum_zone_keepout /  | passed_screen |
 | oomwoo | celisca_floor_1_furniture | gazebo | vacuum_rooms /  | failed_screen |
 | oomwoo | small_house | gazebo | vacuum_zone_mop_carpet /  | passed_screen |
@@ -350,8 +350,8 @@ Unlisted combinations are untested. No row establishes full mission support.
 | labbot | nav_obstacle | pybullet | navigation_mission /  | passed_screen |
 | oomwoo | small_house | mujoco | vacuum_rooms /  | failed_screen |
 | oomwoo | small_house | mujoco | vacuum_spot /  | passed_screen |
-| oomwoo | small_house | pybullet | vacuum_rooms /  | failed_screen |
-| oomwoo | small_house | pybullet | vacuum_spot /  | failed_screen |
+| oomwoo | small_house | pybullet | vacuum_rooms /  | passed_screen |
+| oomwoo | small_house | pybullet | vacuum_spot /  | passed_screen |
 | oomwoo | small_house | isaac | vacuum_rooms /  | passed_screen |
 | oomwoo | small_house | isaac | vacuum_spot /  | passed_screen |
 | px4_x500 | aerial_indoor | gazebo | flight /  | passed_screen |

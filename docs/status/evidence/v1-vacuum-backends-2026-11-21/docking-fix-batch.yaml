@@ -1,0 +1,79 @@
+# V1: the three PyBullet jobs re-run after the docking fix (42f6a13d); indexed after vacuum-batch.yaml, so they control the cells.
+date: '2026-11-22'
+scope: Exact hashed named simulation screens; unlisted cells remain untested.
+source_files:
+- src/robot_lab_bringup/launch/simulated_room_vacuum.launch.py
+- src/robot_lab_bringup/launch/simulated_robot.launch.py
+- src/robot_lab_robots/config/robots.yaml
+- src/robot_lab_robots/oomwoo/urdf/oomwoo.urdf.xacro
+- src/robot_lab_robots/oomwoo/urdf/oomwoo_gazebo.xacro
+- scripts/sim_vacuum_mission.sh
+groups:
+- reports:
+  - docs/status/evidence/v1-vacuum-backends-2026-11-21/runs-docking-fix/pybullet_rooms_office.json
+  report_kind: cleaning_screen
+  identity:
+    robot_id: oomwoo
+    environment_id: small_house
+    simulator: pybullet
+    task_type: vacuum_rooms
+  date: '2026-11-22'
+  revision: 42f6a13d (docking settle gate and missed-entry retry; installed build)
+  hash_revision: 42f6a13d
+  source_files:
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/mission.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/planner.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/vacuum_cleaner.py
+  - src/robot_lab_description/launch/gazebo.launch.py
+  scope: Second building, two rooms by points, with the escape, wedge, rejoin and headless-report fixes.
+  limitations:
+  - One run per cell; the November 10 Gazebo start request
+  - Two of three jobs needed one dock retry (missed by 0.11 and 0.13 m)
+- reports:
+  - docs/status/evidence/v1-vacuum-backends-2026-11-21/runs-docking-fix/pybullet_spot.json
+  report_kind: cleaning_screen
+  identity:
+    robot_id: oomwoo
+    environment_id: small_house
+    simulator: pybullet
+    task_type: vacuum_spot
+  date: '2026-11-22'
+  revision: 42f6a13d (docking settle gate and missed-entry retry; installed build)
+  hash_revision: 42f6a13d
+  source_files:
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/mission.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/planner.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/rooms.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/grid.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/vacuum_cleaner.py
+  - src/robot_lab_description/launch/gazebo.launch.py
+  scope: 'Repeats 2 and 3 of the spot job beside a furniture bar. Judged by cleaning_screen: completed, >= 85 %
+    of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance
+    from the simulator-truth trail.'
+  limitations:
+  - One run per cell; the November 10 Gazebo start request
+  - Two of three jobs needed one dock retry (missed by 0.11 and 0.13 m)
+- reports:
+  - docs/status/evidence/v1-vacuum-backends-2026-11-21/runs-docking-fix/pybullet_zone_keepout.json
+  report_kind: cleaning_screen
+  identity:
+    robot_id: oomwoo
+    environment_id: small_house
+    simulator: pybullet
+    task_type: vacuum_zone_keepout
+  date: '2026-11-22'
+  revision: 42f6a13d (docking settle gate and missed-entry retry; installed build)
+  hash_revision: 42f6a13d
+  source_files:
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/mission.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/planner.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/rooms.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/grid.py
+  - src/robot_lab_vacuum_cleaning/robot_lab_vacuum_cleaning/vacuum_cleaner.py
+  - src/robot_lab_description/launch/gazebo.launch.py
+  scope: 'Repeats 2 and 3 of the zone job with a 1 m no-go box and a 1.6 m virtual wall. Judged by cleaning_screen:
+    completed, >= 85 % of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall
+    compliance from the simulator-truth trail.'
+  limitations:
+  - One run per cell; the November 10 Gazebo start request
+  - Two of three jobs needed one dock retry (missed by 0.11 and 0.13 m)

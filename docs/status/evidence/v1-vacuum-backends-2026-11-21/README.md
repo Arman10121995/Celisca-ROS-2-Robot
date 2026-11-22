@@ -1,6 +1,6 @@
 # V1: vacuum jobs on MuJoCo, PyBullet and Isaac (November 21, 2026)
 
-**Status: 5 of 9 screens passed; PyBullet docking regressed.** `run_jobs.sh`
+**Status: 8 of 9 screens passed after the November 22 docking fix** (5 of 9 on November 21, when PyBullet docked off target). `run_jobs.sh`
 replays the November 10 Gazebo start requests: the office rooms job, the
 (2, 2) spot job, and the keep-out zone with a no-go box and a virtual wall.
 It runs `oomwoo` in `small_house` through `scripts/sim_vacuum_mission.sh`,
@@ -41,6 +41,30 @@ Ruled out, each reverted, with runs in `runs-friction/`:
 The remaining suspect is the robot's in-place rotation overshoot on
 PyBullet after the align phase. It needs a closer look at the spinning
 wheels' braking at that moment.
+
+### Fixed on November 22: all three PyBullet jobs pass
+
+The cause was in the shared docking logic, not in PyBullet. The entry phase
+steers toward the dock and switches to the final turn once the bearing
+error exceeds 1.2 rad. A robot passing beside the dock reaches that angle
+and then logged "Docked" wherever it was. On PyBullet the align spin was
+still coasting when the entry began, so the robot curved in. Commit
+42f6a13d changes two things:
+- the align phase now waits for the heading rate to fall below 0.05 rad/s;
+- an entry that misses by more than 0.06 m backs off and aligns again, up
+  to three times, then reports "Could not dock".
+
+| Job | Coverage | Dock offset by truth | Retries |
+|---|---|---|---|
+| rooms_office | 91.8 % | 0.037 m, −2.5° | 1 (missed by 0.11 m) |
+| spot | 94.0 % | 0.036 m, 2.4° | 0 |
+| zone_keepout | 97.1 % | 0.029 m, −4.2° | 1 (missed by 0.13 m) |
+
+Before the fix the same jobs ended 0.14–0.18 m off. The re-runs are in
+`runs-docking-fix/`, indexed by `docking-fix-batch.yaml`, which now
+controls the three PyBullet cells. With them, the round passes 8 of 9: all
+of Isaac and PyBullet, and MuJoCo 2 of 3. The MuJoCo, Isaac and Gazebo
+cells ran before the fix and have not been re-run with it.
 
 ## MuJoCo rooms job
 

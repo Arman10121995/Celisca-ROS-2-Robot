@@ -1,5 +1,5 @@
 {
-  "generated_utc": "2026-11-22T01:18:02.282772+00:00",
+  "generated_utc": "2026-11-22T01:59:06.573994+00:00",
   "task": "R9.3",
   "status": "partial",
   "qualification": "Exact hashed screens only; artifact validation does not rerun a mission",
@@ -7254,17 +7254,18 @@
       "environment_id": "small_house",
       "simulator": "pybullet",
       "task_type": "vacuum_zone_keepout",
-      "support_level": "experimental",
+      "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-11-21",
-      "revision": "e9189e7f (installed build of 0f918f21; later commits only docs)",
-      "test_result": "failed_screen",
+      "last_tested": "2026-11-22",
+      "revision": "42f6a13d (docking settle gate and missed-entry retry; installed build)",
+      "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/pybullet_zone_keepout.json",
-        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/source-hashes-e9189e7f-7dadd39c.json"
+        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs-docking-fix/pybullet_zone_keepout.json",
+        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs-docking-fix/source-hashes-42f6a13d-32ea56b8.json"
       ],
       "limitations": [
         "One run per cell; the November 10 Gazebo start request",
+        "Two of three jobs needed one dock retry (missed by 0.11 and 0.13 m)",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
       "notes": "Repeats 2 and 3 of the zone job with a 1 m no-go box and a 1.6 m virtual wall. Judged by cleaning_screen: completed, >= 85 % of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance from the simulator-truth trail.",
@@ -7741,17 +7742,18 @@
       "environment_id": "small_house",
       "simulator": "pybullet",
       "task_type": "vacuum_rooms",
-      "support_level": "experimental",
+      "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-11-21",
-      "revision": "e9189e7f (installed build of 0f918f21; later commits only docs)",
-      "test_result": "failed_screen",
+      "last_tested": "2026-11-22",
+      "revision": "42f6a13d (docking settle gate and missed-entry retry; installed build)",
+      "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/pybullet_rooms_office.json",
-        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/source-hashes-e9189e7f.json"
+        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs-docking-fix/pybullet_rooms_office.json",
+        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs-docking-fix/source-hashes-42f6a13d.json"
       ],
       "limitations": [
         "One run per cell; the November 10 Gazebo start request",
+        "Two of three jobs needed one dock retry (missed by 0.11 and 0.13 m)",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
       "notes": "Second building, two rooms by points, with the escape, wedge, rejoin and headless-report fixes.",
@@ -7762,17 +7764,18 @@
       "environment_id": "small_house",
       "simulator": "pybullet",
       "task_type": "vacuum_spot",
-      "support_level": "experimental",
+      "support_level": "partially_supported",
       "evidence_level": "runtime_evidence",
-      "last_tested": "2026-11-21",
-      "revision": "e9189e7f (installed build of 0f918f21; later commits only docs)",
-      "test_result": "failed_screen",
+      "last_tested": "2026-11-22",
+      "revision": "42f6a13d (docking settle gate and missed-entry retry; installed build)",
+      "test_result": "passed_screen",
       "artifacts": [
-        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/pybullet_spot.json",
-        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs/source-hashes-e9189e7f-7dadd39c.json"
+        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs-docking-fix/pybullet_spot.json",
+        "docs/status/evidence/v1-vacuum-backends-2026-11-21/runs-docking-fix/source-hashes-42f6a13d-32ea56b8.json"
       ],
       "limitations": [
         "One run per cell; the November 10 Gazebo start request",
+        "Two of three jobs needed one dock retry (missed by 0.11 and 0.13 m)",
         "Screen evidence; full ROADMAP mission acceptance remains separate"
       ],
       "notes": "Repeats 2 and 3 of the spot job beside a furniture bar. Judged by cleaning_screen: completed, >= 85 % of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance from the simulator-truth trail.",

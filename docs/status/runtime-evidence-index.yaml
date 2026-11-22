@@ -14264,3 +14264,55 @@ records:
   - No obstacle planner in the manual screen
   - Static selected-world takeoff check; actors and contacts are not checked
   - Ceiling-limited takeoff (2.04 m checked rise) instead of 3 m
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: pybullet
+  task_type: vacuum_rooms
+  steering_mode: ''
+  date: '2026-11-22'
+  revision: 42f6a13d (docking settle gate and missed-entry retry; installed build)
+  report: docs/status/evidence/v1-vacuum-backends-2026-11-21/runs-docking-fix/pybullet_rooms_office.json
+  sha256: f94e08257b5abe5217395efb45a7da910c76db131659c8220a19bc9383736cfb
+  source_hashes: docs/status/evidence/v1-vacuum-backends-2026-11-21/runs-docking-fix/source-hashes-42f6a13d.json
+  source_hashes_sha256: ee72c30536e022e05e760fbb481f90421838a854ee94c2d29a927b5b999ab99a
+  report_kind: cleaning_screen
+  scope: Second building, two rooms by points, with the escape, wedge, rejoin and headless-report fixes.
+  limitations:
+  - One run per cell; the November 10 Gazebo start request
+  - Two of three jobs needed one dock retry (missed by 0.11 and 0.13 m)
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: pybullet
+  task_type: vacuum_spot
+  steering_mode: ''
+  date: '2026-11-22'
+  revision: 42f6a13d (docking settle gate and missed-entry retry; installed build)
+  report: docs/status/evidence/v1-vacuum-backends-2026-11-21/runs-docking-fix/pybullet_spot.json
+  sha256: 2830c7f699018aaba930c7e1e675b6ac7c091fa8db93b7556293d64ff6c94307
+  source_hashes: docs/status/evidence/v1-vacuum-backends-2026-11-21/runs-docking-fix/source-hashes-42f6a13d-32ea56b8.json
+  source_hashes_sha256: 32ea56b8d842ed010b81f14d1d620ae5dd9361a0dee02918ed5ffa9b4461e9df
+  report_kind: cleaning_screen
+  scope: 'Repeats 2 and 3 of the spot job beside a furniture bar. Judged by cleaning_screen: completed, >= 85 %
+    of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall compliance
+    from the simulator-truth trail.'
+  limitations:
+  - One run per cell; the November 10 Gazebo start request
+  - Two of three jobs needed one dock retry (missed by 0.11 and 0.13 m)
+- robot_id: oomwoo
+  environment_id: small_house
+  simulator: pybullet
+  task_type: vacuum_zone_keepout
+  steering_mode: ''
+  date: '2026-11-22'
+  revision: 42f6a13d (docking settle gate and missed-entry retry; installed build)
+  report: docs/status/evidence/v1-vacuum-backends-2026-11-21/runs-docking-fix/pybullet_zone_keepout.json
+  sha256: 83b2d96361046d5d79f8c07fc5cff522cc87cb5fa5b11dea142401165f1f55cc
+  source_hashes: docs/status/evidence/v1-vacuum-backends-2026-11-21/runs-docking-fix/source-hashes-42f6a13d-32ea56b8.json
+  source_hashes_sha256: 32ea56b8d842ed010b81f14d1d620ae5dd9361a0dee02918ed5ffa9b4461e9df
+  report_kind: cleaning_screen
+  scope: 'Repeats 2 and 3 of the zone job with a 1 m no-go box and a 1.6 m virtual wall. Judged by cleaning_screen:
+    completed, >= 85 % of the reachable target cleaned, truth on the dock within 0.10 m / 10 deg, no-go and virtual-wall
+    compliance from the simulator-truth trail.'
+  limitations:
+  - One run per cell; the November 10 Gazebo start request
+  - Two of three jobs needed one dock retry (missed by 0.11 and 0.13 m)

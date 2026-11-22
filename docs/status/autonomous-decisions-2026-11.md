@@ -212,3 +212,4 @@ choices.
 | 11-22 | V5 | Recorded terrain_heightfield as refused at takeoff and did not move its spawn | The spawn is 1.45 m under the heightmap; the legged rounds share it, and PX4's Gazebo did not collide with the heightmap anyway |
 | 11-22 | V11 | Made the matrix flight verdict expect the clear takeoff check's rise instead of always 3 m | Indoors the gate limits the climb to the ceiling; the old verdict would mark a correct ceiling-limited flight failed |
 | 11-22 | V5 | Repeated celisca_floor_1 once after a 0.204 m stop drift (limit 0.20) and kept the first run | A 4 mm margin on one stop; the repeat passed and both are in the receipt |
+| 11-22 | V1 | Re-ran only the three PyBullet jobs after the docking fix and indexed them in a separate batch after the original | They were the failing cells; MuJoCo/Isaac/Gazebo passed and are noted as run before the fix |
