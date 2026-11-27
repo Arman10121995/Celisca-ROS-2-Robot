@@ -59,6 +59,24 @@ Add `rgbd_targets.yaml` alongside `worlds/` in the map directory with the
 object identity, collision dimensions and measured HSV range. Keep the
 object visible from the arm's start pose.
 
+## Pick a stepped part
+
+Choose the URDF Franka Panda, **Display** and **Fixed-arm pick-and-place
+lab → Stepped part**. Select `pickup_stepped` as the object and
+`place_table` as the destination. Use **Simulator truth** for this
+experimental workflow. The planner pinches the cylindrical post and
+checks the attached post and box foot during the entire move. At release
+it checks the footprint and bottom height of the complete part against
+the table.
+
+For another reviewed rigid payload, author one loose SDF model with a
+single link and named box, sphere or cylinder collision elements. In the
+arm's `pick_place.compound_payloads` configuration, map the exact SDF
+model name to its unique box or cylinder grasp collider. The binding
+sets the pinch geometry. Placement and collision checks still use all
+colliders. This workflow currently covers fixed arms using measured
+simulator poses.
+
 ## What it does
 
 `urdf_pick_place.py` plans with `robot_lab_mujoco/arm_pick_place.py`, using a

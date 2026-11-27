@@ -177,7 +177,7 @@ source scripts/ssd_env.sh
 xvfb-run -a python3 scripts/qualify_urdf_arm_gui.py \
   --robot asset_elephant_myagv_pro_pro630_f100 \
   --simulator isaac --mode display --map mobile_fetch_lab_f100 \
-  --experimental --pick-place fetch_block drop_table --task-timeout 950 \
+  --experimental --pick-place fetch_block drop_table --task-timeout 1500 \
   --output "$ROBOT_LAB_RUNTIME_ROOT/f100-isaac-gui"
 ```
 

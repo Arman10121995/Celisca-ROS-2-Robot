@@ -364,6 +364,8 @@ def _dynamic_body(model):
         if (not isinstance(shape, dict) or shape["type"] not in ("box", "sphere", "cylinder")
                 or not all(math.isfinite(v) and v > 0.0 for v in shape["size"])):
             return None
+        if len(collisions) > 1:
+            shape['collision_name'] = collision.get('name', '')
         ode = _child(_child(_child(collision, "surface"), "friction"), "ode")
         if _text(ode, "mu"):
             mu = _floats(_text(ode, "mu"), 1, 0.0)[0]

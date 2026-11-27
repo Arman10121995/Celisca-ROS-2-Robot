@@ -301,21 +301,37 @@ class PickPlace(Node):
     def _world_boxes(self):
         """Keep physical obstacles separate from selectable level supports."""
         from ament_index_python.packages import PackageNotFoundError, get_package_share_directory
-        from robot_lab_mujoco.arm_pick_place import Box, MeshObstacle
+        from robot_lab_mujoco.arm_pick_place import Box, CompoundPayload, MeshObstacle
         from robot_lab_utils.sdf_world import extract_dynamic_bodies, extract_static_shapes, uri_resolver
         path = self.get_parameter('world_path').value
         self.arm_obstacles = []
         self.drive_obstacles = []
         self.compound_shapes, self.compound_poses = {}, {}
+        self.compound_payloads = {}
         self.scene_error = ''
         if not path or not os.path.isfile(path):
             return {}, {}
         sizes = {}
+        config = getattr(self, 'config', {})
+        payloads = {} if config.get('mobile') else config.get('compound_payloads', {})
         for body in extract_dynamic_bodies(path):
             shape = body['shape']
             name = body['name']
             if shape is None:
                 self.compound_shapes[name] = body['shapes']
+                if name in payloads:
+                    parts = tuple(Box(part['collision_name'], part['position'], part['orientation'],
+                                      _primitive_collision_size(part), part['type'])
+                                  for part in body['shapes'])
+                    matches = [index for index, part in enumerate(parts) if part.name == payloads[name]]
+                    if len(matches) != 1 or parts[matches[0]].shape not in ('box', 'cylinder'):
+                        raise ValueError(f'{name!r} needs a unique box or cylinder grasp collider')
+                    payload = CompoundPayload(name, (0., 0., 0.), (1., 0., 0., 0.), (), 'compound',
+                                              parts=parts, grasp_index=matches[0])
+                    payload.size = [payload.half_extent(axis) + payload.half_extent(-axis) for axis in np.eye(3)]
+                    self.compound_payloads[name] = payload
+                    sizes[name] = payload.size
+                    self.object_shapes[name] = 'compound'
                 continue
             if shape['type'] == 'box':
                 sizes[name] = list(shape['size'])
@@ -412,6 +428,8 @@ class PickPlace(Node):
             pose[3:] /= norm
             if name in self.compound_shapes:
                 compounds[name] = pose
+                if name in self.compound_payloads:
+                    truth[name] = pose.tolist()
             else:
                 position, orientation = compose((pose[:3], pose[3:]), self.object_collision_frames[name])
                 truth[name] = [*position, *orientation]
@@ -426,6 +444,8 @@ class PickPlace(Node):
 
         obstacles, reference = [], {}
         for name, shapes in self.compound_shapes.items():
+            if name == task.get('object'):
+                continue
             pose = self.compound_poses[name]
             radius = 0.
             for index, shape in enumerate(shapes):
@@ -530,6 +550,7 @@ class PickPlace(Node):
             if task else None,
             restart_required=not task and self.carried_footprint is not None,
             ready=not blocker, feedback_blocker=blocker,
+            last_completed=(task.get('log') or [None])[-1],
             last_result=self.last_result, truth_age_s=round(_now() - self.truth_at, 2) if self.truth else None),
             default=_plain)))
 
@@ -863,7 +884,9 @@ class PickPlace(Node):
         measured = self.measured()
         name = task['object']
         pose = self._object_pose(task, phase)
-        obj = Box(name, pose[:3], pose[3:], self.object_sizes[name], self.object_shapes.get(name, 'box'))
+        compound = self.compound_payloads.get(name)
+        obj = (compound.at_pose(pose[:3], pose[3:]) if compound else
+               Box(name, pose[:3], pose[3:], self.object_sizes[name], self.object_shapes.get(name, 'box')))
         base = self.base if not self.mobile else self.base_pose
         planned_joints = set(self.spec.arm_joints + self.spec.finger_joints)
         held = {c['name']: c['measured'] for c in self.state.get('channels', [])
@@ -1708,7 +1731,6 @@ class PickPlace(Node):
                         reason='object did not rise with the tool' if not passed else '',
                         **({'pad_normal_force_n': force_check['pad_normal_force_n']} if force_check else {}))
         if stage == 'retreat':
-            from robot_lab_mujoco.arm_pick_place import Box
             if 'wait_until' not in task:
                 task['wait_until'] = _now() + 1.0
                 task['rest_sample'] = pose.tolist()
@@ -1717,15 +1739,18 @@ class PickPlace(Node):
                 return None
             support = self.supports[task['support']]
             original = task['obj']
-            actual = Box(name, pose, self.truth[name][3:], original.size, original.shape)
-            half = actual.half_extent((0., 0., 1.))
+            actual = original.at_pose(pose, self.truth[name][3:])
+            half = actual.half_extent((0., 0., -1.))
             speed = float(np.linalg.norm(pose - np.asarray(task['rest_sample'])))
             on_top = abs(pose[2] - (support.top + half)) < 0.01
             inside = support.supports(actual, tolerance=.001)
             aligned = True
             if actual.shape == 'cylinder':
-                placed = Box(name, pose, task['plan']['place_orientation'], actual.size, actual.shape)
+                placed = actual.at_pose(pose, task['plan']['place_orientation'])
                 aligned = abs(float(placed.rotation()[:, 2] @ actual.rotation()[:, 2])) >= math.cos(math.radians(10.))
+            elif actual.shape == 'compound':
+                placed = actual.at_pose(pose, task['plan']['place_orientation'])
+                aligned = float(np.trace(placed.rotation().T @ actual.rotation())) >= 1. + 2. * math.cos(math.radians(10.))
             passed = on_top and inside and aligned and speed < 0.005
             return dict(passed=passed, final_pose=[round(v, 4) for v in pose], height_error_m=round(pose[2] - support.top - half, 4),
                         inside_support=inside, orientation_aligned=aligned, moved_last_s_m=round(speed, 4),

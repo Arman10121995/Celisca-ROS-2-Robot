@@ -150,6 +150,8 @@ robots:
       finger_closed: 0.0
       max_object_width: 0.075
       tool_yaw_offset: -0.785398163
+      compound_payloads:
+        pickup_stepped: pinch_post
   # Official PAL TIAGo (ROADMAP R5.9): fetch an object with the mobile base
   # and the parallel gripper. The grasp frame is gripper_grasping_frame,
   # 0.1931 m along arm_7_link z (fixed links merge into arm_7_link); the

@@ -25,7 +25,7 @@ from __future__ import annotations
 import math
 import time
 import xml.etree.ElementTree as ET
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import Dict, List, Optional, Sequence
 
 import numpy as np
@@ -127,19 +127,45 @@ class Box:
             dimensions = (self.size[0], self.size[2])
         return dict(type=self.shape, size=' '.join('%g' % (max(value, 1e-6)/2) for value in dimensions))
 
+    def at_pose(self, position, quaternion):
+        return replace(self, position=position, quaternion=quaternion)
+
+    def grasp_primitive(self):
+        return self
+
     def supports(self, obj, tolerance=0.):
         """Check the whole projected object against this level table's edges."""
         yaw = yaw_of(self.quaternion)
         c, s = math.cos(yaw), math.sin(yaw)
-        x, y = np.abs(_local(self, obj.position))
-        return (x + obj.half_extent((c, s, 0.)) <= self.size[0]*.5 + tolerance
-                and y + obj.half_extent((-s, c, 0.)) <= self.size[1]*.5 + tolerance)
+        centre = _local(self, obj.position)
+        axes = ((c, s, 0.), (-s, c, 0.))
+        return all(sign * offset + obj.half_extent(np.asarray(axis) * sign) <= limit * .5 + tolerance
+                   for offset, axis, limit in zip(centre, axes, self.size)
+                   for sign in (-1., 1.))
 
     def rests_on(self, support, height_tolerance):
         if support.shape != 'box' or support.rotation()[2, 2] < math.cos(math.radians(.5)):
             return False
-        bottom = self.position[2] - self.half_extent((0., 0., 1.))
+        bottom = self.position[2] - self.half_extent((0., 0., -1.))
         return abs(bottom - support.top) <= height_tolerance and support.supports(self, tolerance=.001)
+
+
+@dataclass
+class CompoundPayload(Box):
+    """Colliders in a single rigid model frame, with a reviewed pinch surface."""
+
+    parts: tuple[Box, ...] = ()
+    grasp_index: int = 0
+
+    def half_extent(self, direction):
+        local = self.rotation().T @ direction
+        return max(float(local @ part.position) + part.half_extent(local) for part in self.parts)
+
+    def grasp_primitive(self):
+        part = self.parts[self.grasp_index]
+        frame = self.rotation()
+        orientation = Rotation.from_matrix(frame @ part.rotation()).as_quat()[[3, 0, 1, 2]]
+        return part.at_pose(np.asarray(self.position) + frame @ part.position, orientation)
 
 
 @dataclass
@@ -240,9 +266,16 @@ class ArmScene:
                           **attributes)
         holder = ET.SubElement(world, 'body', name='pick_place_object', mocap='true',
                                pos='%g %g %g' % tuple(obj.position), quat='%g %g %g %g' % tuple(obj.quaternion))
-        # The margin makes MuJoCo report near-misses within the clearance.
-        ET.SubElement(holder, 'geom', name='object', contype='1', conaffinity='1',
-                      margin='%g' % OBJECT_CLEARANCE_M, **obj.mjcf_geometry())
+        # Retain every collider in the object's frame. Only the declared
+        # pinch primitive may touch the fingers as a planned grasp contact.
+        compound = isinstance(obj, CompoundPayload)
+        parts = obj.parts if compound else (obj,)
+        names = [f'object_part_{index}' for index in range(len(parts))] if compound else ['object']
+        for part, name in zip(parts, names):
+            local = dict(pos='%g %g %g' % tuple(part.position),
+                         quat='%g %g %g %g' % tuple(part.quaternion)) if compound else {}
+            ET.SubElement(holder, 'geom', name=name, contype='1', conaffinity='1',
+                          margin='%g' % OBJECT_CLEARANCE_M, **local, **part.mjcf_geometry())
         option = root.find('option')
         if option is None:
             option = ET.SubElement(root, 'option')
@@ -251,10 +284,11 @@ class ArmScene:
         self.data = mujoco.MjData(self.model)
         m = self.model
         self.site = mujoco.mj_name2id(m, mujoco.mjtObj.mjOBJ_SITE, 'pick_place_tcp')
-        self.object_geom = mujoco.mj_name2id(m, mujoco.mjtObj.mjOBJ_GEOM, 'object')
+        object_ids = [mujoco.mj_name2id(m, mujoco.mjtObj.mjOBJ_GEOM, name) for name in names]
+        self.object_geom = object_ids[obj.grasp_index if compound else 0]
+        self.payload_radii = {geom: min(part.size) / 2 for geom, part in zip(object_ids, parts)}
         self.object_mocap = m.body_mocapid[mujoco.mj_name2id(m, mujoco.mjtObj.mjOBJ_BODY, 'pick_place_object')]
         self.obstacles = {box.name: box for box in obstacles}
-        self.payload_radius = min(obj.size) / 2
         self.obstacle_geoms = {box.name: mujoco.mj_name2id(m, mujoco.mjtObj.mjOBJ_GEOM, 'obstacle_' + box.name)
                                for box in obstacles}
         self.floor_geoms = {self.obstacle_geoms[box.name] for box in obstacles if box.floor}
@@ -381,32 +415,39 @@ class ArmScene:
         for name, geom in self.obstacle_geoms.items():
             if geom in allowed_supports:
                 continue
-            distance = self.mj.mj_geomDistance(m, d, self.object_geom, geom, CONTACT_MARGIN_M, None)
             obstacle = self.obstacles[name]
-            if isinstance(obstacle, MeshObstacle) and distance >= 0.:
-                # Check complete containment independently of surface contact.
-                distance = obstacle.contained_depth(d.geom_xpos[self.object_geom])
-            elif distance == 0.:
-                # A coincident convex pair can yield zero from the distance query.
-                separation = np.linalg.norm(d.geom_xpos[self.object_geom] - d.geom_xpos[geom])
-                distance = separation - self.payload_radius - min(obstacle.size) / 2
-            if distance <= -CONTACT_MARGIN_M:
-                found.append(('object', 'obstacle_' + name, round(float(distance), 4)))
+            for part, radius in self.payload_radii.items():
+                distance = self.mj.mj_geomDistance(m, d, part, geom, CONTACT_MARGIN_M, None)
+                if isinstance(obstacle, MeshObstacle) and distance >= 0.:
+                    # Check complete containment independently of surface contact.
+                    distance = obstacle.contained_depth(d.geom_xpos[part])
+                elif distance == 0.:
+                    # A coincident convex pair can yield zero from the distance query.
+                    separation = np.linalg.norm(d.geom_xpos[part] - d.geom_xpos[geom])
+                    distance = separation - radius - min(obstacle.size) / 2
+                if distance <= -CONTACT_MARGIN_M:
+                    part_name = self.mj.mj_id2name(m, self.mj.mjtObj.mjOBJ_GEOM, part)
+                    found.append((part_name, 'obstacle_' + name, round(float(distance), 4)))
         for i in range(d.ncon):
             c = d.contact[i]
             g1, g2 = int(c.geom1), int(c.geom2)
             pair = {g1, g2}
-            if self.object_geom in pair:
-                other = (pair - {self.object_geom}).pop() if len(pair) > 1 else self.object_geom
-                if allow_fingers and other in self.finger_geoms:
+            parts = pair & self.payload_radii.keys()
+            if parts:
+                if parts == pair:
+                    continue
+                part = parts.pop()
+                other = (pair - {part}).pop()
+                finger_contact = allow_fingers and part == self.object_geom
+                if finger_contact and other in self.finger_geoms:
                     continue
                 resting_depth = self.held_jaw_depths.get(other)
-                if (allow_fingers and resting_depth is not None
+                if (finger_contact and resting_depth is not None
                         and c.dist >= resting_depth - CONTACT_DEPTH_EPSILON_M):
                     continue
                 if other in allowed_supports:
                     continue
-                clearance = object_clearance and not allow_fingers and other in self.robot_geoms
+                clearance = object_clearance and not finger_contact and other in self.robot_geoms
                 if c.dist > (OBJECT_CLEARANCE_M if clearance else -CONTACT_MARGIN_M):
                     continue
             elif c.dist > -CONTACT_MARGIN_M:
@@ -586,22 +627,23 @@ def plan_pick(scene: ArmScene, current: Dict[str, float], obj: Box, *, approach=
     open_f = {n: spec.finger_open for n in spec.finger_joints}
     # Fingers close along tool y, across one horizontal extent of the object.
     # Grip across each extent that fits (narrower first), facing either way.
-    sides = sorted(((float(obj.size[0]), 0.0), (float(obj.size[1]), math.pi / 2)))
-    object_yaw = yaw_of(obj.quaternion)
-    if obj.shape == 'cylinder':
-        axis = obj.rotation()[:, 2]
+    primitive = obj.grasp_primitive()
+    sides = sorted(((float(primitive.size[0]), 0.0), (float(primitive.size[1]), math.pi / 2)))
+    object_yaw = yaw_of(primitive.quaternion)
+    if primitive.shape == 'cylinder':
+        axis = primitive.rotation()[:, 2]
         if abs(axis[2]) >= math.cos(math.radians(5.)):
-            sides = [(float(obj.size[0]), k * math.pi / 4) for k in range(4)]
+            sides = [(float(primitive.size[0]), k * math.pi / 4) for k in range(4)]
         elif abs(axis[2]) <= math.sin(math.radians(5.)):
             closing = math.atan2(axis[1], axis[0]) + math.pi/2
-            sides = [(float(obj.size[0]), closing-object_yaw)]
+            sides = [(float(primitive.size[0]), closing-object_yaw)]
         else:
             raise PlanningError('Cylinder must rest upright or on its side')
     sides = [side for side in sides if spec.min_object_width <= side[0] <= spec.max_object_width]
     if not sides:
         if spec.min_object_width == 0.:
             raise PlanningError('object %.3f m wider than the gripper (%.3f m)' %
-                                (min(obj.size[:2]), spec.max_object_width))
+                                (min(primitive.size[:2]), spec.max_object_width))
         raise PlanningError('object has no grasp width in the gripper range %.3f–%.3f m' %
                             (spec.min_object_width, spec.max_object_width))
     scene.set_joints(dict(current, **open_f))
@@ -628,7 +670,8 @@ def _plan_pick_at(scene, current, obj, tool_yaw, width, approach, lift, seeds):
     spec = scene.spec
     open_f = {n: spec.finger_open for n in spec.finger_joints}
     rotation = top_down_rotation(tool_yaw)
-    centre = np.asarray(obj.position, dtype=float)
+    primitive = obj.grasp_primitive()
+    centre = np.asarray(primitive.position, dtype=float)
     grasp_point = centre.copy()            # TCP at the object's centre
     above_object = centre + [0, 0, approach]
     stages = []
@@ -655,7 +698,7 @@ def _plan_pick_at(scene, current, obj, tool_yaw, width, approach, lift, seeds):
     # Fingertips may reach below the TCP: grip higher on the object (in
     # GRASP_RAISE_STEP_M steps, keeping that much of its upper half) until
     # they clear what the object stands on.
-    half = obj.half_extent((0., 0., 1.))
+    half = primitive.half_extent((0., 0., 1.))
     raise_m = 0.0
     while True:
         try:
@@ -716,8 +759,8 @@ def plan_place(scene: ArmScene, current: Dict[str, float], obj: Box, support: Bo
     rotation = top_down_rotation(tool_yaw)
     xy = support.position[:2] if place_xy is None else place_xy
     orientation = Rotation.from_matrix(rotation @ scene.attached[1]).as_quat()[[3, 0, 1, 2]]
-    placed = Box(obj.name, [float(xy[0]), float(xy[1]), 0.], orientation, obj.size, obj.shape)
-    placed.position[2] = support.top + placed.half_extent((0., 0., 1.))
+    placed = obj.at_pose([float(xy[0]), float(xy[1]), 0.], orientation)
+    placed.position[2] = support.top + placed.half_extent((0., 0., -1.))
     if not support.supports(placed):
         raise PlanningError('The object projection exceeds the selected support')
     place_centre = np.asarray(placed.position)

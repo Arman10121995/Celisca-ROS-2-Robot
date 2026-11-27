@@ -10,11 +10,25 @@ to the maps, robots and simulator versions in their receipts.
 | Ground mobility | Bumperbot and Labbot 16/16 on the four-backend navigation repeat. Four-wheel steering and mecanum 20/20. Car matrix 11/12. | More maps and seeds, actor maps, SLAM and 3D SLAM repeats, and the Isaac Ackermann goal abort. |
 | Legged | A1 and the recovered G1 policy passed 6/6 apiece on the November navigation course. | Go2 forward-arc clearance and stairs, B2 mission reliability, BHL balance and walking, and unqualified backends. |
 | Aerial | The X500 passed the manual GUI screen in all eight sampled Gazebo worlds after the Terrain Heightfield rerun. The moving-walker screen passed 3/3. | Remaining installed worlds, additional flight backends and larger formations. |
-| Manipulation | Panda cube 4/4, can 3/3, Shadow Hand 2/2, and TIAGo RGB-D fetch 2/2. The F100 completed MuJoCo Display and Navigation fetches. Isaac lifted its block, and PyBullet carried its block to the drop table. Stretch completed the camera-guided descent through gripper occlusion. | F100 final docking and release in PyBullet, carry and release in Isaac, Gazebo F100 linkage, Stretch sustained lift and transport, and compound payload grasps. |
+| Manipulation | Panda cube 4/4, can 3/3, Shadow Hand 2/2, and TIAGo RGB-D fetch 2/2. The F100 completed MuJoCo Display and Navigation fetches. In Isaac it entered the final back-away stage. In PyBullet it carried the block to the drop table. Stretch completed the camera-guided descent through gripper occlusion. | F100 final docking and release in PyBullet, terminal clearance in Isaac, Gazebo F100 linkage, Stretch sustained lift and transport, and physical qualification of the stepped compound. |
 | Fleet, swarm and marine | Fleet Ward 3/3 and fleet-lift transports 3/3. Gazebo, MuJoCo and PyBullet concurrent Nav2 jobs 6/6. USV, AUV and ROV each passed the four-backend 8/8 round. | Open-RMF conflict/lift repeats, Isaac concurrency, swarm flocking and larger aerial formations, and broader marine and multi-leg missions. |
 | Release | Scoped runtime receipts and the current CI results are available. | Complete matrix, clean-host reproduction, comparison tutorials and optional hardware trials. |
 
 [Detailed implementation and validation queues](../../ROADMAP.md).
+
+November 27 Codex: an experimental normal Isaac GUI F100 trial reached
+the final `clear` stage, after the carry and supported-release gates. The
+950 s wall budget stopped the qualifier before the back-away stage yielded
+a terminal result. The qualifier now records its resolved profile and
+observed stage transitions separately from mission acceptance.
+[Isaac terminal-timeout receipt](evidence/r143-pro630-f100-2026-11-20/isaac-gui-final-clearance-timeout-2026-11-27.json).
+
+November 27 Codex: the installed URDF Panda GUI offers the **Stepped
+part** workcell variant. A compiled pick/place plan used the declared
+post as the grasp surface and rejected a destination that would only
+support the post. A contact test detected the separate foot collider.
+The first whole-robot GUI trial remains pending.
+[Procedure](../tutorials/urdf-arm-pick-place.md#pick-a-stepped-part).
 
 November 21 Codex: the F100 now offers Isaac Display. Its normal GUI
 reached both presets on `nav_empty`, with all five passive followers,

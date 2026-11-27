@@ -58,6 +58,35 @@ def test_plan_from_home_reaches_grasp_and_place_without_collision(panda):
     assert plan['grasp_width_m'] == pytest.approx(0.04)
 
 
+def test_compound_grasp_uses_the_post_and_places_the_whole_stepped_part(panda):
+    from robot_lab_mujoco.arm_pick_place import CompoundPayload
+    from robot_lab_utils.sdf_world import extract_dynamic_bodies
+
+    world = WORLD.parents[2] / 'arm_pick_place_compound/worlds/arm_pick_place_compound.world'
+    body, = extract_dynamic_bodies(world)
+    identity = (1., 0., 0., 0.)
+    parts = tuple(Box(shape['collision_name'], shape['position'], shape['orientation'], size, shape['type'])
+                  for shape, size in zip(body['shapes'], ((.068, .061, .020), (.04, .04, .068))))
+    obj = CompoundPayload(body['name'], body['position'], identity, (.068, .061, .087), 'compound',
+                          parts=parts, grasp_index=1)
+    scene, spec, obstacles, _, profile = scene_for(panda, obj)
+    home = {n: profile['articulation']['home'][n] for n in spec.arm_joints}
+    support = next(box for box in obstacles if box.name == 'place_table')
+    plan = plan_pick_place(scene, home, obj, support, seeds=[home])
+    assert plan['grasp_width_m'] == pytest.approx(.04)
+    assert plan['place_centre'][2] == pytest.approx(.322, abs=.0001)
+    assert plan['stages'][-1]['stage'] == 'retreat'
+    narrow = Box('small support', support.position, identity, (.05, .05, support.size[2]))
+    assert narrow.supports(obj.grasp_primitive().at_pose(support.position, identity))
+    assert not narrow.supports(obj.at_pose(plan['place_centre'], identity))
+
+    foot_obstacle = Box('stop', (.531, -.25, .31), identity, (.01, .01, .01))
+    blocked = ArmScene(panda[1], spec, [foot_obstacle], obj)
+    hits = blocked.collisions(allow_fingers=True)
+    assert any(part == 'object_part_0' and obstacle == 'obstacle_stop' for part, obstacle, _ in hits)
+    assert not any(part == 'object_part_1' and obstacle == 'obstacle_stop' for part, obstacle, _ in hits)
+
+
 def test_pick_lift_exempts_only_the_payloads_starting_support(panda, monkeypatch):
     from robot_lab_mujoco.arm_pick_place import plan_pick
 

@@ -124,7 +124,7 @@ Work top to bottom. Each line links to its task.
 | Order | Task | Remaining implementation (short) | State |
 |---|---|---|---|
 | I0 | [R14.2](#r142--elephant-robotics-myagv-pro) myAGV Pro | Done: Gazebo source variant plus portable roller variant driving in MuJoCo, PyBullet and Isaac; Nav2 measured in Gazebo and PyBullet | implemented |
-| I0a | [R14.3](#r143--elephant-myagv-pro-mobile-manipulator) Elephant mobile manipulator | Bare Pro630 drive and joints measured on MuJoCo/PyBullet/Isaac. F100 completed MuJoCo Display and Navigation GUI fetches on the short-block map. The GUI offers experimental loaded fetch on PyBullet and Isaac. Supported release on both backends and the Gazebo linkage remain | partial |
+| I0a | [R14.3](#r143--elephant-myagv-pro-mobile-manipulator) Elephant mobile manipulator | Bare Pro630 drive and joints measured on MuJoCo/PyBullet/Isaac. F100 completed MuJoCo Display and Navigation GUI fetches on the short-block map. The GUI offers experimental loaded fetch on PyBullet and Isaac. PyBullet supported release, Isaac final clearance and the Gazebo linkage remain | partial |
 | I0b | [R14.4](#r144--contributor-integration-course) Integration guide chapters | Done 2026-11-13: beginner course part 2 (chapters 9–12) in docs/learn and the GUI docs library; clean-host walkthrough remains | implemented |
 | I1 | [R13.2](#r132--vacuum-carpets-and-mopping) Vacuum carpets and mopping | Done 2026-11-10 (Gazebo mop + rug run passes) | implemented |
 | I2 | [R13.3](#r133--vacuum-camera-obstacle-recognition) Vacuum camera obstacles | Done-when met (ideal and learned). 11-17 retrain 3 installed (fewer pet/cable false positives, pet recall 54 → 60 %); learned zone job passes again (0 contacts, 0.286 m). Sock false positives remain; repeats/held-out room are V1 | implemented |
@@ -134,7 +134,7 @@ Work top to bottom. Each line links to its task.
 | I4b | [R6.8](#r68--real-world-area-import-from-a-globe) Real-world area import | Done 2026-11-13: globe picker (CesiumJS + OSM), Terrain Tiles + OSM buildings/roads/trees/water, SUMO people/traffic; support and roof heights measured on four simulators | implemented |
 | I5 | [R5.11](#r511--drone-moving-obstacles-and-other-drone-backends) Drone moving obstacles | Done 2026-11-13: Kalman tracks, predicted sweeps, walkway look-both-ways and overflight, evasion, sensor-loss hold/land, EKF heading/height gate; 2 passing flights past walkers (Gazebo); PX4 + MuJoCo plant: takeoff, 5 m route and landing | implemented |
 | I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | TIAGo fetch, Nav2 transit and RGB-D grasp workflows measured on MuJoCo and PyBullet. Manual tool-pose planning measured in the MuJoCo GUI. Stretch reached an RGB-D cylinder through gripper occlusion and briefly obtained both pad contacts (11-27). Remaining: sustained Stretch grasp/lift/release and transport, Isaac fetch, general perception and additional backend planners | partial |
-| I7 | [R5.7](#r57--manipulators-and-motion-planning) Arms | Done-when met 11-17: URDF Panda GUI pick → place on PyBullet and MuJoCo (one run each). Native Panda box tasks on MuJoCo. 11-17: URDF Panda pick and place also passes on Isaac and Gazebo (all four backends); UR5/UR10/YuMi joint control on Gazebo. 11-18: upright-cylinder pick and place on MuJoCo, PyBullet and Gazebo. Remaining: compound/mesh geometry, fixed-arm perception, other coupled mechanisms | partial |
+| I7 | [R5.7](#r57--manipulators-and-motion-planning) Arms | Done-when met 11-17: URDF Panda GUI pick → place on PyBullet and MuJoCo (one run each). Native Panda box tasks on MuJoCo. 11-17: URDF Panda pick and place also passes on Isaac and Gazebo (all four backends); UR5/UR10/YuMi joint control on Gazebo. 11-18: upright-cylinder pick and place on MuJoCo, PyBullet and Gazebo. 11-27: planner and GUI fixture for a stepped rigid compound. Mesh payloads, compound perception and other coupled mechanisms remain | partial |
 | I8 | [R5.8](#r58--robot-hands-and-grippers) Hands | Done-when met 11-19: normal GUI grasp → lift 5 cm → hold → return → supported release passes for Robotiq 2F-85 (both variants, support stage), UMI (source axis) and DEX-EE (synthesized tripod, 2/2); parallel-jaw measured in R5.7/R5.9. 11-20: new Wonik Allegro and Shadow Hand (coupled tendons) pass the same cycle (2/2 each). Arm transport and other backends remain | implemented |
 | I9 | [R10.2](#r102--fleet-management-and-open-rmf) Fleet / Open-RMF | Done 2026-11-14: shared-zone reservations (map passages, doors, docks), cycle breaker, recovery drive-out, RMF energy from a drivetrain calibration; two crossing runs pass (native and RMF). 11-18: doors, docks and energy without a lift (`fleet_ward`: door crossing, docking and charging pass). Larger fleets are V7 | implemented |
 | I10 | [R10.3](#r103--swarm-robotics) Swarms | Done 2026-11-14: ROS2swarm port of per-member scan-only behaviours, scan-sensed cooperative coverage, ground/air member-loss replanning; dispersion and coverage-with-loss measured; aggregation gathers three Bumperbots in `swarm_arena` (11-18); 3–4 drone flight is validation | implemented |
@@ -500,8 +500,13 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
     authored frame. The MuJoCo compiler, PyBullet physics and render clients,
     and an Isaac USD stage fixture preserve mass and geometry. The arm
     executor now snapshots measured collider poses for collision checks
-    and stops if a compound moves or loses feedback during a task. Planning
-    a grasp of the compound itself remains open.
+    and stops if a compound moves or loses feedback during a task.
+  - 2026-11-27: the URDF Panda can plan a fixed-arm pick/place of the
+    **Stepped part** from the explicitly bound pinch post. The full compound
+    participates in collision checks and the supported-release check uses
+    the measured body pose and all authored colliders. The compiled planner
+    rejects a destination too narrow for the foot and detects non-grasp-part
+    collisions. Live trials, arbitrary mesh shapes and mobile transport remain.
   - 2026-11-22: the MuJoCo fixed-arm workcell publishes a calibrated
     overhead RGB-D camera. The existing pick-and-place panel can plan a
     Panda cube grasp from three fresh camera estimates. The normal GUI
@@ -509,7 +514,7 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
     The estimate was 1.1 mm from simulator truth. The arm lifted the cube
     96.2 mm, then released and retreated with the cube on the destination.
     [GUI receipt](docs/status/evidence/r57-urdf-arm-pick-place-2026-11-17/mujoco-gui-workcell-rgbd-2026-11-22.json).
-  - compound payload geometry, other fixed-arm perception backends and
+  - broader compound and mesh payload geometry, other fixed-arm perception backends and
     additional gripper-specific pipelines;
   - coupled mechanisms beyond gear-coupled fingers (mimic chains and
     four-bar joints);
@@ -1889,6 +1894,10 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
   the carry and place remain unfinished
   ([runs](docs/status/evidence/r143-pro630-f100-2026-11-20/README.md)).
   [GUI evidence](docs/status/evidence/r143-pro630-f100-2026-11-20/isaac-gui-gripper-confirmed.json).
+  **2026-11-27:** the normal experimental GUI reached `clear` after the
+  carry, placement and supported-release gates. The 950 s wall budget
+  interrupted the final back-away before a terminal result was recorded.
+  [Trial receipt](docs/status/evidence/r143-pro630-f100-2026-11-20/isaac-gui-final-clearance-timeout-2026-11-27.json).
 - The normal GUI and command line load the backend-specific fetch profiles
   when experimental assets are enabled. PyBullet selects the loaded-drive
   and coupling settings. Isaac selects on-demand RGB-D and live grasp

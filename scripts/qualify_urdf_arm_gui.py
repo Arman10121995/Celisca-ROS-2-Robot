@@ -132,7 +132,8 @@ def main():
                 report['task_stages'][-1][key] == value for key, value in stage.items()):
             return
         stage.update(wall_seconds=round(time.monotonic() - started_at, 2),
-                     message=page.pick_state.get('message'))
+                     message=page.pick_state.get('message'),
+                     last_completed=page.pick_state.get('last_completed'))
         report['task_stages'].append(stage)
         with (args.output / 'task-stages.jsonl').open('a', encoding='utf-8') as stream:
             stream.write(json.dumps(stage) + '\n')

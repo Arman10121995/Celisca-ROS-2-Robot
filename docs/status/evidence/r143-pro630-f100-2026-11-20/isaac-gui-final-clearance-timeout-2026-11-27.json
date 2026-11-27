@@ -1,0 +1,74 @@
+{
+  "robot": "asset_elephant_myagv_pro_pro630_f100",
+  "simulator": "isaac",
+  "mode": "display",
+  "map": "mobile_fetch_lab_f100",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=display map_name:=mobile_fetch_lab_f100 robot_model:=asset_elephant_myagv_pro_pro630_f100 simulator:=isaac gui:=false perception:=none allow_experimental_assets:=true",
+  "model_sha256": "bf9ef87b82586316cb4ff59956cd87179c1f681bd352f46777468aebd2bb082d",
+  "passed": false,
+  "launch_returncode": 0,
+  "date": "2026-11-27",
+  "head_at_launch": "305da3e2",
+  "scope": "Normal Robot Lab GUI with a private Isaac experimental configuration.",
+  "raw_report": "/workspace/molar/robot_lab_runtime/pro630-gripper-20261120/isaac-loaded-gui-20261127-HWPoVp/gui/report.json",
+  "raw_sha256": "2c2845f51f0f96c432866f2bbed9421006e1ae43bb7c6e28a22e731a8ee85873",
+  "pick_place_params": "/workspace/molar/robot_lab_runtime/pro630-gripper-20261120/isaac-loaded-gui-20261127-HWPoVp/runtime/tmp/launch_params_yn62f4at",
+  "params_sha256": "f0d3c7d10513fa795a2c05e523ec8d7099de5eafacb7fc4123660291014b7b39",
+  "world_sha256": "79a169bd5c0dc05f8ec1a7d2f744df8b05cd4b24f5642d3af77cd4bb4448e7f9",
+  "mobile_options": {
+    "align_live_grasp": true,
+    "base_radius": 0.37,
+    "dock_position_tolerance": 0.005,
+    "nav_base_footprint": [
+      [
+        0.29,
+        0.205
+      ],
+      [
+        0.29,
+        -0.205
+      ],
+      [
+        -0.29,
+        -0.205
+      ],
+      [
+        -0.29,
+        0.205
+      ]
+    ],
+    "place_inset": 0.06,
+    "place_reach": 0.445,
+    "reach": 0.47,
+    "reanchor_before_descent": true
+  },
+  "qualifier_timeout_wall_s": 950,
+  "qualifier_error": "TimeoutError('task finished')",
+  "last_gui_pick_state": {
+    "schema": "robot_lab.pick_place_state.v1",
+    "phase": "executing",
+    "stage": "clear",
+    "message": "Phase clear",
+    "objects": [
+      "fetch_block"
+    ],
+    "supports": [
+      "drop_table",
+      "pickup_table"
+    ],
+    "mobile": true,
+    "pose_sources": [
+      "truth"
+    ],
+    "nav2_available": false,
+    "rgbd_objects": [],
+    "pose_source": "truth",
+    "drive_phase": "clear",
+    "restart_required": false,
+    "ready": true,
+    "feedback_blocker": "",
+    "last_result": null,
+    "truth_age_s": 0.0
+  },
+  "evidence_scope": "The observed clear stage follows the carry, placement, and supported-release gates. The wall limit interrupted the back-away stage before a terminal result or clearance measurement was recorded."
+}

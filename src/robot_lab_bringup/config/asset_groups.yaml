@@ -258,6 +258,7 @@ maps:
       - {id: arm_pick_place_lab, label: Cube}
       - {id: arm_pick_place_can, label: Upright cylinder}
       - {id: arm_pick_place_can_side, label: Cylinder on its side}
+      - {id: arm_pick_place_compound, label: Stepped part}
   - id: mobile_fetch_lab
     name: Mobile fetch lab
     preferred: mobile_fetch_lab
