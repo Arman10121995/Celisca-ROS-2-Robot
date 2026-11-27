@@ -1,0 +1,147 @@
+{
+  "robot": "menagerie_hello_robot_stretch",
+  "map": "mobile_manipulation_lab_cylinder",
+  "simulator": "mujoco",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=menagerie_hello_robot_stretch simulator:=mujoco use_sim_time:=true map_name:=mobile_manipulation_lab_cylinder world_package:=robot_lab_maps world_name:=mobile_manipulation_lab_cylinder world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/mobile_manipulation_lab_cylinder/a021c7de3b429c0d5d0679457b0b162a1e950ed64a88da47dfa50be051784623/worlds/mobile_manipulation_lab_cylinder.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/mobile_manipulation_lab_cylinder/a021c7de3b429c0d5d0679457b0b162a1e950ed64a88da47dfa50be051784623/maps/map.yaml mode:=display gui:=false perception:=none enable_native_mobile:=true native_task:=display",
+  "passed": false,
+  "scene_id": "6b6c35e2c614f911f04dcc8d7599b0abcfb234c4bc149218e66576b3c69f81f0",
+  "source_sha256": "4f33408242b90acbe4ca0f4b544ca5efae4f423c92ef71358f0977ec0b03a316",
+  "panel_selected": true,
+  "launch_returncode": 0,
+  "events": [
+    {
+      "state": "gripping",
+      "step": 1,
+      "sim_time": 10.100000000000042,
+      "reason": "Waiting for measured source gripper opening/contact",
+      "object_observation": {
+        "stamp": 10.100000000000042,
+        "relative": [
+          0.17781732850835905,
+          0.14072807954477068,
+          0.14707070268437697
+        ],
+        "left_force": 0.0,
+        "right_force": 0.0,
+        "supported": true,
+        "speed": 0.0002696628783564494
+      },
+      "gripper_operation": "open"
+    },
+    {
+      "state": "waiting_for_settle",
+      "step": 2,
+      "sim_time": 11.20000000000041,
+      "reason": "Waiting for measured stopped plant before next step",
+      "perception_target": {
+        "object": "environment_pickup_cylinder",
+        "type": "cylinder",
+        "size": [
+          0.035,
+          0.035,
+          0.06
+        ],
+        "position": [
+          -4.219972834107466e-05,
+          -0.6199572086334229,
+          0.5299098245870313
+        ],
+        "orientation_wxyz": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "pose_reference": "collision_cylinder_center",
+        "position_std_bound_m": 0.0070162441371799025,
+        "observed_top_size_m": [
+          0.035070788115262985,
+          0.035070788115262985
+        ],
+        "top_points": 316,
+        "yaw_symmetry_order": null,
+        "scope": "Known-size upright colored cylinder; declared depth/pixel bound, not calibrated covariance",
+        "observation_id": "2decd1449607b9edd7bd0c8e72ef2ac8c580fb439687efa8aa1adf08227a610f"
+      },
+      "pose_source": "rgbd_primitive_top",
+      "camera_approach_reuse_age_s": null
+    },
+    {
+      "state": "waiting_for_settle",
+      "step": 3,
+      "sim_time": 22.25999999999854,
+      "reason": "Waiting for measured stopped plant before next step",
+      "perception_target": {
+        "object": "environment_pickup_cylinder",
+        "type": "cylinder",
+        "size": [
+          0.035,
+          0.035,
+          0.06
+        ],
+        "position": [
+          -4.219972834107466e-05,
+          -0.6199572086334229,
+          0.5299098245870313
+        ],
+        "orientation_wxyz": [
+          1.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "pose_reference": "collision_cylinder_center",
+        "position_std_bound_m": 0.0070162441371799025,
+        "observed_top_size_m": [
+          0.035070788115262985,
+          0.035070788115262985
+        ],
+        "top_points": 316,
+        "yaw_symmetry_order": null,
+        "scope": "Known-size upright colored cylinder; declared depth/pixel bound, not calibrated covariance",
+        "observation_id": "2decd1449607b9edd7bd0c8e72ef2ac8c580fb439687efa8aa1adf08227a610f"
+      },
+      "pose_source": "rgbd_primitive_top",
+      "camera_approach_reuse_age_s": 11.239999999998542
+    },
+    {
+      "state": "gripping",
+      "step": 4,
+      "sim_time": 31.87999999999321,
+      "reason": "Waiting for measured source gripper opening/contact",
+      "object_observation": {
+        "stamp": 31.87999999999321,
+        "relative": [
+          0.03747249633121714,
+          0.006926883268453503,
+          0.016632039159202503
+        ],
+        "left_force": 0.1545225103860384,
+        "right_force": 0.11047193099089053,
+        "supported": true,
+        "speed": 0.0002604011339381715
+      },
+      "gripper_operation": "close"
+    },
+    {
+      "state": "failed",
+      "step": 4,
+      "sim_time": 32.37999999999361,
+      "reason": "Opposing object contacts lost during generated reach"
+    }
+  ],
+  "artifacts": {
+    "report.json": {
+      "path": "/workspace/molar/robot_lab_runtime/pro630-gripper-20261120/stretch-camera-occlusion-20261127-2BlU0H/report.json",
+      "sha256": "586d3f7580012c402b81e669b85a45db4e7fb4edd43f00cace4ba9952d71bc70"
+    },
+    "20261127-150457-31258f7120cb4fde8fb6966886ea1a89.jsonl": {
+      "path": "/workspace/molar/robot_lab_runtime/mobile-tasks/20261127-150457-31258f7120cb4fde8fb6966886ea1a89.jsonl",
+      "sha256": "e7b467ad401f39dc9098d4e68610bdebbf5a1cc74c4997e1c84c2ba745160ee5"
+    },
+    "gui-output.log": {
+      "path": "/workspace/molar/robot_lab_runtime/pro630-gripper-20261120/stretch-camera-occlusion-20261127-2BlU0H/gui-output.log",
+      "sha256": "f89e9ee3cb7bb76572939f97715616d9056728bf2d684ea80cac6274e94953e1"
+    }
+  }
+}

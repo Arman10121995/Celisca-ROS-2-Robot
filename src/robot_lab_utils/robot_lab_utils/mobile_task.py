@@ -79,6 +79,14 @@ def validate_task(document, source_sha256, scene_id, channels, allow_navigation)
                 if not all(map(math.isfinite, offset)) or max(map(abs, offset)) > .5:
                     raise ValueError('Reach offsets must be finite and within 0.5 m')
                 step['offset'] = offset
+                if 'reuse_camera_on_occlusion' in step:
+                    previous = output[-1] if output else {}
+                    if (step['reuse_camera_on_occlusion'] is not True
+                            or step.get('pose_source') not in CAMERA_POSE_SOURCES or any(offset)
+                            or previous.get('kind') != 'reach_object' or not any(previous['offset'])
+                            or any(previous.get(key) != step.get(key) for key in
+                                   ('object', 'left_body', 'right_body', 'pose_source'))):
+                        raise ValueError('Occlusion reuse requires the preceding camera approach for the same object and fingers.')
                 if 'support_geom' in step:
                     if ('target_xyz' in step or 'orientation_wxyz' in step
                             or step.get('pose_source', 'native_truth') != 'native_truth'

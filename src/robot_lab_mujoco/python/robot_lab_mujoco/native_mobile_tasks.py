@@ -31,6 +31,9 @@ from robot_lab_utils.object_custody import ObjectCustody
 from robot_lab_utils.object_estimates import CAMERA_POSE_SOURCES, ObjectEstimates
 
 
+CAMERA_APPROACH_MAX_AGE_S = 20.
+
+
 class NativeMobileTasks:
     def __init__(self, node):
         self.node, self.mobile, self.arm = node, node.mobile, node.articulation
@@ -64,6 +67,7 @@ class NativeMobileTasks:
                     self.object_candidates.append(name)
         self.reach_worker, self.reach_result = None, None
         self.reach_orientation = None
+        self.camera_approach = None
         self.gripped_step, self.grip_lost_since = None, None
         self.payload_body, self.gripped_body, self.payload_confirmed = None, None, False
         self.custody, self.object_outcome, self.object_measurement = None, 'unassessed', {}
@@ -259,6 +263,7 @@ class NativeMobileTasks:
                 raise ValueError('A unique operator task ID is required.')
             self.custody, self.object_outcome, self.object_measurement = None, 'unassessed', {}
             self.released_support = None
+            self.camera_approach = None
             steps = validate_task(request.get('task'), self.arm.source_sha256, self.scene_id,
                 self.arm.channels, self.node.get_parameter('native_task').value == 'nav')
             for step in steps:
@@ -312,6 +317,7 @@ class NativeMobileTasks:
 
     def cancel(self, reason, failed=False):
         self.reach_orientation = None
+        self.camera_approach = None
         was_active = self.active()
         self.steps = None
         self.generation += 1
@@ -343,6 +349,35 @@ class NativeMobileTasks:
                 mask[index] = True  # blocked by measured opposing object contacts
         return mask
 
+    def camera_target(self, step, obj):
+        """Reuse a verified approach observation through gripper occlusion."""
+        source, name = step['pose_source'], step['object']
+        estimates = self.perception_estimates[source]
+        data = self.node.data
+        now, identity = float(data.time), self.estimate_identity()
+        key = (source, name, step['left_body'], step['right_body'])
+        previous, self.camera_approach = self.camera_approach, None
+        if not estimates.fresh(identity, now) or name in estimates.targets or not step.get('reuse_camera_on_occlusion'):
+            target = estimates.get(name, identity, now)
+            self.camera_approach = dict(key=key, index=self.index, stamp=estimates.stamp, target=target,
+                                        xyz=data.xpos[obj].copy(), quat=data.xquat[obj].copy(), base_pose=self.pose())
+            return target, None
+        if previous is None or previous['key'] != key or previous['index'] + 1 != self.index:
+            raise ValueError('The occluded pickup needs a matching camera approach in this task')
+        age = now - previous['stamp']
+        if not 0 <= age <= CAMERA_APPROACH_MAX_AGE_S:
+            raise ValueError('The occluded pickup exceeded the camera approach observation window')
+        base = self.pose()
+        previous_base = previous['base_pose']
+        angle = base[2] - previous_base[2]
+        if (math.dist(base[:2], previous_base[:2]) > .01
+                or abs(math.atan2(math.sin(angle), math.cos(angle))) > .02
+                or self.mobile.moving()
+                or math.dist(data.xpos[obj], previous['xyz']) > .005
+                or abs(float(data.xquat[obj] @ previous['quat'])) < math.cos(math.radians(1.5))):
+            raise ValueError('Base or object moved after the last visible camera approach')
+        return previous['target'], age
+
     def begin_reach(self, step):
         source=step.get('pose_source','native_truth')
         if 'support_geom' in step:
@@ -350,10 +385,10 @@ class NativeMobileTasks:
             step = dict(step, target_xyz=target.tolist(), keep_orientation=True)
             self.record(support_geometry=step['support_geom'], pad_target_m=step['target_xyz'])
         elif source in CAMERA_POSE_SOURCES:
-            observed=self.perception_estimates[source].get(step['object'],self.estimate_identity(),float(self.node.data.time))
             obj,_=self.object_bodies(step);model=self.node.model;mj=self.node.mujoco
             if obj in (self.gripped_body,self.payload_body):
                 raise ValueError('Camera object-relative targets require an unheld object; use an explicit carry/lift target')
+            observed, reuse_age = self.camera_target(step, obj)
             geoms=[g for g in range(model.ngeom) if model.geom_bodyid[g]==obj
                    and (model.geom_contype[g] or model.geom_conaffinity[g])]
             if len(geoms) != 1:
@@ -375,7 +410,8 @@ class NativeMobileTasks:
             offset=rotation.apply(model.geom_pos[geom]) if source=='aruco_pnp' else np.zeros(3)
             step['target_xyz']=(np.asarray(observed['position'])+offset
                                 +np.asarray(step.get('offset',[0.,0.,0.]))).tolist()
-            self.record(perception_target=observed,pose_source=source)
+            self.record(perception_target=observed, pose_source=source,
+                        camera_approach_reuse_age_s=reuse_age)
         self.reach_orientation = None
         if self.reach_worker is not None and self.reach_worker.is_alive():
             raise ValueError('Previous reach planner is still stopping; retry after its bounded deadline')
@@ -575,11 +611,18 @@ class NativeMobileTasks:
                     self.halt_base()
                     observation = self.measure_object(step)
                     self.object_measurement = observation
+                    control = self.grip_index
+                    rate = abs(self.arm.measured_rates()[control])
                     if step['operation']=='close':
-                        ready = min(observation['left_force'],observation['right_force'])>=.1
+                        # The pads can both touch while the close command is
+                        # still ramping. Transfer ownership after source
+                        # compression has actually reached its hold command.
+                        ready = (min(observation['left_force'], observation['right_force']) >= .1
+                                 and abs(self.arm.commanded[control] - self.arm.target[control]) < 1e-5
+                                 and rate <= .005)
                     else:
-                        ready = (abs(self.arm.measured_controls()[self.grip_index]-self.arm.target[self.grip_index])<=.002
-                                 and abs(self.arm.measured_rates()[self.grip_index])<=.005
+                        ready = (abs(self.arm.measured_controls()[control]-self.arm.target[control])<=.002
+                                 and rate<=.005
                                  and max(observation['left_force'],observation['right_force'])<.1)
                     if self.mobile.moving():
                         self.cancel('Base moved during gripper operation',failed=True)
@@ -592,7 +635,9 @@ class NativeMobileTasks:
                             self.payload_body = self.gripped_body = self.object_bodies(step)[0]
                             self.gripped_step, self.grip_lost_since = dict(step), None
                             self.payload_confirmed = False
-                        self.record(gripper_operation=step['operation'],object_observation=observation)
+                        self.record(gripper_operation=step['operation'], object_observation=observation,
+                                    grip_command=float(self.arm.commanded[control]),
+                                    grip_target=float(self.arm.target[control]), grip_rate=rate)
                         self.advance()
                 elif phase == 'checking_object':
                     self.halt_base()
@@ -643,6 +688,8 @@ class NativeMobileTasks:
             elif self.grip_lost_since is None:
                 self.grip_lost_since = observation['stamp']
             elif observation['stamp']-self.grip_lost_since>=.25:
+                self.object_measurement = observation
+                self.record(object_observation=observation, object_condition='grip_lost')
                 self.gripped_body, self.payload_confirmed = None, False
                 self.cancel('Opposing object contacts lost during generated reach',failed=True)
         if (self.active() and self.custody is not None
@@ -660,19 +707,20 @@ class NativeMobileTasks:
                 self.object_outcome = 'custody_lost'
                 self.record(object_observation=observed, object_condition=self.object_outcome)
                 self.cancel('Measured object support/contact/slip changed during carry', failed=True)
+        identity = self.estimate_identity()
+        sim_time = float(self.node.data.time)
         self.publisher.publish(String(data=json.dumps(dict(self.state,
             plant_id=self.arm.plant_id, source_sha256=self.arm.source_sha256, scene_id=self.scene_id,
             physical_pose=self.pose(), active=self.active(), nav_cancel_pending=bool(self.pending or self.handle),
             navigation_available=self.node.get_parameter('native_task').value == 'nav' and self.client.server_is_ready(),
             object_candidates=self.object_candidates, finger_candidates=self.finger_candidates,
             support_candidates=sorted(self.support_candidates),
-            perception_objects=(list(self.object_estimates.targets) if time.monotonic()-self.object_estimates.received<1.
-                and -.05<=float(self.node.data.time)-getattr(self.object_estimates,'stamp',-math.inf)<=.5 else []),
+            perception_objects=(list(self.object_estimates.targets)
+                if self.object_estimates.fresh(identity, sim_time) else []),
             perception_error=self.perception_error,
             perception_errors={source:store.reason for source,store in self.perception_estimates.items()},
             perception_sources={source:list(store.targets) for source,store in self.perception_estimates.items()
-                if store.identity==self.estimate_identity() and time.monotonic()-store.received<1.
-                and -.05<=float(self.node.data.time)-getattr(store,'stamp',-math.inf)<=.5},
+                if store.fresh(identity, sim_time)},
             payload_name=(self.node.mujoco.mj_id2name(self.node.model, self.node.mujoco.mjtObj.mjOBJ_BODY, self.payload_body)
                           if self.payload_body is not None else ''),
             costmap_footprint_consumers=sorted(self.node.sensors.footprint_receipts.received),

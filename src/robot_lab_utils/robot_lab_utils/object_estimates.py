@@ -14,6 +14,7 @@ class ObjectEstimates:
     def __init__(self,pose_source='aruco_pnp'):
         if pose_source not in CAMERA_POSE_SOURCES:raise ValueError('Unknown camera pose source')
         self.pose_source=pose_source;self.targets={};self.received=-math.inf;self.identity=None
+        self.stamp = -math.inf
         self.reason='No observation received; check map bindings and camera'
 
     def receive(self,record,identity,now):
@@ -49,8 +50,12 @@ class ObjectEstimates:
         self.reason=str(record.get('reason') or ('; '.join(str(k)+': '+str(v) for k,v in rejected.items())
             if isinstance(rejected,dict) else '') or ('' if targets else 'No matching visible object'))[:1024]
 
+    def fresh(self, identity, now):
+        return (self.identity == identity and time.monotonic() - self.received <= 1.
+                and -.05 <= now - self.stamp <= .5)
+
     def get(self,name,identity,now):
-        if self.identity!=identity or time.monotonic()-self.received>1. or not -.05<=now-self.stamp<=.5:
+        if not self.fresh(identity, now):
             raise ValueError('Fresh source/scene-bound camera observation required')
-        if name not in self.targets:raise ValueError('Selected object marker is not visible')
+        if name not in self.targets:raise ValueError('Selected object is not visible in the camera')
         return copy.deepcopy(self.targets[name])

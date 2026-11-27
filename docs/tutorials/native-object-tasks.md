@@ -38,7 +38,10 @@ arm/hand tasks. Run the autofilled command.
 
 For configured printed boxes, the task builder also accepts
 [camera-derived object targets](camera-object-targets.md). Simulator geometry
-remains the default; selecting Camera fiducials never enables a truth fallback.
+remains the default. A camera pick recipe can reuse its successful approach
+observation for the following descent when the gripper blocks the view. The
+camera must still publish fresh observations for the same scene, and the
+base and object must remain within their measured motion tolerances.
 
 In the Arm/Hand native controls, find the mobile task panel. Select
 `environment_pickup_cube` and the two `rubber_tip_left` / `rubber_tip_right`

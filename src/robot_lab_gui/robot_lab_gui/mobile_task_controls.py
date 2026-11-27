@@ -208,10 +208,13 @@ class MobileTaskControls(ttk.LabelFrame):
             offset=self.approach_offset()
             approach=self.object_step('reach_object',offset=offset)
             approach['name']='Approach '+self.approach_mode.get()
+            descent = self.object_step('reach_object', offset=[0., 0., 0.])
+            if approach['pose_source'] != 'native_truth':
+                descent['reuse_camera_on_occlusion'] = True
             self.add_native_steps([
                 self.object_step('grip',operation='open'),
                 approach,
-                self.object_step('reach_object',offset=[0.,0.,0.]),
+                descent,
                 self.object_step('grip',operation='close'),
                 self.object_step('reach_object',offset=[0.,0.,.10],pose_source='native_truth'),
                 self.object_step('object_check',condition='grasped'),

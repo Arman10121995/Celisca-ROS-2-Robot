@@ -94,7 +94,9 @@ def test_rgbd_cylinder_uses_camera_position_and_checks_compiled_collision(monkey
     task.arm = SimpleNamespace(plant_id='plant', source_sha256='source', channels=[],
                                measured_controls=lambda: np.array([]))
     task.scene_id = 'scene'
-    task.mobile = SimpleNamespace(joints=[])
+    task.mobile = SimpleNamespace(joints=[], moving=lambda: False)
+    task.pose = lambda: [0., 0., 0.]
+    task.camera_approach, task.index = None, 1
     task.gripped_body = task.payload_body = task.reach_worker = None
     task.generation = 1
     task.record = lambda **kwargs: None
@@ -127,6 +129,18 @@ def test_rgbd_cylinder_uses_camera_position_and_checks_compiled_collision(monkey
     task.reach_worker.join(timeout=2.)
     assert len(planned) == 1
     np.testing.assert_allclose(planned[0]['target_xyz'], [.27, .02, .47])
+    task.index += 1
+    data.time = 11.
+    camera.receive(dict(record, stamp_s=data.time, targets={}), identity, data.time)
+    descent = dict(step, offset=[0., 0., 0.], reuse_camera_on_occlusion=True)
+    anchor = task.camera_approach
+    task.begin_reach(descent)
+    task.reach_worker.join(timeout=2.)
+    np.testing.assert_allclose(planned[-1]['target_xyz'], [.27, .02, .39])
+    task.camera_approach = anchor
+    data.xpos[object_id, 0] += .02
+    with pytest.raises(ValueError, match='object moved'):
+        task.begin_reach(descent)
 
 
 def test_native_placement_uses_pad_offset_and_requires_contact_on_the_named_support():
@@ -281,7 +295,8 @@ def test_live_task_orientation_guard_checks_held_paths_and_explicit_pose_endpoin
     task.last_heartbeat=task.started=task.phase_started=time.monotonic()
     task.state={'state':'articulating'};task.sequence_id='owned'
     task.reach_orientation=(0,np.array([1.,0.,0.,0.]))
-    task.node=SimpleNamespace(data=SimpleNamespace(qpos=np.zeros(1),xquat=np.array([[math.cos(.1),0.,0.,math.sin(.1)]])))
+    task.node=SimpleNamespace(data=SimpleNamespace(time=0., qpos=np.zeros(1),
+                                                  xquat=np.array([[math.cos(.1),0.,0.,math.sin(.1)]])))
     task.node.get_parameter=lambda key:SimpleNamespace(value='display')
     task.node.sensors=SimpleNamespace(footprint_receipts=SimpleNamespace(received={}))
     task.mobile=SimpleNamespace(fault='',moving=lambda:False,payload_footprint_ready=lambda:True)

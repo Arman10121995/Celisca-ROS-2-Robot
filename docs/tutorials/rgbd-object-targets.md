@@ -121,15 +121,19 @@ Names must match the selected source box and its compiled dimensions. Color
 uses OpenCV HSV coordinates: H 0–179 and S/V 0–255. Binding color ranges cannot
 overlap. These are controlled-scene appearance/size assumptions: an unrelated
 identical-looking object cannot be semantically identified by color. Unknown
-shapes, occlusion, arbitrary roll/pitch, object recognition and uncertain
+shapes, general occlusion, arbitrary roll/pitch, object recognition and uncertain
 camera registration require further perception adapters.
 
 The target's error bound combines the declared depth noise, pixel footprint,
 observed size discrepancy and top-plane variation. It is not an empirically
 calibrated covariance and does not certify camera/TF calibration. Samples older
 than 0.5 simulation seconds or one wall second, mismatched source/scene/plant,
-wrong method and geometry changes are refused. Task motion continues to use
-existing source rates, collision worker, custody checks and Stop/watchdog.
+wrong method and geometry changes are refused. During a local pick recipe,
+the immediate descent can use its preceding camera approach observation for
+up to 20 simulated seconds if an active stream temporarily loses the object
+and the base and payload have held their measured poses. The journal records
+the original camera observation and its reuse age. Task motion continues to
+use source rates, collision checks, measured custody and Stop/watchdog.
 
 For contributors provisioning the declared fixture on another SSD workspace:
 `python3 scripts/provision_mobile_manipulation_scene.py --unmarked` installs

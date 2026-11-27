@@ -66,6 +66,8 @@ def test_real_widget_builds_source_bound_recipe_without_dispatch():
         panel.steps.clear()
         panel.pose_source.set('RGB-D upright objects');panel.add_pick()
         assert panel.steps[1]['pose_source'] == panel.steps[2]['pose_source'] == 'rgbd_primitive_top'
+        assert 'reuse_camera_on_occlusion' not in panel.steps[1]
+        assert panel.steps[2]['reuse_camera_on_occlusion'] is True
         assert panel.steps[4]['pose_source'] == 'native_truth'
         panel.state['support_candidates'] = ['environment_delivery_bench_collision']
         panel.ready=lambda:True
