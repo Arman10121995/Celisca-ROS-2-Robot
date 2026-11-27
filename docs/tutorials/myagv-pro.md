@@ -168,6 +168,24 @@ the owned action stops and the base settles. Keep **Enable experimental
 robot workflows** on to use the Fetch panel.
 [Measured Navigation fetch](../status/evidence/r143-pro630-f100-2026-11-20/README.md#complete-gui-navigation-fetch).
 
+To repeat the loaded Isaac experiment from a sourced workspace, run the
+same GUI workflow with its qualifier. The output directory must be new.
+Use the SSD runtime directory and run one physics trial at a time.
+
+```bash
+source scripts/ssd_env.sh
+xvfb-run -a python3 scripts/qualify_urdf_arm_gui.py \
+  --robot asset_elephant_myagv_pro_pro630_f100 \
+  --simulator isaac --mode display --map mobile_fetch_lab_f100 \
+  --experimental --pick-place fetch_block drop_table --task-timeout 950 \
+  --output "$ROBOT_LAB_RUNTIME_ROOT/f100-isaac-gui"
+```
+
+Use `--simulator pybullet` for the PyBullet experiment. The run records the
+resolved GUI command and profiles in `launch-profile.json`, observed stage
+changes in `task-stages.jsonl` and the terminal measured result in
+`report.json`.
+
 ## How control and sensing connect
 
 ```mermaid

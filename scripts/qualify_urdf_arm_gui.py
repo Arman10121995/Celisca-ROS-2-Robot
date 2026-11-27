@@ -9,6 +9,7 @@ judged on the measured joint state the plant publishes. Requires DISPLAY or
 xvfb-run, a sourced workspace, and one simulation at a time.
 """
 import argparse
+from hashlib import sha256
 import json
 import math
 from pathlib import Path
@@ -112,20 +113,40 @@ def main():
     if args.pose_source != 'truth' and not args.pick_place:
         parser.error('--pose-source requires --pick-place')
     args.output.mkdir(parents=True, exist_ok=False)
-    report = dict(robot=args.robot, simulator=args.simulator, map=args.map, mode=args.mode, steps=[], passed=False)
+    report = dict(robot=args.robot, simulator=args.simulator, map=args.map, mode=args.mode,
+                  experimental=args.experimental, steps=[], passed=False)
+    if args.pick_place:
+        report['request'] = dict(object=args.pick_place[0], support=args.pick_place[1],
+                                 pose_source=args.pose_source, wall_timeout_s=args.task_timeout)
+        report['task_stages'] = []
     app = SimulationLauncherGui()
     page = app.urdf_arm_controls
+    started_at = time.monotonic()
+
+    def update():
+        app.update()
+        if not args.pick_place or not page.pick_state:
+            return
+        stage = {key: page.pick_state.get(key) for key in ('phase', 'stage', 'drive_phase')}
+        if report['task_stages'] and all(
+                report['task_stages'][-1][key] == value for key, value in stage.items()):
+            return
+        stage.update(wall_seconds=round(time.monotonic() - started_at, 2),
+                     message=page.pick_state.get('message'))
+        report['task_stages'].append(stage)
+        with (args.output / 'task-stages.jsonl').open('a', encoding='utf-8') as stream:
+            stream.write(json.dumps(stage) + '\n')
 
     def pump(seconds):
         end = time.monotonic() + seconds
         while time.monotonic() < end:
-            app.update()
+            update()
             time.sleep(.02)
 
     def until(predicate, seconds, label, *, require_launch=True):
         end = time.monotonic() + seconds
         while time.monotonic() < end:
-            app.update()
+            update()
             if predicate():
                 return
             if require_launch and app.process is not None and app.process.poll() is not None:
@@ -176,8 +197,15 @@ def main():
         report['rows'] = [child.cget('text') for child in page.joint_frame.winfo_children()]
         app.show_tab('Mobile arm')             # the Launch workspace, this page raised
         report['command'] = app.command_var.get()
-        if app.mode_var.get() != args.mode:
-            raise RuntimeError('Requested mode is unavailable for the selected robot, simulator and map')
+        requested = dict(robot=args.robot, simulator=args.simulator, map=args.map, mode=args.mode)
+        resolved = dict(robot=app.robot_var.get(), simulator=app.simulator_var.get(),
+                        map=app.map_var.get(), mode=app.mode_var.get())
+        if resolved != requested:
+            raise RuntimeError(f'GUI selected {resolved}, requested {requested}')
+        profiles = dict(command=report['command'], robot=app._robot_config(), world=app._map_config())
+        profile_bytes = (json.dumps(profiles, sort_keys=True, indent=2) + '\n').encode('utf-8')
+        (args.output / 'launch-profile.json').write_bytes(profile_bytes)
+        report['launch_profile_sha256'] = sha256(profile_bytes).hexdigest()
         app._start_launch()
         until(page.ready, 300, 'arm page ready')
         report['model_sha256'] = page.state.get('model_sha256')
