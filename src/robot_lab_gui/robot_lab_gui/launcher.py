@@ -1485,12 +1485,13 @@ class SimulationLauncherGui(tk.Tk):
         option = getattr(self, 'experimental_assets_var', None)
         profile = self.robot_profiles.get(self.robot_var.get(), {})
         return bool(option and option.get() and (profile.get('experimental_modes_by_simulator')
-                                                or profile.get('experimental_asset_options')))
+                                                or profile.get('experimental_asset_options')
+                                                or profile.get('experimental_backend_options')))
 
     def _robot_config(self):
         option = getattr(self, 'experimental_assets_var', None)
         return experimental_asset_profile(self.robot_profiles.get(self.robot_var.get(), {}),
-                                           bool(option and option.get()))
+                                           bool(option and option.get()), self.simulator_var.get())
 
     def _mode_config(self):
         return self.mode_profiles.get(self.mode_var.get(), {})

@@ -763,7 +763,8 @@ def _build_simulation_actions(context):
         )
         from robot_lab_utils.asset_support import experimental_asset_profile
         robot_config = experimental_asset_profile(robot_config,
-            _as_bool(_launch_value(context, 'allow_experimental_assets')))
+            _as_bool(_launch_value(context, 'allow_experimental_assets')),
+            _launch_value(context, 'simulator'))
         _validate_robot_for_mode(robot_model, robot_config, mode_name, mode_config,
                                  _launch_value(context, "simulator"))
         if robot_config.get('tracked_model'):

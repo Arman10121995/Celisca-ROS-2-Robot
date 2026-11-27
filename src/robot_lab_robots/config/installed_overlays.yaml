@@ -61,6 +61,37 @@ robots:
     - {simulator: pybullet, mode: display, map: nav_empty, evidence: docs/status/evidence/myagv-pro-2026-11-12/README.md}
     - {simulator: isaac, mode: display, map: nav_empty, evidence: docs/status/evidence/myagv-pro-2026-11-12/README.md}
   asset_elephant_myagv_pro_pro630_f100:
+    # Loaded fetch candidates, activated only by the experimental workflow.
+    # The measured Display presets and MuJoCo fetch keep their own profiles.
+    experimental_backend_options:
+      pybullet:
+        drive:
+          pybullet_solver_iterations: 100
+          pybullet_noncontact_iterations: 4
+        articulation:
+          pybullet_added_link_inertia:
+            pro630_gripper_controller: 0.003
+            pro630_gripper_base_to_gripper_left2: 0.00015
+            pro630_gripper_left3_to_gripper_left1: 0.00015
+            pro630_gripper_base_to_gripper_right3: 0.00015
+            pro630_gripper_base_to_gripper_right2: 0.00015
+            pro630_gripper_right3_to_gripper_right1: 0.00015
+          pybullet_gear_erp: 0.35
+        pick_place:
+          retry_shifted_grasp: true
+          mobile:
+            holonomic_docking: true
+            reanchor_before_descent: true
+            carry_drive_speed_scale: 0.5
+            carry_drive_ramp_seconds: 2.0
+            dock_linear_speed_floor_mps: 0.014
+      isaac:
+        drive:
+          isaac_rgbd_on_demand: true
+        pick_place:
+          mobile:
+            reanchor_before_descent: true
+            align_live_grasp: true
     articulation:
       planning:
         schema: robot_lab.articulation_plan.v1

@@ -73,3 +73,26 @@ def test_changed_robot_geometry_gets_no_experimental_modes():
         dict(source_revision='pin', screens=[dict(backend='mujoco', mode='nav')]), ROOT)
     assert result['supported_modes'] == ['display']
     assert not result.get('experimental_modes_by_simulator')
+
+
+def test_f100_backend_options_are_opt_in_and_keep_source_controls():
+    from robot_lab_utils.asset_support import experimental_asset_profile
+
+    overlays = ROOT / 'src/robot_lab_robots/config/installed_overlays.yaml'
+    profile = yaml.safe_load(overlays.read_text())['robots']['asset_elephant_myagv_pro_pro630_f100']
+    profile['experimental_asset_options'] = {'pick_place': {'mobile': {'dock_position_tolerance': .005}}}
+    profile['drive'] = {'type': 'mecanum'}
+    profile['articulation']['joints'] = {'pro630_gripper_controller': {'effort': .8}}
+    assert 'pick_place' not in experimental_asset_profile(profile, False, 'pybullet')
+    bullet = experimental_asset_profile(profile, True, 'pybullet')
+    isaac = experimental_asset_profile(profile, True, 'isaac')
+    mujoco = experimental_asset_profile(profile, True, 'mujoco')
+    assert bullet['drive'] == {'type': 'mecanum', 'pybullet_solver_iterations': 100,
+                               'pybullet_noncontact_iterations': 4}
+    assert bullet['articulation']['joints'] == profile['articulation']['joints']
+    assert bullet['pick_place']['mobile']['dock_position_tolerance'] == .005
+    assert bullet['pick_place']['mobile']['carry_drive_speed_scale'] == .5
+    assert 'align_live_grasp' not in bullet['pick_place']['mobile']
+    assert isaac['pick_place']['mobile']['align_live_grasp'] is True
+    assert 'pybullet_added_link_inertia' not in isaac['articulation']
+    assert mujoco['pick_place']['mobile'] == {'dock_position_tolerance': .005}

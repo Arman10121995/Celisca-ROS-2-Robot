@@ -150,6 +150,15 @@ The installed GUI reports both loaded workflows as experimental.
 [Measured PyBullet presets](../status/evidence/r143-pro630-f100-2026-11-20/bullet-gui-gripper-confirmed.json) · [Measured Isaac presets](../status/evidence/r143-pro630-f100-2026-11-20/isaac-gui-gripper-confirmed.json).
 [PyBullet carry receipt](../status/evidence/r143-pro630-f100-2026-11-20/bullet-gui-loaded-carry-pad-loss.json) · [Isaac closure receipt](../status/evidence/r143-pro630-f100-2026-11-20/isaac-gui-reanchor-one-sided-closure.json).
 
+For a loaded experiment, select **Display**, **Mobile fetch lab with short
+block** and **Enable experimental robot workflows**. PyBullet then uses the
+calibrated passive linkage, ramped carry and precision docking recovery.
+Isaac uses stopped open-jaw alignment before closing. The measured PyBullet
+carry reached the delivery table with both pads loaded. The measured Isaac
+trial lifted the block. Confirm final docking and supported release when
+testing either workflow.
+[Loaded PyBullet receipt](../status/evidence/r143-pro630-f100-2026-11-20/bullet-gui-loaded-final-dock-2026-11-27.json) · [Loaded Isaac trials](../status/evidence/r143-pro630-f100-2026-11-20/README.md).
+
 To try Nav2 transport, keep the same experimental profile and map and
 select **MuJoCo → Navigation**. **Run fetch** becomes available when the Nav2 transit
 action and articulation feedback are ready. The loaded leg waits for both

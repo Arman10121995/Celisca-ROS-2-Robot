@@ -50,7 +50,7 @@ def apply_support_or_candidate(apply, profile, source_revision, support, reposit
         return result
 
 
-def experimental_asset_profile(profile, enabled=False):
+def experimental_asset_profile(profile, enabled=False, simulator=None):
     """Apply explicit candidate availability without changing qualification."""
     result = dict(profile or {})
     if not enabled:
@@ -65,6 +65,10 @@ def experimental_asset_profile(profile, enabled=False):
         result['supported_modes'] = list(dict.fromkeys([
             *result.get('supported_modes', []), *(mode for modes in matrix.values() for mode in modes)]))
     result.update(result.get('experimental_asset_options', {}))
+    backend_options = result.get('experimental_backend_options', {}).get(simulator)
+    if backend_options:
+        from .installed_assets import _deep_merge
+        result = _deep_merge(result, backend_options)
     return result
 
 from .qualification import navigation_acceptance
