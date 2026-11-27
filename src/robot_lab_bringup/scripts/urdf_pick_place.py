@@ -540,6 +540,7 @@ class PickPlace(Node):
     def _publish_state(self):
         task = self.task or {}
         blocker = self._feedback_blocker()
+        last_completed = next((entry for entry in reversed(task.get('log', ())) if 'stage' in entry), None)
         self.state_pub.publish(String(data=json.dumps(dict(
             schema='robot_lab.pick_place_state.v1',
             phase='stopping' if self.stopping_nav else task.get('phase', 'idle'), stage=task.get('stage'),
@@ -550,7 +551,7 @@ class PickPlace(Node):
             if task else None,
             restart_required=not task and self.carried_footprint is not None,
             ready=not blocker, feedback_blocker=blocker,
-            last_completed=(task.get('log') or [None])[-1],
+            last_completed=last_completed,
             last_result=self.last_result, truth_age_s=round(_now() - self.truth_at, 2) if self.truth else None),
             default=_plain)))
 

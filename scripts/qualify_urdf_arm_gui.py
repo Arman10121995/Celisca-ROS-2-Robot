@@ -203,7 +203,10 @@ def main():
                         map=app.map_var.get(), mode=app.mode_var.get())
         if resolved != requested:
             raise RuntimeError(f'GUI selected {resolved}, requested {requested}')
-        profiles = dict(command=report['command'], robot=app._robot_config(), world=app._map_config())
+        profile = app._robot_config()
+        if not profile or not report['command']:
+            raise RuntimeError('GUI could not prepare launch: ' + app.validation_var.get())
+        profiles = dict(command=report['command'], robot=profile, world=app._map_config())
         profile_bytes = (json.dumps(profiles, sort_keys=True, indent=2) + '\n').encode('utf-8')
         (args.output / 'launch-profile.json').write_bytes(profile_bytes)
         report['launch_profile_sha256'] = sha256(profile_bytes).hexdigest()
