@@ -311,12 +311,18 @@ def test_holonomic_dock_corrects_the_measured_pose_after_settling(pick_place, mo
     monkeypatch.setattr(pick_place, '_now', lambda: 10.)
     task = dict(interlock={'drive_ticks': 0}, log=[])
     goal = dict(x=.89, y=0., yaw=0.)
-    phase = dict(started=9., waypoints=[goal], waypoint=0, at_point=True)
+    phase = dict(name='to_object', started=9., waypoints=[goal], waypoint=0, at_point=True)
     node._drive(task, phase)
     args, kwargs = node._twist.call_args
     assert args[0] > 0 and args[1] > 0 and kwargs['vy'] < 0
     assert math.hypot(args[0], kwargs['vy']) <= pick_place.HOLONOMIC_DOCK_SPEED_MPS
     assert phase['precision_dock'] == goal
+    node.mobile['dock_linear_speed_floor_mps'] = .014
+    node.base_pose = (.879, 0., -.002, .01)
+    node._drive(task, phase)
+    args, kwargs = node._twist.call_args
+    assert math.hypot(args[0], kwargs['vy']) == pytest.approx(.014)
+    assert args[1] == 0.0
     phase.update(waypoint=1, still=9.)
     node._drive(task, phase)
     assert phase['waypoint'] == 0 and phase['dock_recaptures'] == 1
@@ -327,6 +333,24 @@ def test_holonomic_dock_corrects_the_measured_pose_after_settling(pick_place, mo
     node._drive(task, phase)
     node._next_phase.assert_called_once_with(task)
     assert task['log'][0]['dock_recaptures'] == 1
+
+
+def test_dock_recovery_keeps_the_oriented_base_and_target_clear(pick_place):
+    pytest.importorskip('shapely')
+    from robot_lab_mujoco.arm_pick_place import Box
+
+    node = object.__new__(pick_place.PickPlace)
+    node.mobile = dict(pick_place.MOBILE_DEFAULTS, base_radius=.37,
+                       nav_base_footprint=[[.29, .205], [.29, -.205], [-.29, -.205], [-.29, .205]])
+    node.base_pose = (.4765, 1.531, -.0019, 1.5807)
+    desk = Box('drop_table', (0., 2.2, .25), (1., 0., 0., 0.), (1.2, .6, .5))
+    goal = dict(x=.45, y=1.515, yaw=math.pi/2)
+    assert node._can_recover_dock([desk], goal)
+    assert not node._can_recover_dock([desk], dict(goal, y=1.56))
+    node.base_pose = (.4765, 1.61, -.0019, 1.5807)
+    assert not node._can_recover_dock([desk], goal)
+    node.base_pose = (.4765, 1.531, -.0019, 1.4)
+    assert not node._can_recover_dock([desk], goal)
 
 
 def test_direct_mobile_legs_check_primitive_obstacles_and_keep_nav2_transit(pick_place):

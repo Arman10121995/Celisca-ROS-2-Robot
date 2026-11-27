@@ -1,0 +1,452 @@
+{
+  "robot": "asset_elephant_myagv_pro_pro630_f100",
+  "simulator": "pybullet",
+  "mode": "display",
+  "map": "mobile_fetch_lab_f100",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=display map_name:=mobile_fetch_lab_f100 robot_model:=asset_elephant_myagv_pro_pro630_f100 simulator:=pybullet gui:=false perception:=none allow_experimental_assets:=true",
+  "model_sha256": "bf9ef87b82586316cb4ff59956cd87179c1f681bd352f46777468aebd2bb082d",
+  "passed": false,
+  "launch_returncode": 0,
+  "raw_report": "/workspace/molar/robot_lab_runtime/pro630-gripper-20261120/bullet-loaded-gui-20261127-gWPReV/gui/report.json",
+  "raw_sha256": "717d98a447d21257a779821373f58cb66396b5e061fcbe671ffeb2aeacbe880c",
+  "task_seconds": 501.82,
+  "stage": "carry",
+  "message": "Precision docking blocked by drop_table. Loaded footprint retained. Restart the simulation before another fetch.",
+  "plan": {
+    "transit": "straight",
+    "pick_base": [
+      0.89,
+      -0.0,
+      0.0
+    ],
+    "place_base": [
+      0.45,
+      1.515,
+      1.571
+    ],
+    "place_xy": [
+      0.45,
+      1.96
+    ],
+    "grasp_width_m": 0.04,
+    "pick_base_measured": [
+      0.8903,
+      0.0084,
+      -0.0019,
+      0.008
+    ],
+    "carry_direct_drive": {
+      "speed_scale": 0.5,
+      "ramp_seconds": 2.0
+    }
+  },
+  "interlock": {
+    "max_base_speed_in_arm_phases": 0.02312941874139006,
+    "max_base_turn_in_arm_phases": 0.041103319718143586,
+    "drive_ticks_with_articulation_active": 0,
+    "drive_ticks": 1806
+  },
+  "stages": [
+    {
+      "phase": "to_object_arrived",
+      "final_pose": [
+        0.8861,
+        0.0016,
+        -0.0019,
+        -0.0006
+      ],
+      "dock_recaptures": 0
+    },
+    {
+      "phase": "to_object",
+      "seconds": 25.42
+    },
+    {
+      "stage": "open",
+      "seconds": 4.08,
+      "object_truth": [
+        1.36,
+        -0.0,
+        0.545
+      ],
+      "tcp_estimate": [
+        0.8865,
+        0.2868,
+        1.0729
+      ],
+      "passed": true
+    },
+    {
+      "stage": "above_object",
+      "seconds": 14.68,
+      "object_truth": [
+        1.36,
+        0.0,
+        0.545
+      ],
+      "tcp_estimate": [
+        1.3599,
+        -0.0003,
+        0.605
+      ],
+      "passed": true,
+      "replan": true,
+      "pregrasp_base": [
+        0.8903446793556213,
+        0.008446200750768185,
+        -0.0018867995822802186,
+        0.007987121780779751
+      ],
+      "projected_tool_drift_m": 0.01172,
+      "payload_drift_m": 1e-05
+    },
+    {
+      "stage": "open",
+      "seconds": 0.03,
+      "object_truth": [
+        1.36,
+        0.0,
+        0.545
+      ],
+      "tcp_estimate": [
+        1.3641,
+        0.0106,
+        0.605
+      ],
+      "passed": true
+    },
+    {
+      "stage": "above_object",
+      "seconds": 2.12,
+      "object_truth": [
+        1.36,
+        -0.0,
+        0.545
+      ],
+      "tcp_estimate": [
+        1.3604,
+        0.0002,
+        0.6054
+      ],
+      "passed": true,
+      "replan": false,
+      "pregrasp_base": [
+        0.8894526362419128,
+        0.0051245610229671,
+        -0.0019848633091896772,
+        0.01414490923542
+      ],
+      "projected_tool_drift_m": 0.00096,
+      "payload_drift_m": 0.0
+    },
+    {
+      "stage": "down_to_grasp",
+      "seconds": 2.21,
+      "object_truth": [
+        1.3592,
+        0.0003,
+        0.5453
+      ],
+      "tcp_estimate": [
+        1.3605,
+        0.0,
+        0.5764
+      ],
+      "passed": true
+    },
+    {
+      "stage": "close",
+      "seconds": 15.42,
+      "object_truth": [
+        1.364,
+        -0.0008,
+        0.5457
+      ],
+      "tcp_estimate": [
+        1.3604,
+        0.0,
+        0.5755
+      ],
+      "finger_positions": [
+        0.37504483901344304,
+        0.37515544010363816,
+        0.37552424246294974,
+        0.37783486496184365,
+        0.3753582716443734,
+        0.3757086965767013
+      ],
+      "passed": true,
+      "pad_normal_force_n": {
+        "left": 2.2652926532630464,
+        "right": 9.61388119582994
+      },
+      "reason": ""
+    },
+    {
+      "stage": "lift",
+      "seconds": 5.98,
+      "object_truth": [
+        1.3668,
+        0.0076,
+        0.5898
+      ],
+      "tcp_estimate": [
+        1.3593,
+        0.0,
+        0.6243
+      ],
+      "passed": true,
+      "rise_m": 0.0448,
+      "hold_drift_m": 0.0007,
+      "reason": "",
+      "pad_normal_force_n": {
+        "left": 4.999827251791247,
+        "right": 5.024705352380039
+      }
+    },
+    {
+      "phase": "pick",
+      "seconds": 46.57
+    }
+  ],
+  "private_settings": {
+    "solver_iterations": 100,
+    "noncontact_iterations": 4,
+    "gear_erp": 0.35,
+    "added_inertia_kg_m2": {
+      "driver": 0.003,
+      "each_follower": 0.00015
+    },
+    "reanchor_before_descent": true,
+    "holonomic_docking": true,
+    "dock_position_tolerance_m": 0.005,
+    "carry_drive_speed_scale": 0.5,
+    "carry_drive_ramp_seconds": 2.0
+  },
+  "last_stage_samples": [
+    {
+      "t": 499.75,
+      "stage": "carry",
+      "object": [
+        0.4832,
+        2.0017,
+        0.5899,
+        0.7066,
+        -0.002,
+        0.0052,
+        0.7076
+      ],
+      "fingers": [
+        0.3616,
+        0.3616,
+        0.3616,
+        0.3616,
+        0.3616,
+        0.3616
+      ],
+      "finger_references": [
+        0.3365,
+        0.3615,
+        0.3615,
+        0.3617,
+        0.361,
+        0.3614
+      ],
+      "pad_normal_force_n": {
+        "left": 3.1533469997170718,
+        "right": 2.660776480930271
+      },
+      "non_pad_jaw_normal_force_n": {
+        "left": 0.0,
+        "right": 0.0
+      },
+      "arm_joints": {
+        "pro630_joint1_to_base": -0.21481,
+        "pro630_joint2_to_joint1": 0.94785,
+        "pro630_joint3_to_joint2": -0.3607,
+        "pro630_joint4_to_joint3": 0.98332,
+        "pro630_joint5_to_joint4": -1.57075,
+        "pro630_joint6_to_joint5": -0.97117
+      },
+      "base": [
+        0.4751,
+        1.5268,
+        -0.0018,
+        1.58
+      ],
+      "object_in_base": [
+        0.4748,
+        -0.0124,
+        0.5917
+      ]
+    },
+    {
+      "t": 500.3,
+      "stage": "carry",
+      "object": [
+        0.4836,
+        2.0033,
+        0.59,
+        0.7067,
+        -0.0018,
+        0.0052,
+        0.7075
+      ],
+      "fingers": [
+        0.3616,
+        0.3616,
+        0.3616,
+        0.3617,
+        0.3616,
+        0.3616
+      ],
+      "finger_references": [
+        0.3365,
+        0.3615,
+        0.3615,
+        0.3617,
+        0.361,
+        0.3614
+      ],
+      "pad_normal_force_n": {
+        "left": 3.168954213626745,
+        "right": 2.6642017700511866
+      },
+      "non_pad_jaw_normal_force_n": {
+        "left": 0.0,
+        "right": 0.0
+      },
+      "arm_joints": {
+        "pro630_joint1_to_base": -0.2148,
+        "pro630_joint2_to_joint1": 0.94785,
+        "pro630_joint3_to_joint2": -0.3607,
+        "pro630_joint4_to_joint3": 0.98332,
+        "pro630_joint5_to_joint4": -1.57075,
+        "pro630_joint6_to_joint5": -0.97117
+      },
+      "base": [
+        0.4753,
+        1.5281,
+        -0.0018,
+        1.5801
+      ],
+      "object_in_base": [
+        0.4751,
+        -0.0126,
+        0.5918
+      ]
+    },
+    {
+      "t": 501.02,
+      "stage": "carry",
+      "object": [
+        0.4851,
+        2.0029,
+        0.5906,
+        0.7063,
+        -0.0008,
+        0.0054,
+        0.7079
+      ],
+      "fingers": [
+        0.3616,
+        0.3616,
+        0.3616,
+        0.3616,
+        0.3616,
+        0.3616
+      ],
+      "finger_references": [
+        0.3365,
+        0.3615,
+        0.3615,
+        0.3617,
+        0.361,
+        0.3614
+      ],
+      "pad_normal_force_n": {
+        "left": 3.137267941260285,
+        "right": 2.6548632047642204
+      },
+      "non_pad_jaw_normal_force_n": {
+        "left": 0.0,
+        "right": 0.0
+      },
+      "arm_joints": {
+        "pro630_joint1_to_base": -0.2148,
+        "pro630_joint2_to_joint1": 0.94786,
+        "pro630_joint3_to_joint2": -0.3607,
+        "pro630_joint4_to_joint3": 0.98332,
+        "pro630_joint5_to_joint4": -1.57075,
+        "pro630_joint6_to_joint5": -0.97117
+      },
+      "base": [
+        0.4763,
+        1.5286,
+        -0.0018,
+        1.5807
+      ],
+      "object_in_base": [
+        0.4742,
+        -0.0135,
+        0.5923
+      ]
+    },
+    {
+      "t": 501.58,
+      "stage": "carry",
+      "object": [
+        0.4836,
+        2.0044,
+        0.5903,
+        0.7064,
+        -0.0022,
+        0.0044,
+        0.7077
+      ],
+      "fingers": [
+        0.3616,
+        0.3616,
+        0.3616,
+        0.3617,
+        0.3616,
+        0.3616
+      ],
+      "finger_references": [
+        0.3365,
+        0.3615,
+        0.3615,
+        0.3617,
+        0.361,
+        0.3614
+      ],
+      "pad_normal_force_n": {
+        "left": 3.1378171884064585,
+        "right": 2.6526936365322955
+      },
+      "non_pad_jaw_normal_force_n": {
+        "left": 0.0,
+        "right": 0.0
+      },
+      "arm_joints": {
+        "pro630_joint1_to_base": -0.21481,
+        "pro630_joint2_to_joint1": 0.94786,
+        "pro630_joint3_to_joint2": -0.3607,
+        "pro630_joint4_to_joint3": 0.98332,
+        "pro630_joint5_to_joint4": -1.57074,
+        "pro630_joint6_to_joint5": -0.97116
+      },
+      "base": [
+        0.4765,
+        1.5299,
+        -0.0019,
+        1.5807
+      ],
+      "object_in_base": [
+        0.4745,
+        -0.0117,
+        0.5921
+      ]
+    }
+  ]
+}

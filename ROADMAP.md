@@ -1847,6 +1847,14 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
   projected drift, outside the existing 30 mm gross limit. The loaded
   ramp still needs a physical carry run.
   [Carry receipt](docs/status/evidence/r143-pro630-f100-2026-11-20/bullet-gui-loaded-carry-pad-loss.json).
+  **2026-11-27:** with the same physical linkage, half-speed loaded drive
+  and a two-second ramp, the private PyBullet trial lifted 44.8 mm and
+  kept both pads loaded to the destination. Final docking stopped after
+  the base entered the circular clearance margin of the drop table.
+  The executor can now check an oriented, padded base sweep for a short
+  recovery to a target that still satisfies the circular clearance rule.
+  Supported release remains open.
+  [Loaded-dock receipt](docs/status/evidence/r143-pro630-f100-2026-11-20/bullet-gui-loaded-final-dock-2026-11-27.json).
   [GUI evidence](docs/status/evidence/r143-pro630-f100-2026-11-20/bullet-gui-gripper-confirmed.json).
 - **Isaac Display:** the F100 imported with one powered shaft and five
   passive followers. The normal GUI on `nav_empty` reached both presets

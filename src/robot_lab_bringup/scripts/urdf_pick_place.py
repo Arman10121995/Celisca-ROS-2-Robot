@@ -239,9 +239,13 @@ class PickPlace(Node):
         if self.mobile:
             speed_scale = float(self.mobile.get('carry_drive_speed_scale', 1.0))
             ramp_seconds = float(self.mobile.get('carry_drive_ramp_seconds', 0.0))
+            dock_speed_floor = float(self.mobile.get('dock_linear_speed_floor_mps', 0.0))
             if not 0.0 < speed_scale <= 1.0 or not math.isfinite(ramp_seconds) or ramp_seconds < 0.0:
                 raise ValueError('Loaded direct drive requires a speed scale in (0, 1] and a nonnegative ramp')
-            self.mobile.update(carry_drive_speed_scale=speed_scale, carry_drive_ramp_seconds=ramp_seconds)
+            if not 0.0 <= dock_speed_floor <= HOLONOMIC_DOCK_SPEED_MPS:
+                raise ValueError('Precision docking speed floor must be within the holonomic docking speed cap')
+            self.mobile.update(carry_drive_speed_scale=speed_scale, carry_drive_ramp_seconds=ramp_seconds,
+                               dock_linear_speed_floor_mps=dock_speed_floor)
         self.base_pose, self.base_twist, self.base_at = None, (0.0, 0.0), -math.inf
         if self.mobile:
             self.create_subscription(Odometry, '/odom/ground_truth', self._on_odom, 10)
@@ -1277,6 +1281,8 @@ class PickPlace(Node):
         if phase['waypoint'] >= len(phase['waypoints']):
             phase.pop('carry_drive_command', None)
             self._twist(0.0, 0.0)
+            if phase.get('precision_dock'):
+                self.message = 'Dock reached. Waiting for the measured base to stop.'
             if max(self.base_twist) < STILL_SPEED:
                 phase['still'] = phase.get('still') or _now()
                 if _now() - phase['still'] > 0.5:
@@ -1311,12 +1317,18 @@ class PickPlace(Node):
 
             boxes = task.get('drive_obstacles', self.drive_obstacles)
             clearance, obstacle = segment_clearance(boxes, (x, y), (target['x'], target['y']))
-            if clearance < self.mobile['base_radius']:
+            if clearance < self.mobile['base_radius'] and not self._can_recover_dock(boxes, target):
                 return self._finish('failed', f'Precision docking blocked by {obstacle}')
             yaw_error = _wrap(target['yaw'] - yaw)
             if distance > position_tolerance or abs(yaw_error) > YAW_TOLERANCE:
-                scale = min(.8, HOLONOMIC_DOCK_SPEED_MPS/distance) if distance > position_tolerance else 0.
+                self.message = 'Docking for %s. Position error %.1f mm, heading error %.1f°.' % (
+                    phase['name'].replace('_', ' '), 1000.0 * distance, math.degrees(yaw_error))
+                speed_floor = self.mobile.get('dock_linear_speed_floor_mps', 0.)
+                scale = (min(HOLONOMIC_DOCK_SPEED_MPS, max(speed_floor, .8 * distance)) / distance
+                         if distance > position_tolerance else 0.)
                 c, s = math.cos(yaw), math.sin(yaw)
+                if speed_floor and abs(yaw_error) <= YAW_TOLERANCE:
+                    yaw_error = 0.0
                 wz = max(-HOLONOMIC_DOCK_TURN_RPS, min(HOLONOMIC_DOCK_TURN_RPS, 1.5*yaw_error))
                 return self._drive_twist(phase, scale*(c*dx+s*dy), wz, vy=scale*(-s*dx+c*dy))
         if distance > position_tolerance and not phase.get('at_point'):
@@ -1342,6 +1354,38 @@ class PickPlace(Node):
         phase['waypoint'] += 1
         phase['rolling'] = phase['at_point'] = False
         self._drive_twist(phase, 0.0, 0.0)
+
+    def _can_recover_dock(self, boxes, target):
+        """Permit a short retreat after an overshoot using the oriented base outline."""
+        from robot_lab_mujoco.arm_pick_place import segment_clearance, yaw_of
+        from shapely.geometry import MultiPoint, Polygon
+
+        outline = self.mobile.get('nav_base_footprint')
+        x, y, _, yaw = self.base_pose
+        end = (target['x'], target['y'])
+        if not outline or abs(_wrap(target['yaw'] - yaw)) > YAW_TOLERANCE:
+            return False
+        # The corrected dock must still satisfy the ordinary circular check.
+        if segment_clearance(boxes, end, end)[0] < self.mobile['base_radius']:
+            return False
+
+        def corners(points, center, heading):
+            c, s = math.cos(heading), math.sin(heading)
+            return [(center[0] + c*px - s*py, center[1] + s*px + c*py) for px, py in points]
+
+        # A convex hull encloses translation at the measured heading. Pad
+        # for any corner motion within the permitted heading change.
+        swept = MultiPoint(corners(outline, (x, y), yaw) + corners(outline, end, yaw)).convex_hull
+        radius = max(math.hypot(*point) for point in outline)
+        padding = self.mobile['nav_footprint_padding'] + 2 * radius * math.sin(YAW_TOLERANCE / 2)
+        swept = swept.buffer(padding)
+        for box in boxes:
+            hx, hy = .5*box.size[0], .5*box.size[1]
+            obstacle = Polygon(corners([(hx, hy), (-hx, hy), (-hx, -hy), (hx, -hy)],
+                                       box.position, yaw_of(box.quaternion)))
+            if swept.intersects(obstacle):
+                return False
+        return True
 
     def _drive_twist(self, phase, linear, angular, *, vy=0.):
         """Apply a profile's loaded speed and slew limits to direct drive only."""
