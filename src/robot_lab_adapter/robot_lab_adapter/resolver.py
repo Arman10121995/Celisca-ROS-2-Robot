@@ -205,7 +205,7 @@ def _world_arguments(environment: Dict[str, Any]) -> Dict[str, str]:
         # Water volumes have no planar occupancy map. Preserve the legacy
         # ground-map convention without inventing a nonexistent marine grid.
         if 'underwater' not in environment.get('tags', []):
-            args['map_yaml'] = f'maps/{key}/maps/map.yaml'
+            args['map_yaml'] = environment.get('occupancy_yaml') or f'maps/{key}/maps/map.yaml'
     return args
 
 
@@ -384,7 +384,6 @@ def resolve_experiment(registry: Any, request: ExperimentRequest) -> Tuple[bool,
             return False, outcome
         # MAVLink telemetry and its ROS TF are stamped with ROS wall time.
         launch_args['use_sim_time'] = 'false'
-        launch_args['spawn_z'] = str((resolved.spawn or {}).get('z', 0.0))
     if resolved.gui:
         gui_value = str(resolved.gui).lower()
         if gui_value not in ('auto', 'true', 'false'):

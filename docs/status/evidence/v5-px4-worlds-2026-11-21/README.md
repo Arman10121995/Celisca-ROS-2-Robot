@@ -67,6 +67,13 @@ against a 0.20 m limit. It is kept, and the repeat passed.
 
 ## terrain_heightfield
 
+**November 27 retest.** The GUI now lets the map profile set the X500
+altitude. The normal flight run spawned on the 1.72 m pad, climbed 2.916 m,
+passed direction, altitude, Stop and command-loss checks, then landed
+within 0.12 mm of the initial body height. The launch exited with code 0.
+The original refused launch is retained below.
+[Retest report and raw artifact hashes](terrain-heightfield-gui-2026-11-27.json).
+
 The takeoff gate refused the spawn: "Selected world blocks the minimum
 0.8 m takeoff corridor". The refusal is correct:
 - The authored spawn (−6, −6, 0.02) lies 1.45 m below the heightmap

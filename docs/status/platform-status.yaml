@@ -2345,6 +2345,7 @@ tasks:
         next_action: 'Implemented 2026-11-13 (claude, on the user''s request): Gazebo source variant plus the portable roller variant measured driving in MuJoCo, PyBullet and Isaac; Nav2 measured in Gazebo (nav_empty) and PyBullet. Validation: other maps, SLAM, MuJoCo/Isaac navigation.'
         evidence: [docs/status/evidence/myagv-pro-2026-11-12/README.md, docs/tutorials/myagv-pro.md]
       R14.3:
+        codex_resume_20261127: 'Codex resumes the F100 loaded PyBullet route from the prior 46.2 mm lift and right-pad loss. Test the bounded carry ramp with current docking and measured linkage settings. Keep shaft effort, pad and carry gates and record the actual terminal result.'
         claude_bilateral_20261122: 'Claude: raised 25 mm open-jaw alignment, open-jaw/stopped-arm settle for approach stages, three corrections, drive phases on the simulation clock. Isaac F100 run 1333 aligned to 1.05 mm, closed with both pads (2.77 / 4.34 N) and lifted 40.3 mm, then its carry timed out on the wall clock. Later runs level off at 2-3 mm alignment; accepting 2.69 mm gave a one-sided closure and was reverted. Carry and place remain. docs/status/evidence/r143-pro630-f100-2026-11-20/README.md'
         claude_dock5mm_20261122: 'Claude: Isaac F100 fetch samples docked 9.5-13.4 mm off and the reanchor replan found no descent IK; with dock_position_tolerance 0.005 the dock was about 3 mm off, replan, live 6.6 mm alignment and down_to_grasp passed, then align_grasp timed out (joint4 0.0113 rad vs 0.01). Profile now docks to 5 mm. docs/status/evidence/r143-pro630-f100-2026-11-20/README.md'
         claude_takeover_20261122: 'User handed Codex work to Claude (Codex done). Claude committed Codex''s pending align_grasp change: up to two bounded open-jaw alignment corrections, each must improve the error by 1 mm, and the align_grasp stage settles when open fingers are within 0.005 rad and coupling is not inhibited (the 07:38 Isaac paired-feedback run timed out there with every arm joint within tolerance). 34 focused checks pass. Codex''s live fetch qualifications ran from unrecorded private drivers, so a reproducible fetch qualifier is still needed before live acceptance.'
@@ -2360,8 +2361,8 @@ tasks:
         isaac_jaw_diagnostics_owner_20261122: 'Codex added Isaac contact diagnostics that separate pad forces from other collision force on the same distal jaw. The task trace carries both measurements. A contact-routing fixture and Isaac build pass. A new physical mission must diagnose the load path.'
         measured_reapproach_owner_20261122: 'Codex implemented two-stage F100 recovery. Open and retract first, then remeasure three fresh stable object samples on the same support and confirm the stopped base before replanning. PyBullet precision dock passed at 7.6 mm error, but 34/34 bilateral closure samples exceeded 0.01 rad follower error and retract shifted the object 17.9 mm. Isaac loaded closure measured 5.89 N right and zero left. Both trials stopped before lift. The revised physical recovery remains pending.'
         acceptance_ref: ROADMAP.md R14.3
-        owner: claude (takeover 2026-11-22; was codex)
-        active_scope: 'Codex continues the measured F100 closure/carry blockers on PyBullet and Isaac. Preserve existing F100 pad force, articulation ownership and footprint gates.'
+        owner: codex
+        active_scope: 'Resume the measured F100 closure and carry blockers on PyBullet and Isaac. Preserve F100 pad force, articulation ownership and footprint gates.'
         state: partial
         updated: '2026-11-21'
         title: Official myAGV Pro plus myCobot Pro630 mobile manipulator
@@ -3036,6 +3037,7 @@ tasks:
         state: done
         title: Qualify Bumperbot and Labbot mobile tasks
       R5.10:
+        terrain_gui_owner_20261127: 'Codex removed the synthetic zero-altitude override from composed X500 commands. The normal GUI on Terrain Heightfield used the 1.72 m physical pad, climbed 2.916 m, passed directional/altitude/Stop and publisher-loss gates (0.022 m drift), and landed with 0.000123 m height error. Launch exit 0. This completes the eight-world V5 sample. docs/status/evidence/v5-px4-worlds-2026-11-21/terrain-heightfield-gui-2026-11-27.json'
         terrain_flight_spawn_owner_20261122: 'Codex added the X500 Terrain Heightfield site and 1.6 m physical pad with a 1.72 m top. PX4 spawns on the pad and the same prepared SDF supplies takeoff clearance. The authored terrain sample maximum around the pad is 1.6235 m. The static clearance test permits 3 m ascent and rejects the old underground site. Ground configuration stays separate. Normal GUI flight verification is pending.'
         acceptance_ref: ROADMAP.md
         active_scope: '2026-10-12 claude (continuing codex, user request): aerial
@@ -4403,6 +4405,7 @@ tasks:
               broader acceptance pending
         title: Robot hand and gripper actuation
       R5.9:
+        stretch_camera_occlusion_owner_20261127: 'Codex owns the Stretch RGB-D pickup occlusion. The normal GUI completed the camera-guided approach, then the gripper obscured the cylinder on the next reach. Preserve the camera coordinates and require same-task adjacency, recent stream feedback, stopped base and unchanged physical scene before reusing that approach observation.'
         native_support_placement_owner_20261122: 'Codex implemented named level-box support selection for native Stretch place recipes. A fresh bilateral grasp, observed payload bounds and measured pad midpoint determine the goal. The released payload must fit and rest on that exact support before retreat. Local MuJoCo contact, source-bound recipe, and actual Tk widget checks passed. The complete native mission remains unmeasured.'
         rgbd_binding_validation_20261121: 'Codex applied the same source-object, collision shape and physical size validation to legacy and current TIAGo RGB-D bindings. Both installed fixtures load; dimension and shape mismatch tests reject either schema. Physical execution status is separate.'
         stretch_primitive_owner_20261121: 'Codex implemented the native Stretch RGB-D upright-cylinder adapter, installed the matching Mobile manipulation lab variant and added a GUI recipe source. Source, scene, plant, age, compiled collision dimensions and unheld gating remain required. 61 tests passed across estimator, ROS transport, native reach and Tk recipe code. Actual source-camera cylinder detection and physical missions are unmeasured.'

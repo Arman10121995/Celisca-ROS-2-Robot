@@ -1101,7 +1101,7 @@ def test_px4_flight_autofill_services_and_backend_correction(app):
     assert 'mode:=flight' in app.command_var.get()
     assert 'map_name:=celisca_floor_1' in app.command_var.get()
     assert 'use_sim_time:=false' in app.command_var.get()
-    assert 'spawn_z:=0.0' in app.command_var.get()
+    assert 'spawn_z:=' not in app.command_var.get()
     assert all(button.instate(['!disabled']) for button in app.flight_buttons)
     assert app.strafe_left_button.instate(['!disabled'])
     with patch.object(app, '_publish_drive') as publish, patch.object(app, '_run_aux_command') as command:
@@ -1113,6 +1113,21 @@ def test_px4_flight_autofill_services_and_backend_correction(app):
     select(app, app.robot_combo, 'bumperbot')
     assert not app._flight_selectable()
     assert all(button.instate(['disabled']) for button in app.flight_buttons)
+
+
+def test_px4_terrain_command_leaves_the_map_spawn_in_effect(app):
+    from dataclasses import replace
+
+    select(app, app.map_combo, 'terrain_heightfield')
+    select(app, app.robot_combo, 'px4_x500')
+    app.mode_var.set('flight')
+    app._update_from_selection()
+    assert 'map_name:=terrain_heightfield' in app.command_var.get()
+    assert 'spawn_z:=' not in app.command_var.get()
+    selection = replace(app._composition_selection(), spawn={'z': 2.1})
+    ok, manifest = launcher.resolve_selection(app.composition_registry, selection)
+    assert ok, manifest
+    assert manifest['launch']['arguments']['spawn_z'] == '2.100'
 
 
 def test_px4_rgbd_camera_and_aerial_mapping_autofill(app, tmp_path):
@@ -1174,10 +1189,12 @@ def test_px4_preserves_every_installed_world_and_autofills_flight(app):
         if world in restricted:
             assert app.command_var.get() == '' and "does not support robot class 'aerial'" in app.validation_var.get()
             continue
-        # The resolver canonicalizes aliases such as outdoor_terrain to the
-        # installed terrain_rough world, while keeping the operator selection.
-        canonical=app.map_profiles[world]['gazebo'].get('world_name',world)
-        assert 'map_name:='+canonical in app.command_var.get(), app.validation_var.get()
+        # The map ID selects the profile and the SDF filename selects the world.
+        world_name=app.map_profiles[world]['gazebo'].get('world_name',world)
+        assert 'map_name:='+world in app.command_var.get(), app.validation_var.get()
+        assert 'world_name:='+world_name in app.command_var.get()
+        if world == 'mobile_fetch_lab_can':
+            assert 'map_yaml:=maps/mobile_fetch_lab/maps/map.yaml' in app.command_var.get()
         assert 'mode:=flight' in app.command_var.get()
 
 

@@ -1,0 +1,141 @@
+{
+  "robot": "px4_x500",
+  "backend": "gazebo",
+  "map": "terrain_heightfield",
+  "mode": "flight",
+  "passed": true,
+  "scope": "Normal owned Tk Run/Takeoff/seven direction buttons/altitude/release/Stop/publisher loss/Land. Native X500/PX4 and independent Gazebo body; one open static map, no obstacle planner.",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=px4_x500 simulator:=gazebo use_sim_time:=false map_name:=terrain_heightfield world_package:=robot_lab_maps world_name:=terrain_heightfield world_path:=maps/terrain_heightfield/worlds/terrain_heightfield.world map_yaml:=maps/terrain_heightfield/maps/map.yaml mode:=flight gui:=false aerial_obstacles:=none",
+  "owned_pid": 152031,
+  "neutral": {
+    "commands": 0,
+    "displacement_m": 0.0,
+    "armed": false
+  },
+  "takeoff_check_replies": [
+    ""
+  ],
+  "takeoff_check": {
+    "state": "clear",
+    "rise_m": 3.0,
+    "ceiling_limited": false,
+    "error": ""
+  },
+  "takeoff_height_m": 2.9164881983464355,
+  "directions": {
+    "Turn Left": {
+      "yaw_rad": 0.6112273283503261,
+      "net_xy_m": 0.05443188018175085,
+      "command_max_yaw_rad_s": 0.3,
+      "stop": {
+        "drift_m": 0.028229046134825405,
+        "yaw_drift_rad": 0.002076560327107346
+      }
+    },
+    "Turn Right": {
+      "yaw_rad": -0.5884574508382391,
+      "net_xy_m": 0.04328589907190276,
+      "command_max_yaw_rad_s": 0.3,
+      "stop": {
+        "drift_m": 0.02274125965463244,
+        "yaw_drift_rad": 0.0008620833724540609
+      }
+    },
+    "Forward": {
+      "body_frame_travel_m": [
+        0.6937403799757446,
+        -0.07307160258322895
+      ],
+      "stop": {
+        "drift_m": 0.039168827160770706,
+        "yaw_drift_rad": 0.0005540370926161659
+      }
+    },
+    "Reverse": {
+      "body_frame_travel_m": [
+        -0.6929647938398235,
+        0.023907596370319133
+      ],
+      "stop": {
+        "drift_m": 0.021791274174584176,
+        "yaw_drift_rad": 0.000826807936249299
+      }
+    },
+    "Strafe L": {
+      "body_frame_travel_m": [
+        0.0793617520125829,
+        0.6939167529158075
+      ],
+      "stop": {
+        "drift_m": 0.03649289659073151,
+        "yaw_drift_rad": 8.77604365282711e-05
+      }
+    },
+    "Strafe R": {
+      "body_frame_travel_m": [
+        -0.08149356711044932,
+        -0.7518507889750524
+      ],
+      "stop": {
+        "drift_m": 0.040505225553385836,
+        "yaw_drift_rad": 0.0003051479334814054
+      }
+    }
+  },
+  "altitude": {
+    "up": {
+      "height_change_m": 0.6742786113986732,
+      "stop": {
+        "drift_m": 0.018103357492290674,
+        "yaw_drift_rad": 5.224235817100076e-05
+      }
+    },
+    "down": {
+      "height_change_m": -0.6491056879467942,
+      "stop": {
+        "drift_m": 0.038789475822017,
+        "yaw_drift_rad": 0.00029658224152902257
+      }
+    }
+  },
+  "publisher_loss_drift_m": 0.0219561308402368,
+  "landing_height_error_m": 0.000123076763827612,
+  "rotor_max_rad_s": 86.50507386180351,
+  "launch_returncode": 0,
+  "physical_body": {
+    "initial": {
+      "wall": 16645.268081222,
+      "x": -6.0,
+      "y": -6.0,
+      "z": 1.95412,
+      "yaw": 0.0
+    },
+    "final": {
+      "wall": 16768.763024465,
+      "x": -5.731790286030676,
+      "y": -6.013875559965036,
+      "z": 1.946876342397351,
+      "yaw": -0.022080757823982736
+    },
+    "maximum_z_m": 5.583694125545006,
+    "samples": 2468
+  },
+  "artifacts": {
+    "report.json": {
+      "path": "/workspace/molar/robot_lab_runtime/v5-terrain-gui-20261127-P78ky8/gui/report.json",
+      "sha256": "2a26d42853c812a506dffbb7a8cf0a1042b67c9deb685ac8adb12596551cd96f"
+    },
+    "source-manifest.json": {
+      "path": "/workspace/molar/robot_lab_runtime/v5-terrain-gui-20261127-P78ky8/gui/source-manifest.json",
+      "sha256": "7648480abf3f0ab8e9026c5052f5ae095b76286bbf2598fe490b134a619b20a7"
+    },
+    "trace.json": {
+      "path": "/workspace/molar/robot_lab_runtime/v5-terrain-gui-20261127-P78ky8/gui/trace.json",
+      "sha256": "f6df5e134e57c9b9d286a97bd27f54dbe9f9ed22f799d44af460f6dbce4238e8"
+    },
+    "gui-output.log": {
+      "path": "/workspace/molar/robot_lab_runtime/v5-terrain-gui-20261127-P78ky8/gui/gui-output.log",
+      "sha256": "1a1054239b1666b02af6ec8fc8478cc9f9a9b7e2602e51c96bd5903307f2b66f"
+    }
+  }
+}
