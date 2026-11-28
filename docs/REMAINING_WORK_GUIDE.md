@@ -7,6 +7,36 @@ evidence. Use their resolved GUI settings and receipts when changing
 controllers or planning. Scope new outcomes to the tested robot, fixture,
 backend and execution path.
 
+## Continue manipulation from the November 28 checkpoint
+
+- **F100 on Isaac.** In the GUI select the Pro630 + F100, Isaac, Display,
+  **Mobile fetch lab → Short block for F100**, and experimental workflows.
+  Follow `fetch_block` from the open-jaw alignment through pickup, carry,
+  `drop_table` release and final back-away. The installed profile uses the
+  existing PhysX gravity feedforward with a shared drive and compensation
+  budget. Preserve the shaft effort cap, passive followers and pad-force
+  thresholds. Archive the resolved profile, stage log and terminal report.
+  [GUI procedure and qualifier](tutorials/myagv-pro.md#experimental-fetch-with-the-f100).
+- **F100 on Gazebo.** The installed Fortress physics-5 interface and the
+  newer physics-7 mimic constraint are different contracts. Begin with a
+  one-shaft, five-follower component fixture under load and measure follower
+  error, drive effort, and bilateral contact. Use those results when wiring
+  the combined model's base and shared articulation into the GUI. Keep the
+  validated Fortress projects on their existing engine during this work.
+  [Fortress collection versions](https://github.com/gazebosim/docs/blob/master/fortress/install.md) · [Gazebo Physics 7 mimic feature](https://gazebosim.org/api/physics/7/classgz_1_1physics_1_1SetMimicConstraintFeature.html).
+- **Stretch loaded transport.** Reuse the tested original Stretch camera
+  pickup on `mobile_manipulation_lab_cylinder`. The native Navigation
+  workflow adds a destination and a named delivery support after the stow
+  checkpoint. Record both costmap acknowledgements, the owned Nav2 action,
+  independent base position, contact on both pads while carrying and the
+  supported release. [Camera setup](tutorials/rgbd-object-targets.md) · [Native task controls](tutorials/native-object-tasks.md).
+- **Panda workcell.** Use the authored `workcell_rgbd_pose` and RGB-D target
+  binding for the cube. Record camera error before planning and actual
+  object motion at lift and release. For the stepped part, the grasp is on
+  the declared post and the whole foot must fit on the support. Run the
+  measured MuJoCo fixture after changing shared geometry or custody logic.
+  [Workcell and compound payload guide](tutorials/urdf-arm-pick-place.md).
+
 November 3: [curved AUV planning, bounded terrain/backend adapters and concurrent fleet missions](status/curves-terrain-concurrency-2026-11-03.md) are implemented. Read the [source/measurement receipt](status/evidence/curves-terrain-concurrency-2026-11-03/README.md) and [native GUI guide](tutorials/curves-terrain-concurrency.md) before changing these paths. Continue the exact unresolved per-model/backend and floor/parking cases, preserving all historical certificates.
 
 Newest implementation: [facility queues/recovery, marine interruption and aerial formation routes](status/workflow-continuation-2026-11-02.md). Do not rebuild these workflows or infer their full acceptance from fixtures. Empty-car recovery and a single-member two-stop floor queue have real receipts; concurrent passenger missions, new aerial route flights, marine saved-map/obstacle/current/loss and terrain cases remain. Preserve exact source/runtime certificates and complete the remaining implementation before broad campaigns.
