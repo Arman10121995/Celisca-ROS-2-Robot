@@ -10,11 +10,18 @@ to the maps, robots and simulator versions in their receipts.
 | Ground mobility | Bumperbot and Labbot 16/16 on the four-backend navigation repeat. Four-wheel steering and mecanum 20/20. Car matrix 11/12. | More maps and seeds, actor maps, SLAM and 3D SLAM repeats, and the Isaac Ackermann goal abort. |
 | Legged | A1 and the recovered G1 policy passed 6/6 apiece on the November navigation course. | Go2 forward-arc clearance and stairs, B2 mission reliability, BHL balance and walking, and unqualified backends. |
 | Aerial | The X500 passed the manual GUI screen in all eight sampled Gazebo worlds after the Terrain Heightfield rerun. The moving-walker screen passed 3/3. | Remaining installed worlds, additional flight backends and larger formations. |
-| Manipulation | Panda cube 4/4, can 3/3, and the stepped part on MuJoCo. Shadow Hand 2/2 and TIAGo RGB-D fetch 2/2. The F100 completed MuJoCo Display and Navigation and PyBullet Display fetches. Stretch completed a camera-guided local cylinder pickup and supported release in MuJoCo. | F100 Isaac grip repeatability and terminal clearance, Gazebo linkage, loaded Stretch transport, arbitrary mesh payloads and more camera-guided backends. |
+| Manipulation | Panda cube 4/4, can 3/3, and the stepped part on MuJoCo. Shadow Hand 2/2 and TIAGo RGB-D fetch 2/2. The F100 completed MuJoCo Display and Navigation and PyBullet and Isaac Display fetches. Stretch completed a camera-guided local cylinder pickup and supported release in MuJoCo. | F100 Gazebo linkage and more maps and modes, loaded Stretch transport, arbitrary mesh payloads and additional camera-guided backends. |
 | Fleet, swarm and marine | Fleet Ward 3/3 and fleet-lift transports 3/3. Gazebo, MuJoCo and PyBullet concurrent Nav2 jobs 6/6. USV, AUV and ROV each passed the four-backend 8/8 round. | Open-RMF conflict/lift repeats, Isaac concurrency, swarm flocking and larger aerial formations, and broader marine and multi-leg missions. |
 | Release | Scoped runtime receipts and the current CI results are available. | Complete matrix, clean-host reproduction, comparison tutorials and optional hardware trials. |
 
 [Detailed implementation and validation queues](../../ROADMAP.md).
+
+November 28 Codex: Isaac completed the normal F100 GUI short-block fetch
+with bounded native gravity compensation. Residual alignment was 0.96 mm,
+lift was 47.5 mm, and maximum carry drift was 15.4 mm. The block remained
+stable on the drop table and the base backed away 0.577 m. The GUI scope
+matches the measured model, map and opt-in Isaac settings.
+[Isaac full-fetch receipt](evidence/r143-pro630-f100-2026-11-20/isaac-gui-full-fetch-2026-11-28.json).
 
 November 27 Codex: the experimental PyBullet F100 profile completed its
 normal-GUI fetch in 265.22 s. The block lifted 44.3 mm, drifted at most
@@ -55,10 +62,11 @@ Pickup bench. The matching model and scene offer a tested pinch offset.
 [Offset diagnosis](evidence/r59-stretch-camera-2026-11-27/gui-offset-penetration-stop-2026-11-28.json) · [Completed trial](evidence/r59-stretch-camera-2026-11-27/gui-camera-pick-supported-release-2026-11-28.json).
 
 November 28 Codex: a PyBullet fixed-arm workcell can now publish the
-configured overhead RGB-D stream and the optical transform. The software
-render test checks metric depth and image orientation against a known
-scene. Full camera-guided pickup and release await their physical trial.
-[Procedure](../tutorials/urdf-arm-pick-place.md#pick-the-cube-with-the-workcell-camera).
+configured overhead RGB-D stream and optical transform. The first normal
+GUI trial found an ambiguous color. After excluding the brown tables by
+their measured hue, the normal GUI completed the camera-guided cube
+pickup and supported release in 39.74 s with 0.8 mm camera position error.
+[Procedure](../tutorials/urdf-arm-pick-place.md#pick-the-cube-with-the-workcell-camera) · [Completed trial](evidence/r57-urdf-arm-pick-place-2026-11-17/pybullet-gui-workcell-rgbd-2026-11-28.json).
 
 November 21 Codex: the F100 now offers Isaac Display. Its normal GUI
 reached both presets on `nav_empty`, with all five passive followers,

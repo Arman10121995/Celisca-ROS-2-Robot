@@ -124,7 +124,7 @@ Work top to bottom. Each line links to its task.
 | Order | Task | Remaining implementation (short) | State |
 |---|---|---|---|
 | I0 | [R14.2](#r142--elephant-robotics-myagv-pro) myAGV Pro | Done: Gazebo source variant plus portable roller variant driving in MuJoCo, PyBullet and Isaac; Nav2 measured in Gazebo and PyBullet | implemented |
-| I0a | [R14.3](#r143--elephant-myagv-pro-mobile-manipulator) Elephant mobile manipulator | Bare Pro630 drive and joints measured on MuJoCo/PyBullet/Isaac. F100 completed MuJoCo Display and Navigation and PyBullet Display GUI fetches on the short-block map. Isaac grip repeatability and final clearance, and the Gazebo linkage remain | partial |
+| I0a | [R14.3](#r143--elephant-myagv-pro-mobile-manipulator) Elephant mobile manipulator | Bare Pro630 drive and joints measured on MuJoCo/PyBullet/Isaac. F100 completed MuJoCo Display and Navigation and PyBullet and Isaac Display GUI fetches on the short-block map. The Gazebo linkage and additional repeat, map and mode coverage remain | partial |
 | I0b | [R14.4](#r144--contributor-integration-course) Integration guide chapters | Done 2026-11-13: beginner course part 2 (chapters 9–12) in docs/learn and the GUI docs library; clean-host walkthrough remains | implemented |
 | I1 | [R13.2](#r132--vacuum-carpets-and-mopping) Vacuum carpets and mopping | Done 2026-11-10 (Gazebo mop + rug run passes) | implemented |
 | I2 | [R13.3](#r133--vacuum-camera-obstacle-recognition) Vacuum camera obstacles | Done-when met (ideal and learned). 11-17 retrain 3 installed (fewer pet/cable false positives, pet recall 54 → 60 %); learned zone job passes again (0 contacts, 0.286 m). Sock false positives remain; repeats/held-out room are V1 | implemented |
@@ -1910,12 +1910,19 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
   The installed-profile repeat stopped one-sided at close with about
   6 N on the left pad and zero on the right.
   [Trial receipt](docs/status/evidence/r143-pro630-f100-2026-11-20/isaac-gui-final-clearance-timeout-2026-11-27.json) · [Repeat](docs/status/evidence/r143-pro630-f100-2026-11-20/isaac-gui-replayed-one-sided-close-2026-11-27.json).
+  **2026-11-28:** bounded actual-pose gravity compensation brought the
+  residual to 0.96 mm. The normal experimental GUI lifted 47.5 mm with
+  both pads loaded, carried with 15.4 mm maximum drift, confirmed stable
+  support after release and backed away 0.577 m. The task completed in
+  894.03 wall seconds on `mobile_fetch_lab_f100`.
+  [Completed Isaac fetch](docs/status/evidence/r143-pro630-f100-2026-11-20/isaac-gui-full-fetch-2026-11-28.json).
 - The normal GUI and command line load the backend-specific fetch profiles
   when experimental assets are enabled. PyBullet selects the loaded-drive
   and coupling settings. Isaac selects on-demand RGB-D and live grasp
   alignment. The installed model retains its measured MuJoCo settings.
-- **Remaining implementation:** resolve variable loaded closure and confirm
-  terminal clearance for Isaac. The physical linkage on Gazebo remains open.
+- **Remaining implementation:** physical linkage and shared control on Gazebo.
+  Repeat the scoped Isaac and PyBullet screens with their declared settings
+  before expanding supported maps, objects and navigation modes.
 - **How to do it:** preserve the vendor flange and follower transforms, one
   shaft effort budget and the real measured linkage. Build on the existing
   source planner and R5.9 grasp/release contract.

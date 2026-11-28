@@ -108,6 +108,17 @@ robots:
             carry_drive_ramp_seconds: 2.0
             dock_linear_speed_floor_mps: 0.014
       isaac:
+        runtime_screens:
+          - backend: isaac
+            mode: display
+            maps: [nav_empty]
+            reports: [docs/status/evidence/r143-pro630-f100-2026-11-20/isaac-gui-gripper-confirmed.json]
+          - backend: isaac
+            mode: display
+            maps: [mobile_fetch_lab_f100]
+            reports: [docs/status/evidence/r143-pro630-f100-2026-11-20/isaac-gui-full-fetch-2026-11-28.json]
+            model_sha256: bf9ef87b82586316cb4ff59956cd87179c1f681bd352f46777468aebd2bb082d
+            task: F100 pickup, carry, supported release and clearance
         drive:
           isaac_rgbd_on_demand: true
         articulation:

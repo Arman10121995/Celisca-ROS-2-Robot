@@ -2,10 +2,11 @@
 
 November 28 manipulation: preserve the measured loaded PyBullet F100
 opt-in profile, including the single shaft effort, both pads, measured
-release and final clearance. Isaac's 1.25 mm alignment screen stopped at
-2.54 mm, and a subsequent candidate compensates PhysX joint gravity
-within the same effort budgets. The supported-release gate remains in force.
-[PyBullet receipt](status/evidence/r143-pro630-f100-2026-11-20/bullet-gui-full-fetch-2026-11-27.json) · [Isaac alignment receipt](status/evidence/r143-pro630-f100-2026-11-20/isaac-gui-alignment-plateau-2026-11-28.json).
+release and final clearance. The Isaac profile uses actual-pose gravity compensation within the same
+effort budgets. It completed the normal GUI fetch and final back-away.
+Preserve the measured 1.25 mm alignment gate while adding repeats and
+completing the Gazebo linkage.
+[PyBullet receipt](status/evidence/r143-pro630-f100-2026-11-20/bullet-gui-full-fetch-2026-11-27.json) · [Isaac receipt](status/evidence/r143-pro630-f100-2026-11-20/isaac-gui-full-fetch-2026-11-28.json).
 
 The original Stretch passed the camera-guided local cylinder pick and
 Pickup bench release. Preserve matched scene and source IDs, the stopped

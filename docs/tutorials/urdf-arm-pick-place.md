@@ -50,10 +50,11 @@ before it plans the grasp. It uses physical object feedback to judge lift
 and release. The fixture recognizes the authored red 40 mm cube.
 The normal GUI run on 2026-11-22 took 26.52 seconds, measured a 1.1 mm
 camera position error, lifted the cube 96.2 mm and left it stable on the
-destination table. PyBullet uses a stationary camera with the same optical
-pose and mirrors the measured objects from its physics client. A physical
-PyBullet camera-guided mission remains pending.
-[MuJoCo GUI receipt](../status/evidence/r57-urdf-arm-pick-place-2026-11-17/mujoco-gui-workcell-rgbd-2026-11-22.json).
+destination table. PyBullet uses the same optical pose and mirrors the
+measured objects from its physics client. The normal GUI run on November
+28 had 0.8 mm camera position error, raised the cube 99.7 mm and completed
+supported release in 39.74 seconds.
+[MuJoCo GUI receipt](../status/evidence/r57-urdf-arm-pick-place-2026-11-17/mujoco-gui-workcell-rgbd-2026-11-22.json) · [PyBullet GUI receipt](../status/evidence/r57-urdf-arm-pick-place-2026-11-17/pybullet-gui-workcell-rgbd-2026-11-28.json).
 
 To add a stationary camera to another MuJoCo or PyBullet fixed-arm workcell, set
 `workcell_rgbd_pose` on the map entry in `sim_maps.yaml`. Give the camera's

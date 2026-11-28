@@ -153,11 +153,11 @@ The installed GUI reports both loaded workflows as experimental.
 For a loaded experiment, select **Display**, **Mobile fetch lab → Short
 block for F100**, and **Enable experimental robot workflows**. PyBullet
 uses the calibrated passive linkage, ramped carry and precision docking
-recovery. The first complete run lifted 44.3 mm, released the block on the
-drop table and backed away 0.571 m. Isaac uses stopped open-jaw alignment
-before closing. One Isaac trial reached the back-away stage and timed out.
-A repeat stopped at a one-sided grip.
-[PyBullet full fetch](../status/evidence/r143-pro630-f100-2026-11-20/bullet-gui-full-fetch-2026-11-27.json) · [Isaac back-away](../status/evidence/r143-pro630-f100-2026-11-20/isaac-gui-final-clearance-timeout-2026-11-27.json) · [Isaac repeat](../status/evidence/r143-pro630-f100-2026-11-20/isaac-gui-replayed-one-sided-close-2026-11-27.json).
+recovery. Its complete run lifted 44.3 mm and backed away 0.571 m after
+release. Isaac uses stopped open-jaw alignment and bounded actual-pose
+gravity compensation. Its complete run aligned to 0.96 mm, lifted 47.5 mm,
+released onto the drop table and cleared it by 0.577 m in 894.03 seconds.
+[PyBullet full fetch](../status/evidence/r143-pro630-f100-2026-11-20/bullet-gui-full-fetch-2026-11-27.json) · [Isaac full fetch](../status/evidence/r143-pro630-f100-2026-11-20/isaac-gui-full-fetch-2026-11-28.json).
 
 To try Nav2 transport, keep the same experimental profile and map and
 select **MuJoCo → Navigation**. **Run fetch** becomes available when the Nav2 transit
