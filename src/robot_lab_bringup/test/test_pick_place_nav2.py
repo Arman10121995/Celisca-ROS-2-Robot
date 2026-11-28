@@ -512,7 +512,7 @@ def test_held_arm_interlock_leaves_existing_nav2_goal_owned(pick_place):
     node.base_pose, node.base_at = (0., 0., 0., 0.), pick_place._now()
     node._nav2_leg, node._twist, node._finish = Mock(), Mock(), Mock()
     target = dict(x=2., y=1., yaw=0., nav2=True)
-    phase = dict(started=node.base_at, waypoint=0, waypoints=[target])
+    phase = dict(name='carry', started=node.base_at, waypoint=0, waypoints=[target])
     task = dict(interlock=dict(drive_ticks=0, drive_ticks_with_articulation_active=0))
     node.state = dict(base_inhibited=True, holding=True)
 

@@ -1279,6 +1279,7 @@ class PickPlace(Node):
             return self._finish('failed', 'drive %s timed out' % phase['name'])
         interlock = task['interlock']
         interlock['drive_ticks'] += 1
+        phase_label = phase['name'].replace('_', ' ').capitalize()
         if phase.get('carrying'):
             drift = float(np.linalg.norm(self._in_base(self.truth[task['object']][:3]) - np.asarray(phase['reference'])))
             phase['max_drift'] = max(phase.get('max_drift', 0.0), drift)
@@ -1299,19 +1300,20 @@ class PickPlace(Node):
             # driving and new goals need the interlock to clear first.
             interlock['drive_ticks_with_articulation_active'] += 1
             if phase.get('nav_goal') is None:
+                self.message = f'{phase_label} paused while the arm settles.'
                 phase.pop('carry_drive_command', None)
                 return self._twist(0.0, 0.0)
             if self.state.get('holding') is not True or self.state.get('coupling_inhibited'):
                 return self._finish('failed', 'Articulation interlock during a Nav2 leg')
         x, y, _z, yaw = self.base_pose
         if phase['waypoint'] < len(phase['waypoints']) and phase['waypoints'][phase['waypoint']].get('nav2'):
+            self.message = f'{phase_label} using the owned Nav2 goal.'
             phase.pop('carry_drive_command', None)
             return self._nav2_leg(task, phase, phase['waypoints'][phase['waypoint']])
         if phase['waypoint'] >= len(phase['waypoints']):
             phase.pop('carry_drive_command', None)
             self._twist(0.0, 0.0)
-            if phase.get('precision_dock'):
-                self.message = 'Dock reached. Waiting for the measured base to stop.'
+            self.message = f'{phase_label} destination reached. Waiting for the measured base to stop.'
             if max(self.base_twist) < STILL_SPEED:
                 phase['still'] = phase.get('still') or _now()
                 if _now() - phase['still'] > 0.5:
@@ -1335,6 +1337,8 @@ class PickPlace(Node):
         target = phase['waypoints'][phase['waypoint']]
         dx, dy = target['x'] - x, target['y'] - y
         distance = math.hypot(dx, dy)
+        self.message = (f'{phase_label} at waypoint {phase["waypoint"] + 1} of {len(phase["waypoints"])}. '
+                        f'{distance:.2f} m remaining to this waypoint.')
         reverse = target.get('reverse', False)
         position_tolerance = self.dock_tolerance if 'yaw' in target else POSITION_TOLERANCE
         precision = (self.mobile.get('holonomic_docking') is True and 'yaw' in target
