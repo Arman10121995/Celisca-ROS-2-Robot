@@ -123,3 +123,32 @@ def test_real_sensor_publisher_updates_both_costmaps_and_invalid_bounds_keep_gat
     sensors.footprint()
     assert state.footprint_error and errors
     assert all(len(messages)==1 for messages in emitted)  # no bogus/shrunken envelope published
+
+
+def test_navigation_camera_has_a_scene_alias_without_reparenting_its_optical_frame():
+    from builtin_interfaces.msg import Time
+    from scipy.spatial.transform import Rotation
+    from robot_lab_mujoco.native_mobile_sensors import NativeMobileSensors
+    from robot_lab_utils.camera_model import NATIVE_CAMERA_OPTICAL_FRAME, scene_optical_frame
+
+    model = mj.MjModel.from_xml_string('''<mujoco><worldbody>
+      <body pos="1 2 .3" quat=".707106781 0 0 .707106781">
+        <camera pos=".2 0 .1" quat=".707106781 0 .707106781 0"/>
+      </body></worldbody></mujoco>''')
+    data = mj.MjData(model)
+    mj.mj_forward(model, data)
+    captured = []
+    sensors = NativeMobileSensors.__new__(NativeMobileSensors)
+    sensors.model, sensors.data, sensors.mj = model, data, mj
+    sensors.laser, sensors.camera, sensors.task = 1, 0, 'nav'
+    sensors.node = SimpleNamespace(tf=SimpleNamespace(sendTransform=captured.extend))
+    sensors.static_mounts(Time(sec=3))
+    ordinary = next(item for item in captured if item.child_frame_id == NATIVE_CAMERA_OPTICAL_FRAME)
+    assert ordinary.header.frame_id == 'native_body_1'
+    alias = next(item for item in captured if item.child_frame_id == scene_optical_frame(NATIVE_CAMERA_OPTICAL_FRAME, True))
+    assert alias.header.frame_id == 'native_world' and alias.header.stamp.sec == 3
+    p, q = alias.transform.translation, alias.transform.rotation
+    np.testing.assert_allclose([p.x, p.y, p.z], data.cam_xpos[0])
+    np.testing.assert_allclose(Rotation.from_quat([q.x, q.y, q.z, q.w]).as_matrix(),
+                               data.cam_xmat[0].reshape(3, 3) @ np.diag([1., -1., -1.]), atol=1e-7)
+    assert scene_optical_frame('external_camera_frame', True) == 'external_camera_frame'

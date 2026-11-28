@@ -15,6 +15,7 @@ from rclpy.qos import qos_profile_sensor_data
 from sensor_msgs.msg import Image,CameraInfo
 from std_msgs.msg import String
 from tf2_ros import Buffer,TransformListener,TransformException
+from robot_lab_utils.camera_model import scene_optical_frame
 from scipy.spatial.transform import Rotation
 
 from robot_lab_utils.object_estimates import RGBD_BOX_SOURCE, RGBD_PRIMITIVE_SOURCE
@@ -49,7 +50,7 @@ class RGBDObjects(Node):
         super().__init__('rgbd_object_pose',**kwargs)
         for name,value in dict(bindings='',image_topic='/oakd/rgb/image_raw',depth_topic='/oakd/depth/image_raw',
                 camera_info_topic='/oakd/rgb/camera_info',context_topic='/mobile_task/state',
-                output_topic='/robot_lab/object_estimates').items():self.declare_parameter(name,value)
+                output_topic='/robot_lab/object_estimates',use_native_scene_camera=False).items():self.declare_parameter(name,value)
         import yaml
         path=Path(self.get_parameter('bindings').value)
         contents = path.read_bytes()
@@ -106,7 +107,8 @@ class RGBDObjects(Node):
                     or info.roi.width not in (0,info.width) or info.roi.height not in (0,info.height)):
                 raise ValueError('RGB/depth must be aligned in the same calibrated optical frame and image size')
             color=pixels(rgb);distance=pixels(depth,True)
-            transform=self.tf.lookup_transform('native_world',rgb.header.frame_id,rclpy.time.Time.from_msg(rgb.header.stamp)).transform
+            optical_frame = scene_optical_frame(rgb.header.frame_id, self.get_parameter('use_native_scene_camera').value)
+            transform=self.tf.lookup_transform('native_world',optical_frame,rclpy.time.Time.from_msg(rgb.header.stamp)).transform
             p,q=transform.translation,transform.rotation
             world=np.eye(4);world[:3,:3]=Rotation.from_quat([q.x,q.y,q.z,q.w]).as_matrix();world[:3,3]=[p.x,p.y,p.z]
             digest=hashlib.sha256(bytes(rgb.data)+bytes(depth.data)+str(stamp(rgb)).encode()+self.bindings_sha256.encode()).hexdigest()

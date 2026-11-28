@@ -1335,17 +1335,18 @@ def _build_simulation_actions(context):
                     'grasp_fixture': display_args.get('grasp_fixture', 'false'),
                     **{'spawn_'+axis: display_args['spawn_'+axis] for axis in ('x', 'y', 'z', 'yaw')},
                 }.items()))
+        native_task = _launch_value(context, 'native_task')
+        object_camera_parameters = {'use_sim_time': True, 'use_native_scene_camera': native_task != 'display'}
         if marker_config and marker_config!='none':
             if not native_mobile:raise ValueError('Camera object targets currently require native mobile controls')
             if not Path(marker_config).is_file():raise ValueError('Object marker binding file is unavailable: '+marker_config)
             actions.append(Node(package='robot_lab_utils',executable='fiducial_object_pose.py',
-                name='fiducial_object_pose',output='screen',parameters=[{'use_sim_time':True,'bindings':marker_config}]))
+                name='fiducial_object_pose',output='screen',parameters=[dict(object_camera_parameters, bindings=marker_config)]))
         if rgbd_config and rgbd_config!='none':
             if not native_mobile:raise ValueError('RGB-D object targets currently require native mobile controls')
             if not Path(rgbd_config).is_file():raise ValueError('RGB-D object binding file is unavailable: '+rgbd_config)
             actions.append(Node(package='robot_lab_utils',executable='rgbd_object_pose.py',
-                name='rgbd_object_pose',output='screen',parameters=[{'use_sim_time':True,'bindings':rgbd_config}]))
-        native_task = _launch_value(context, 'native_task')
+                name='rgbd_object_pose',output='screen',parameters=[dict(object_camera_parameters, bindings=rgbd_config)]))
         if native_task != 'display':
             if not native_mobile or map_free:
                 raise ValueError('Native workflow requires enabled native mobile control and a selected world')

@@ -18,13 +18,15 @@ from tf2_ros import Buffer,TransformListener
 from scipy.spatial.transform import Rotation
 
 from robot_lab_utils.fiducial_objects import bindings,marker_pose,object_pose
+from robot_lab_utils.camera_model import scene_optical_frame
 
 
 class FiducialObjects(Node):
     def __init__(self,**kwargs):
         super().__init__('fiducial_object_pose',**kwargs)
         for name,value in dict(bindings='',image_topic='/oakd/rgb/image_raw',camera_info_topic='/oakd/rgb/camera_info',
-                               context_topic='/mobile_task/state',output_topic='/robot_lab/object_estimates').items():
+                               context_topic='/mobile_task/state',output_topic='/robot_lab/object_estimates',
+                               use_native_scene_camera=False).items():
             self.declare_parameter(name,value)
         import yaml
         path=Path(self.get_parameter('bindings').value)
@@ -98,7 +100,8 @@ class FiducialObjects(Node):
             gray=pixels[:,:,0] if count==1 else cv2.cvtColor(pixels,cv2.COLOR_RGB2GRAY if message.encoding=='rgb8' else cv2.COLOR_BGR2GRAY)
             corners,ids,_=(self.detector.detectMarkers(gray) if self.detector else
                           cv2.aruco.detectMarkers(gray,self.dictionary,parameters=self.parameters))
-            transform=self.tf.lookup_transform('native_world',message.header.frame_id,rclpy.time.Time.from_msg(message.header.stamp)).transform
+            optical_frame = scene_optical_frame(message.header.frame_id, self.get_parameter('use_native_scene_camera').value)
+            transform=self.tf.lookup_transform('native_world',optical_frame,rclpy.time.Time.from_msg(message.header.stamp)).transform
             p,q=transform.translation,transform.rotation
             world=np.eye(4);world[:3,:3]=Rotation.from_quat([q.x,q.y,q.z,q.w]).as_matrix();world[:3,3]=[p.x,p.y,p.z]
             detected=[] if ids is None else list(zip(ids.ravel().tolist(),corners))

@@ -15,6 +15,7 @@ from sensor_msgs.msg import CameraInfo, Image, Imu, LaserScan
 from std_msgs.msg import Bool
 
 from robot_lab_utils.camera_msgs import camera_info_msg, image_msg
+from robot_lab_utils.camera_model import NATIVE_CAMERA_OPTICAL_FRAME, NATIVE_CAMERA_SCENE_OPTICAL_FRAME
 from robot_lab_utils.native_mjcf_assets import body_frame
 
 
@@ -68,12 +69,27 @@ class NativeMobileSensors:
         laser.transform.rotation.w = 1.
         camera = TransformStamped()
         camera.header.stamp, camera.header.frame_id = stamp, body_frame(int(self.model.cam_bodyid[self.camera]))
-        camera.child_frame_id = 'native_camera_optical_frame'
+        camera.child_frame_id = NATIVE_CAMERA_OPTICAL_FRAME
         camera.transform.translation.x, camera.transform.translation.y, camera.transform.translation.z = map(float, self.model.cam_pos[self.camera])
         quaternion = np.zeros(4)
         self.mj.mju_mulQuat(quaternion, self.model.cam_quat[self.camera], np.array([0., 1., 0., 0.]))
         camera.transform.rotation.w, camera.transform.rotation.x, camera.transform.rotation.y, camera.transform.rotation.z = map(float, quaternion)
-        self.node.tf.sendTransform([laser, camera])
+        transforms = [laser, camera]
+        if self.task != 'display':
+            # Nav2 owns odom -> base. The detector still needs camera poses
+            # in the simulator scene for exact collision-aware reach targets.
+            scene_camera = TransformStamped()
+            scene_camera.header.stamp, scene_camera.header.frame_id = stamp, body_frame(0)
+            scene_camera.child_frame_id = NATIVE_CAMERA_SCENE_OPTICAL_FRAME
+            scene_camera.transform.translation.x, scene_camera.transform.translation.y, scene_camera.transform.translation.z = map(
+                float, self.data.cam_xpos[self.camera])
+            world_camera = np.zeros(4)
+            self.mj.mju_mat2Quat(world_camera, self.data.cam_xmat[self.camera])
+            self.mj.mju_mulQuat(quaternion, world_camera, np.array([0., 1., 0., 0.]))
+            scene_camera.transform.rotation.w, scene_camera.transform.rotation.x, scene_camera.transform.rotation.y, scene_camera.transform.rotation.z = map(
+                float, quaternion)
+            transforms.append(scene_camera)
+        self.node.tf.sendTransform(transforms)
 
     def publish(self, stamp):
         self.static_mounts(stamp)
@@ -146,7 +162,7 @@ class NativeMobileSensors:
         depth = self.depth_renderer.render().astype(np.float32)
         depth[~np.isfinite(depth) | (depth <= 0.) | (depth > 30.)] = np.nan
         fov = 2*math.atan(math.tan(math.radians(float(self.model.cam_fovy[self.camera]))/2)*self.width/self.height)
-        frame = 'native_camera_optical_frame'
+        frame = NATIVE_CAMERA_OPTICAL_FRAME
         self.rgb_pub.publish(image_msg(stamp, frame, rgb, 'rgb8'))
         self.depth_pub.publish(image_msg(stamp, frame, depth, '32FC1'))
         self.info_pub.publish(camera_info_msg(stamp, frame, self.width, self.height, fov))

@@ -32,6 +32,14 @@ OAKD = {
 # OpenGL-style camera frame (x right, y up, looking along -z).
 LINK_TO_OPENGL_CAMERA = (0.5, 0.5, -0.5, -0.5)
 WORKCELL_RGBD_FRAME = "workcell_rgbd_optical_frame"
+NATIVE_CAMERA_OPTICAL_FRAME = 'native_camera_optical_frame'
+NATIVE_CAMERA_SCENE_OPTICAL_FRAME = 'native_camera_scene_optical_frame'
+
+
+def scene_optical_frame(image_frame, use_native_scene_camera):
+    if use_native_scene_camera and image_frame == NATIVE_CAMERA_OPTICAL_FRAME:
+        return NATIVE_CAMERA_SCENE_OPTICAL_FRAME
+    return image_frame
 
 
 def vertical_fov(horizontal_fov, width, height):

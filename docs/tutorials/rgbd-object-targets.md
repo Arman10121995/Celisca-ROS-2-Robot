@@ -90,6 +90,10 @@ flowchart TD
 The ROS node consumes `/oakd/rgb/image_raw`, `/oakd/depth/image_raw`,
 `/oakd/rgb/camera_info`, image-time TF into `native_world` and the task's
 identity/object-name list. It ignores simulator object poses in the context.
+The navigation workflow retains the ordinary optical frame for the robot
+and carries a same-image-time optical pose in `native_world` for the
+detectors. This keeps reach coordinates in the compiled collision scene
+while the estimator owns the navigation frames.
 Output is `/robot_lab/object_estimates`. The original box configuration uses
 `rgbd_box_top`. A map declaring `robot_lab.rgbd_primitives.v1` uses
 `rgbd_primitive_top` for boxes and upright cylinders. A circular lid gives

@@ -20,6 +20,11 @@ ENVELOPE = dict(lower=[-0.503881, -0.503881, -0.227], upper=[0.503881, 0.503881,
 CHANNELS = [dict(name="lift", limits=[0.0, 1.1]), dict(name="gripper", limits=[-0.5, 0.5])]
 
 
+def test_native_sensor_readiness_gate_is_executable_in_a_symlink_install():
+    script = Path(_HERE).parent / 'scripts' / 'wait_native_sensors.py'
+    assert script.is_file() and os.access(script, os.X_OK)
+
+
 def _box(center, size):
     return dict(type="box", position=list(center), size=list(size), rotation=np.eye(3))
 

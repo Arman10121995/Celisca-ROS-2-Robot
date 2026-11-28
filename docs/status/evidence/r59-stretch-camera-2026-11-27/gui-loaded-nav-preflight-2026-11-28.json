@@ -1,0 +1,40 @@
+[
+  {
+    "robot": "menagerie_hello_robot_stretch",
+    "map": "mobile_manipulation_lab_cylinder",
+    "simulator": "mujoco",
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=menagerie_hello_robot_stretch simulator:=mujoco use_sim_time:=true map_name:=mobile_manipulation_lab_cylinder world_package:=robot_lab_maps world_name:=mobile_manipulation_lab_cylinder world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/mobile_manipulation_lab_cylinder/a021c7de3b429c0d5d0679457b0b162a1e950ed64a88da47dfa50be051784623/worlds/mobile_manipulation_lab_cylinder.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/mobile_manipulation_lab_cylinder/a021c7de3b429c0d5d0679457b0b162a1e950ed64a88da47dfa50be051784623/maps/map.yaml mode:=display gui:=false perception:=none enable_native_mobile:=true native_task:=nav",
+    "passed": false,
+    "error": "RuntimeError('Launch exited during native mobile task feedback')",
+    "launch_returncode": 1,
+    "scene_id": null,
+    "source_sha256": null,
+    "report": "/workspace/molar/robot_lab_runtime/pro630-gripper-20261120/stretch-loaded-camera-nav-20261128-Fkln6u/gui/report.json",
+    "report_sha256": "53754e73667778d134027fc6f631aa3ca519571e617db3b48b545e153c7bcd44",
+    "launch_log": "/workspace/molar/robot_lab_runtime/pro630-gripper-20261120/stretch-loaded-camera-nav-20261128-Fkln6u/gui/gui-output.log",
+    "launch_log_sha256": "61b92f4a829fcce3eeff434117d635f48e689c0a73d69329eadb03fda6ca2e32",
+    "diagnosis": "Native readiness helper lacked execute permission in the symlink install."
+  },
+  {
+    "robot": "menagerie_hello_robot_stretch",
+    "map": "mobile_manipulation_lab_cylinder",
+    "simulator": "mujoco",
+    "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=menagerie_hello_robot_stretch simulator:=mujoco use_sim_time:=true map_name:=mobile_manipulation_lab_cylinder world_package:=robot_lab_maps world_name:=mobile_manipulation_lab_cylinder world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/mobile_manipulation_lab_cylinder/a021c7de3b429c0d5d0679457b0b162a1e950ed64a88da47dfa50be051784623/worlds/mobile_manipulation_lab_cylinder.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/mobile_manipulation_lab_cylinder/a021c7de3b429c0d5d0679457b0b162a1e950ed64a88da47dfa50be051784623/maps/map.yaml mode:=display gui:=false perception:=none enable_native_mobile:=true native_task:=nav",
+    "passed": false,
+    "error": "TimeoutError('camera cylinder fit')",
+    "launch_returncode": 0,
+    "scene_id": "6b6c35e2c614f911f04dcc8d7599b0abcfb234c4bc149218e66576b3c69f81f0",
+    "source_sha256": "4f33408242b90acbe4ca0f4b544ca5efae4f423c92ef71358f0977ec0b03a316",
+    "report": "/workspace/molar/robot_lab_runtime/pro630-gripper-20261120/stretch-loaded-camera-nav-fixed-20261128-m7vbrv/gui/report.json",
+    "report_sha256": "66c52ad74ca7febcb2b573baf9ca79323f4e68a89e9ab91d1c52672ea71fe10e",
+    "launch_log": "/workspace/molar/robot_lab_runtime/pro630-gripper-20261120/stretch-loaded-camera-nav-fixed-20261128-m7vbrv/gui/gui-output.log",
+    "launch_log_sha256": "9ff2212a641c325e1bdb34a7bffe90eef6f95f2a5b00272c6a4352a637cde7dd",
+    "diagnosis": "Nav2 and articulation became ready. The camera detector could not resolve the native scene frame from the Nav2 optical frame.",
+    "perception_errors": {
+      "aruco_pnp": "No observation received; check map bindings and camera",
+      "rgbd_box_top": "No observation received; check map bindings and camera",
+      "rgbd_primitive_top": "LookupException: image-time TF unavailable"
+    },
+    "nav2_available": true
+  }
+]
