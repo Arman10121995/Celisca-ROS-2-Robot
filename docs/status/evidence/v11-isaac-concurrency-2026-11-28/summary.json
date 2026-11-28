@@ -1,0 +1,238 @@
+{
+ "I0_isaac_alone": [
+  {
+   "id": "377648fe99ba430bb09f765bba80bec4",
+   "backend": "isaac",
+   "ros_domain_id": 20,
+   "partition": "robot_lab_377648fe99ba430bb09f765bba80bec4",
+   "state": "task_process_completed",
+   "mission_success": true,
+   "mission_state": "measured_goals_reached",
+   "mission_reason": null,
+   "mission_result_error": null,
+   "goals": [
+    {
+     "requested": [
+      -3.8,
+      -3.3,
+      0.0
+     ],
+     "position_error_m": 0.031,
+     "heading_error_deg": 0.05,
+     "nav2_status": 4,
+     "sim_time": 43.5
+    },
+    {
+     "requested": [
+      -5.5,
+      -7.0,
+      3.14159
+     ],
+     "position_error_m": 0.017,
+     "heading_error_deg": 1.09,
+     "nav2_status": 4,
+     "sim_time": 73.533333333
+    }
+   ],
+   "goal_rejections_before_nav2_active": 2,
+   "path_length_m": 11.497693293085756,
+   "wall_duration_s": 112.4256686350127,
+   "real_time_factor": 0.902,
+   "peak_rss_mb": 6582,
+   "peak_cpu_percent": 1076,
+   "resource_samples": 351,
+   "budget_rss_mb": 8192.0,
+   "cleanup_complete": true,
+   "observed_surviving_pids": [],
+   "revision": "d91e94653cac4f86c54923345d6f49710c70f7b3"
+  }
+ ],
+ "I1_isaac_mujoco": [
+  {
+   "id": "57f75df386684cdf926a8221bb8a999c",
+   "backend": "mujoco",
+   "ros_domain_id": 21,
+   "partition": "robot_lab_57f75df386684cdf926a8221bb8a999c",
+   "state": "task_process_completed",
+   "mission_success": true,
+   "mission_state": "measured_goals_reached",
+   "mission_reason": null,
+   "mission_result_error": null,
+   "goals": [
+    {
+     "requested": [
+      -3.8,
+      -3.3,
+      0.0
+     ],
+     "position_error_m": 0.066,
+     "heading_error_deg": 1.13,
+     "nav2_status": 4,
+     "sim_time": 43.324
+    },
+    {
+     "requested": [
+      -5.5,
+      -7.0,
+      3.14159
+     ],
+     "position_error_m": 0.085,
+     "heading_error_deg": 2.81,
+     "nav2_status": 4,
+     "sim_time": 72.544
+    }
+   ],
+   "goal_rejections_before_nav2_active": 2,
+   "path_length_m": 11.378461881055424,
+   "wall_duration_s": 82.97140966499865,
+   "real_time_factor": 0.96,
+   "peak_rss_mb": 1952,
+   "peak_cpu_percent": 897,
+   "resource_samples": 221,
+   "budget_rss_mb": 4096.0,
+   "cleanup_complete": true,
+   "observed_surviving_pids": [],
+   "revision": "d91e94653cac4f86c54923345d6f49710c70f7b3"
+  },
+  {
+   "id": "d092771d994c4a6c8b70e38fd0de2734",
+   "backend": "isaac",
+   "ros_domain_id": 20,
+   "partition": "robot_lab_d092771d994c4a6c8b70e38fd0de2734",
+   "state": "task_process_completed",
+   "mission_success": true,
+   "mission_state": "measured_goals_reached",
+   "mission_reason": null,
+   "mission_result_error": null,
+   "goals": [
+    {
+     "requested": [
+      -3.8,
+      -3.3,
+      0.0
+     ],
+     "position_error_m": 0.052,
+     "heading_error_deg": 0.21,
+     "nav2_status": 4,
+     "sim_time": 41.85
+    },
+    {
+     "requested": [
+      -5.5,
+      -7.0,
+      3.14159
+     ],
+     "position_error_m": 0.071,
+     "heading_error_deg": 0.4,
+     "nav2_status": 4,
+     "sim_time": 71.116666666
+    }
+   ],
+   "goal_rejections_before_nav2_active": 2,
+   "path_length_m": 11.430051960686844,
+   "wall_duration_s": 125.4944143689936,
+   "real_time_factor": 0.765,
+   "peak_rss_mb": 6578,
+   "peak_cpu_percent": 917,
+   "resource_samples": 356,
+   "budget_rss_mb": 8192.0,
+   "cleanup_complete": true,
+   "observed_surviving_pids": [],
+   "revision": "d91e94653cac4f86c54923345d6f49710c70f7b3"
+  }
+ ],
+ "I2_isaac_mujoco": [
+  {
+   "id": "279b489cb59e4d5c8f34dae8c095245e",
+   "backend": "isaac",
+   "ros_domain_id": 20,
+   "partition": "robot_lab_279b489cb59e4d5c8f34dae8c095245e",
+   "state": "task_process_completed",
+   "mission_success": true,
+   "mission_state": "measured_goals_reached",
+   "mission_reason": null,
+   "mission_result_error": null,
+   "goals": [
+    {
+     "requested": [
+      -3.8,
+      -3.3,
+      0.0
+     ],
+     "position_error_m": 0.037,
+     "heading_error_deg": 0.33,
+     "nav2_status": 4,
+     "sim_time": 42.883333333
+    },
+    {
+     "requested": [
+      -5.5,
+      -7.0,
+      3.14159
+     ],
+     "position_error_m": 0.034,
+     "heading_error_deg": 1.32,
+     "nav2_status": 4,
+     "sim_time": 73.0
+    }
+   ],
+   "goal_rejections_before_nav2_active": 2,
+   "path_length_m": 11.53403835762104,
+   "wall_duration_s": 127.2444591520034,
+   "real_time_factor": 0.767,
+   "peak_rss_mb": 6543,
+   "peak_cpu_percent": 916,
+   "resource_samples": 371,
+   "budget_rss_mb": 8192.0,
+   "cleanup_complete": true,
+   "observed_surviving_pids": [],
+   "revision": "d91e94653cac4f86c54923345d6f49710c70f7b3"
+  },
+  {
+   "id": "a850971a375b48ae82a8f6223e5409e7",
+   "backend": "mujoco",
+   "ros_domain_id": 21,
+   "partition": "robot_lab_a850971a375b48ae82a8f6223e5409e7",
+   "state": "task_process_completed",
+   "mission_success": true,
+   "mission_state": "measured_goals_reached",
+   "mission_reason": null,
+   "mission_result_error": null,
+   "goals": [
+    {
+     "requested": [
+      -3.8,
+      -3.3,
+      0.0
+     ],
+     "position_error_m": 0.089,
+     "heading_error_deg": 1.13,
+     "nav2_status": 4,
+     "sim_time": 42.264
+    },
+    {
+     "requested": [
+      -5.5,
+      -7.0,
+      3.14159
+     ],
+     "position_error_m": 0.061,
+     "heading_error_deg": 0.78,
+     "nav2_status": 4,
+     "sim_time": 71.924
+    }
+   ],
+   "goal_rejections_before_nav2_active": 2,
+   "path_length_m": 11.382628301270486,
+   "wall_duration_s": 82.20284181999159,
+   "real_time_factor": 0.966,
+   "peak_rss_mb": 1901,
+   "peak_cpu_percent": 916,
+   "resource_samples": 226,
+   "budget_rss_mb": 4096.0,
+   "cleanup_complete": true,
+   "observed_surviving_pids": [],
+   "revision": "d91e94653cac4f86c54923345d6f49710c70f7b3"
+  }
+ ]
+}

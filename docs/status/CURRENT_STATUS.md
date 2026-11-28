@@ -16,6 +16,8 @@ to the maps, robots and simulator versions in their receipts.
 
 [Detailed implementation and validation queues](../../ROADMAP.md).
 
+November 28 Claude: **V11 Isaac in the concurrent coordinator: 5 of 5.** The Bumperbot Nav2 workload passed on Isaac alone (0.031 / 0.017 m) and twice beside MuJoCo (MuJoCo kept real-time factor 0.96; Isaac 0.77). The first pass with the 800 % CPU budget stopped every Isaac job (its tree uses about 1000 %), which left MuJoCo passing beside it; Isaac now needs `max_cpu_percent: 1200`. [Round](evidence/v11-isaac-concurrency-2026-11-28/README.md)
+
 November 28 Codex: Isaac completed the normal F100 GUI short-block fetch
 with bounded native gravity compensation. Residual alignment was 0.96 mm,
 lift was 47.5 mm, and maximum carry drift was 15.4 mm. The block remained

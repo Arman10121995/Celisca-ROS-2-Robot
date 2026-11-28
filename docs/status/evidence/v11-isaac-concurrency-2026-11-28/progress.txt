@@ -1,0 +1,9 @@
+I0_isaac_alone exit=1
+I1_isaac_mujoco exit=1
+I2_isaac_mujoco exit=1
+ALLDONE
+budget-800 runs moved to budget-800/; rerun with Isaac max_cpu_percent 1200:
+I0_isaac_alone exit=0
+I1_isaac_mujoco exit=0
+I2_isaac_mujoco exit=0
+ALLDONE

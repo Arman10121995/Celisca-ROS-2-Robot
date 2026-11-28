@@ -5387,6 +5387,7 @@ tasks:
       certificates. Full declared roadmap acceptance is still open; test counts, metadata and scene loads
       do not qualify remaining robot/map/backend missions. See docs/REMAINING_WORK_GUIDE.md.'
   R8:
+    validation_isaac_20261128: 'Claude V11: Isaac alone and Isaac + MuJoCo Nav2 jobs 5/5 under the coordinator with an Isaac CPU budget of 1200 percent; at 800 percent every Isaac job stopped on its budget while MuJoCo passed. docs/status/evidence/v11-isaac-concurrency-2026-11-28/README.md'
     owner: cline-agent
     state: partial
     tasks:

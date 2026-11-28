@@ -1,0 +1,169 @@
+{
+ "I0_isaac_alone": [
+  {
+   "id": "37ac71059b264a83b0ff5e788da39f74",
+   "backend": "isaac",
+   "ros_domain_id": 20,
+   "partition": "robot_lab_37ac71059b264a83b0ff5e788da39f74",
+   "state": "resource_budget_exceeded",
+   "mission_success": null,
+   "mission_state": null,
+   "mission_reason": null,
+   "mission_result_error": "No measured workload result was produced.",
+   "goals": [],
+   "goal_rejections_before_nav2_active": null,
+   "path_length_m": null,
+   "wall_duration_s": 32.565785462007625,
+   "real_time_factor": 0.331,
+   "peak_rss_mb": 6576,
+   "peak_cpu_percent": 1047,
+   "resource_samples": 101,
+   "budget_rss_mb": 8192.0,
+   "cleanup_complete": true,
+   "observed_surviving_pids": [],
+   "revision": "d91e94653cac4f86c54923345d6f49710c70f7b3"
+  }
+ ],
+ "I1_isaac_mujoco": [
+  {
+   "id": "2e7de3f0628449a1aabfd94a9e641172",
+   "backend": "isaac",
+   "ros_domain_id": 20,
+   "partition": "robot_lab_2e7de3f0628449a1aabfd94a9e641172",
+   "state": "resource_budget_exceeded",
+   "mission_success": false,
+   "mission_state": "failed",
+   "mission_reason": "Workload interrupted/canceled.",
+   "mission_result_error": null,
+   "goals": [],
+   "goal_rejections_before_nav2_active": 2,
+   "path_length_m": 6.156476761964438,
+   "wall_duration_s": 86.29244273999939,
+   "real_time_factor": 0.661,
+   "peak_rss_mb": 6580,
+   "peak_cpu_percent": 903,
+   "resource_samples": 239,
+   "budget_rss_mb": 8192.0,
+   "cleanup_complete": true,
+   "observed_surviving_pids": [],
+   "revision": "d91e94653cac4f86c54923345d6f49710c70f7b3"
+  },
+  {
+   "id": "854f192d7d33438189a5668673fd9ffa",
+   "backend": "mujoco",
+   "ros_domain_id": 21,
+   "partition": "robot_lab_854f192d7d33438189a5668673fd9ffa",
+   "state": "task_process_completed",
+   "mission_success": true,
+   "mission_state": "measured_goals_reached",
+   "mission_reason": null,
+   "mission_result_error": null,
+   "goals": [
+    {
+     "requested": [
+      -3.8,
+      -3.3,
+      0.0
+     ],
+     "position_error_m": 0.041,
+     "heading_error_deg": 0.28,
+     "nav2_status": 4,
+     "sim_time": 43.724
+    },
+    {
+     "requested": [
+      -5.5,
+      -7.0,
+      3.14159
+     ],
+     "position_error_m": 0.028,
+     "heading_error_deg": 2.98,
+     "nav2_status": 4,
+     "sim_time": 73.044
+    }
+   ],
+   "goal_rejections_before_nav2_active": 2,
+   "path_length_m": 11.401867115626441,
+   "wall_duration_s": 83.2614300379937,
+   "real_time_factor": 0.964,
+   "peak_rss_mb": 1894,
+   "peak_cpu_percent": 787,
+   "resource_samples": 226,
+   "budget_rss_mb": 4096.0,
+   "cleanup_complete": true,
+   "observed_surviving_pids": [],
+   "revision": "d91e94653cac4f86c54923345d6f49710c70f7b3"
+  }
+ ],
+ "I2_isaac_mujoco": [
+  {
+   "id": "1911f281fa2445bfa1c4f8568311ab29",
+   "backend": "isaac",
+   "ros_domain_id": 20,
+   "partition": "robot_lab_1911f281fa2445bfa1c4f8568311ab29",
+   "state": "resource_budget_exceeded",
+   "mission_success": false,
+   "mission_state": "failed",
+   "mission_reason": "Workload interrupted/canceled.",
+   "mission_result_error": null,
+   "goals": [],
+   "goal_rejections_before_nav2_active": 2,
+   "path_length_m": 6.2239161847724285,
+   "wall_duration_s": 87.78614910099714,
+   "real_time_factor": 0.655,
+   "peak_rss_mb": 6582,
+   "peak_cpu_percent": 877,
+   "resource_samples": 238,
+   "budget_rss_mb": 8192.0,
+   "cleanup_complete": true,
+   "observed_surviving_pids": [],
+   "revision": "d91e94653cac4f86c54923345d6f49710c70f7b3"
+  },
+  {
+   "id": "1cae6f0d935143c5b6446bd76ede47e6",
+   "backend": "mujoco",
+   "ros_domain_id": 21,
+   "partition": "robot_lab_1cae6f0d935143c5b6446bd76ede47e6",
+   "state": "task_process_completed",
+   "mission_success": true,
+   "mission_state": "measured_goals_reached",
+   "mission_reason": null,
+   "mission_result_error": null,
+   "goals": [
+    {
+     "requested": [
+      -3.8,
+      -3.3,
+      0.0
+     ],
+     "position_error_m": 0.078,
+     "heading_error_deg": 0.64,
+     "nav2_status": 4,
+     "sim_time": 45.944
+    },
+    {
+     "requested": [
+      -5.5,
+      -7.0,
+      3.14159
+     ],
+     "position_error_m": 0.044,
+     "heading_error_deg": 1.02,
+     "nav2_status": 4,
+     "sim_time": 74.964
+    }
+   ],
+   "goal_rejections_before_nav2_active": 2,
+   "path_length_m": 11.404124462820064,
+   "wall_duration_s": 85.43876566599647,
+   "real_time_factor": 0.964,
+   "peak_rss_mb": 1972,
+   "peak_cpu_percent": 925,
+   "resource_samples": 228,
+   "budget_rss_mb": 4096.0,
+   "cleanup_complete": true,
+   "observed_surviving_pids": [],
+   "revision": "d91e94653cac4f86c54923345d6f49710c70f7b3"
+  }
+ ]
+}
