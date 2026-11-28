@@ -248,3 +248,4 @@ choices.
 | 11-28 | V5 | Added X500-only `flight_spawn`s for residential_demo and terrain_stairs instead of moving their ground spawns | The takeoff check refused correctly (table, stair edge); ground robots keep their measured spawns |
 | 11-28 | V5 | Reverted the PX4 physics-step substitution after it did not change the small_warehouse result | A change that does not fix the measured failure would only alter other worlds' physics |
 | 11-28 | V7 | Kept the flocking peer search and reverted the steer-while-moving variant | The search alone kept 2/2 groups together; steering made one of two runs travel but lose cohesion |
+| 11-28 | V10 | Reverted the shorter MPPI→Arrival progress allowance after 20 s and 10 s lost 1 and 2 goals | Faster medians do not justify losing goals; the shared Humble progress checker needs a structural fix |
