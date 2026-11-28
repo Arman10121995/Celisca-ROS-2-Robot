@@ -73,8 +73,8 @@ def test_flocking_zones():
     _, angular, info = behaviour.step(*scan([(0., 1., .3)]), now=0.)
     assert info['state'] == 'avoid' and angular != 0
     behaviour = LocalBehaviour('local_flocking', .25, .6)
-    linear, _, info = behaviour.step(*scan(), now=0.)
-    assert info['state'] == 'forward' and linear == pytest.approx(.2)
+    linear, angular, info = behaviour.step(*scan(), now=0.)
+    assert info['state'] == 'search' and linear == 0. and angular > 0   # no peer in range: look for the group
 
 
 def test_flocking_thresholds_scale_with_scan_resolution():
@@ -275,4 +275,18 @@ def test_flocking_backs_out_of_a_corner_after_half_a_turn():
     linear, _, info = behaviour.step(corner, -math.pi, INC, now=half_turn + .1)
     assert info['state'] == 'backing' and linear < 0.
     assert behaviour.step(corner, -math.pi, INC, now=half_turn + 1.)[0] < 0.       # still backing out
-    assert behaviour.step([3.0] * 360, -math.pi, INC, now=half_turn + 2.)[2]['state'] == 'forward'
+    assert behaviour.step([3.0] * 360, -math.pi, INC, now=half_turn + 2.)[2]['state'] == 'search'     # out, no peer seen
+
+
+def test_flocking_searches_for_lost_peers_before_driving_on():
+    """No peer in range: a full turn in place, then 3 s forward, then search again (2026-11-28)."""
+    behaviour = LocalBehaviour('local_flocking', .2, 1.)
+    empty = [math.inf] * 360
+    increment = 2 * math.pi / 360
+    linear, angular, info = behaviour.step(empty, -math.pi, increment, 0.)
+    assert info['state'] == 'search' and linear == 0. and angular > 0.
+    turn = 2 * math.pi / abs(behaviour.params['left'])
+    assert behaviour.step(empty, -math.pi, increment, turn - .1)[2]['state'] == 'search'
+    linear, angular, info = behaviour.step(empty, -math.pi, increment, turn + .1)
+    assert info['state'] == 'search_forward' and linear > 0. and angular == 0.
+    assert behaviour.step(empty, -math.pi, increment, turn + 3.2)[2]['state'] == 'search'

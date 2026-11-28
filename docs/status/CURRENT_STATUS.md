@@ -16,6 +16,8 @@ to the maps, robots and simulator versions in their receipts.
 
 [Detailed implementation and validation queues](../../ROADMAP.md).
 
+November 28 Claude: **V7 swarm flocking keeps the group together (implemented, experimental; flocking still not passed).** A member that sees no peer now turns to find the group before driving on, instead of driving straight off. On `nav_empty` the three Bumperbots ended 1.51 and 2.04 m apart (11.1 m before) and stayed within sensing range 92–100 % of the time, but the group's centre moved under 1 m in 120 s: no collective motion yet. [Round](evidence/v7-swarm-flocking-2026-11-28/README.md)
+
 November 28 Claude: **V5 PX4 manual flight in 12 more worlds: 11 passed.** The X500 GUI screen flew the nav, office, warehouse, CELISCA floor 2, residential and stairs worlds (takeoff 2.91–3.10 m, publisher-loss drift ≤ 0.13 m). The takeoff check correctly refused two ground spawns (inside the residential table; beside a stair platform), and those worlds now carry X500 `flight_spawn`s that fly. small_warehouse arms but never lifts from two interior spots; a PX4 physics-step substitution had no effect and was reverted, and the building shell is the open suspect. [Round](evidence/v5-px4-more-worlds-2026-11-28/README.md)
 
 November 28 Claude: **V11 Isaac in the concurrent coordinator: 5 of 5.** The Bumperbot Nav2 workload passed on Isaac alone (0.031 / 0.017 m) and twice beside MuJoCo (MuJoCo kept real-time factor 0.96; Isaac 0.77). The first pass with the 800 % CPU budget stopped every Isaac job (its tree uses about 1000 %), which left MuJoCo passing beside it; Isaac now needs `max_cpu_percent: 1200`. [Round](evidence/v11-isaac-concurrency-2026-11-28/README.md)

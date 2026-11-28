@@ -22,6 +22,10 @@ Deviations, all for Robot Lab's scans and controllers:
 - speeds are clipped to the member's limits; the fleet controller's
   separation and scan guards still apply after a behaviour.
 
+- flocking with no peer in range turns in place for one full turn to find
+  the group before driving on for 3 s (then searches again). ROS2swarm
+  drives straight on, and in open space the members drifted apart
+  (measured 2026-11-18 and 2026-11-22);
 - flocking's avoid state only turns; in a corner every heading sees a wall
   inside zone 1 and a member turned for 65 s (measured 2026-11-18). After
   half a turn without a clear front it backs out for 1.5 s;
@@ -45,6 +49,7 @@ import numpy as np
 
 BEHAVIOURS = ('local_dispersion', 'local_attraction', 'local_aggregation', 'local_flocking')
 FLOCKING_BACK_OUT_S = 1.5     # s of reversing out of a corner (see the module notes)
+FLOCKING_SEARCH_FORWARD_S = 3.  # s of driving on after a full search turn found no peer
 
 # ROS2swarm config/burger/movement_pattern/basic/*.yaml
 BURGER = dict(
@@ -169,6 +174,8 @@ class LocalBehaviour:
     turn_sign: float = 0.         # an in-place turn short of the guard's corridor, kept until clear
     avoid_since: float = 0.       # flocking: when the current avoid turn began
     backing_until: float = 0.     # flocking: backing out of a corner until then
+    search_since: float = -1.     # flocking: when the current peer-search turn began (-1: not searching)
+    search_forward_until: float = 0.  # flocking: driving on after a fruitless search turn until then
     rng: random.Random = field(default_factory=lambda: random.Random(0))
 
     def __post_init__(self):
@@ -332,5 +339,22 @@ class LocalBehaviour:
             behind = zones['behind']
             nearest = min(behind)
             return turn_left if self.last[1] == 0. and nearest in behind[:len(behind) // 2] else turn_right
+        if not peers:
+            # No peer in range: turn in place to look for the group, for one
+            # full turn, before driving on (then search again). Without this a
+            # member that lost sight of its peers drove straight on, and the
+            # members drifted apart (2.5 -> 7.6 m on 11-18, 11.1 m on 11-22).
+            if now < self.search_forward_until:
+                self.state = 'search_forward'
+                return move
+            if self.search_since < 0.:
+                self.search_since = now
+            if now - self.search_since <= 2 * math.pi / abs(p['left']):
+                self.state = 'search'
+                return turn_left
+            self.search_since, self.search_forward_until = -1., now + FLOCKING_SEARCH_FORWARD_S
+            self.state = 'search_forward'
+            return move
+        self.search_since = -1.
         self.state = 'forward'
         return move
