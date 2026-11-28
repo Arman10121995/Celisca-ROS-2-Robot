@@ -22,10 +22,15 @@ For the experimental cylinder scene, select **Mobile manipulation lab →
 Upright RGB-D cylinder**. Select `environment_pickup_cylinder` and
 **RGB-D upright objects** in the task builder. The fixture uses the same
 benches and spawn, with a free 35 g cylinder, 35 mm across and 60 mm tall.
-Keep the full circular lid in view. A physical cylinder pick and transport
-run is pending. The GUI's **Object offset XYZ (m)** can shift the local
-pinch by up to 20 mm, for example to try a higher contact on the cylinder.
-The approach and descent keep the same shift. The close feedback reports
+Keep the full circular lid in view. For the original Stretch at the tested
+spawn with both rubber tips selected, click **Use tested pinch offset**
+before adding the local pick recipe. Select **Pickup bench** for the place
+recipe. The measured GUI run lifted the cylinder with 0.95 N and 0.96 N on
+the pads and returned it to that bench. Loaded base transport remains open.
+[Measured pickup and release](../status/evidence/r59-stretch-camera-2026-11-27/gui-camera-pick-supported-release-2026-11-28.json).
+
+The GUI's **Object offset XYZ (m)** can shift the local pinch by up to
+20 mm. The approach and descent keep the same shift. The close feedback reports
 the requested and measured gripper state alongside the two pad loads.
 The controlled close can retain its compressed motor reference when both
 pads produce enough normal load for the object's mass and nominal friction.

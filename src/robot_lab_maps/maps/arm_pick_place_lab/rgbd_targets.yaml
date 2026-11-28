@@ -5,5 +5,6 @@ objects:
     shape: box
     size_m: [0.04, 0.04, 0.04]
     hsv_low: [0, 75, 35]
-    hsv_high: [15, 255, 255]
+    # The TinyRenderer image gives the red cube hue 2 and both brown tables hue 15.
+    hsv_high: [12, 255, 255]
     depth_noise_m: 0.001

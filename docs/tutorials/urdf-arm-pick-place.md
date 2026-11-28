@@ -72,6 +72,9 @@ checks the attached post and box foot during the entire move. At release
 it checks the footprint and bottom height of the complete part against
 the table. A circular grasp surface permits any settled heading. The
 executor checks uprightness and rotation over the same settling interval.
+One normal MuJoCo GUI run lifted the stepped part 99.5 mm, transferred it,
+and confirmed supported release in 31.63 s.
+[Measured trial](../status/evidence/r57-urdf-arm-pick-place-2026-11-17/mujoco-gui-stepped-part-place-2026-11-28.json).
 
 For another reviewed rigid payload, author one loose SDF model with a
 single link and named box, sphere or cylinder collision elements. In the

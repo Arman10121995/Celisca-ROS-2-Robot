@@ -60,6 +60,17 @@ robots:
     - {simulator: mujoco, mode: display, map: nav_empty, evidence: docs/status/evidence/myagv-pro-2026-11-12/README.md}
     - {simulator: pybullet, mode: display, map: nav_empty, evidence: docs/status/evidence/myagv-pro-2026-11-12/README.md}
     - {simulator: isaac, mode: display, map: nav_empty, evidence: docs/status/evidence/myagv-pro-2026-11-12/README.md}
+  menagerie_hello_robot_stretch:
+    mobile_pick_presets:
+      mobile_manipulation_lab_cylinder:
+        source_sha256: 4f33408242b90acbe4ca0f4b544ca5efae4f423c92ef71358f0977ec0b03a316
+        scene_id: 6b6c35e2c614f911f04dcc8d7599b0abcfb234c4bc149218e66576b3c69f81f0
+        object: environment_pickup_cylinder
+        left_body: rubber_tip_left
+        right_body: rubber_tip_right
+        pose_source: rgbd_primitive_top
+        base_pose: [0.0, 0.0, 0.0]
+        offset: [0.001, -0.016, -0.008]
   asset_elephant_myagv_pro_pro630_f100:
     # Loaded fetch candidates, activated only by the experimental workflow.
     # The measured Display presets and MuJoCo fetch keep their own profiles.
@@ -99,6 +110,8 @@ robots:
       isaac:
         drive:
           isaac_rgbd_on_demand: true
+        articulation:
+          isaac_native_gravity_compensation: true
         pick_place:
           mobile:
             reanchor_before_descent: true
@@ -129,6 +142,10 @@ robots:
         mode: display
         map: arm_pick_place_lab
         evidence: docs/status/evidence/r57-urdf-arm-pick-place-2026-11-17/mujoco-gui-workcell-rgbd-2026-11-22.json
+      - simulator: mujoco
+        mode: display
+        map: arm_pick_place_compound
+        evidence: docs/status/evidence/r57-urdf-arm-pick-place-2026-11-17/mujoco-gui-stepped-part-place-2026-11-28.json
     articulation:
       schema: robot_lab.urdf_articulation.v1
       panel: arm

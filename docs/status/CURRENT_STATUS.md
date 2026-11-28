@@ -10,7 +10,7 @@ to the maps, robots and simulator versions in their receipts.
 | Ground mobility | Bumperbot and Labbot 16/16 on the four-backend navigation repeat. Four-wheel steering and mecanum 20/20. Car matrix 11/12. | More maps and seeds, actor maps, SLAM and 3D SLAM repeats, and the Isaac Ackermann goal abort. |
 | Legged | A1 and the recovered G1 policy passed 6/6 apiece on the November navigation course. | Go2 forward-arc clearance and stairs, B2 mission reliability, BHL balance and walking, and unqualified backends. |
 | Aerial | The X500 passed the manual GUI screen in all eight sampled Gazebo worlds after the Terrain Heightfield rerun. The moving-walker screen passed 3/3. | Remaining installed worlds, additional flight backends and larger formations. |
-| Manipulation | Panda cube 4/4, can 3/3, Shadow Hand 2/2, and TIAGo RGB-D fetch 2/2. The F100 completed MuJoCo Display and Navigation and PyBullet Display fetches. Stretch completed the camera-guided descent through gripper occlusion. | F100 Isaac grip repeatability and terminal clearance, Gazebo linkage, Stretch sustained grasp and lift, and steady lift of the stepped compound. |
+| Manipulation | Panda cube 4/4, can 3/3, and the stepped part on MuJoCo. Shadow Hand 2/2 and TIAGo RGB-D fetch 2/2. The F100 completed MuJoCo Display and Navigation and PyBullet Display fetches. Stretch completed a camera-guided local cylinder pickup and supported release in MuJoCo. | F100 Isaac grip repeatability and terminal clearance, Gazebo linkage, loaded Stretch transport, arbitrary mesh payloads and more camera-guided backends. |
 | Fleet, swarm and marine | Fleet Ward 3/3 and fleet-lift transports 3/3. Gazebo, MuJoCo and PyBullet concurrent Nav2 jobs 6/6. USV, AUV and ROV each passed the four-backend 8/8 round. | Open-RMF conflict/lift repeats, Isaac concurrency, swarm flocking and larger aerial formations, and broader marine and multi-leg missions. |
 | Release | Scoped runtime receipts and the current CI results are available. | Complete matrix, clean-host reproduction, comparison tutorials and optional hardware trials. |
 
@@ -41,14 +41,18 @@ November 28, with ten NoSlip iterations, the GUI lifted 99.6 mm with
 0.5 mm hold drift and reached the table inside its support. The then-current
 check rejected the part's stationary 17.8° heading change. The release
 checker now measures uprightness and rotation through the settling period.
-[Procedure](../tutorials/urdf-arm-pick-place.md#pick-a-stepped-part) · [NoSlip trial](evidence/r57-urdf-arm-pick-place-2026-11-17/mujoco-gui-stepped-part-settled-heading-2026-11-28.json).
+The normal GUI replay then completed pickup and supported release in
+31.63 s, with a 99.5 mm lift and 0.8 mm hold drift.
+[Procedure](../tutorials/urdf-arm-pick-place.md#pick-a-stepped-part) · [NoSlip diagnosis](evidence/r57-urdf-arm-pick-place-2026-11-17/mujoco-gui-stepped-part-settled-heading-2026-11-28.json) · [Completed trial](evidence/r57-urdf-arm-pick-place-2026-11-17/mujoco-gui-stepped-part-place-2026-11-28.json).
 
 November 28 Codex: the Stretch camera trial with a 16 mm reach correction
 produced 1.06 N and 1.41 N at its pads before the environment penetration
 guard stopped it. The metered close now holds the attained reference once
-the measured loads meet the configured support margin. A supported pickup
-and release still require a terminal measurement.
-[Offset trial](evidence/r59-stretch-camera-2026-11-27/gui-offset-penetration-stop-2026-11-28.json).
+the measured loads meet the configured support margin. A normal GUI run
+then completed all 13 local steps. It measured 0.946 N and 0.963 N while
+holding the cylinder unsupported, retracted the arm and released onto the
+Pickup bench. The matching model and scene offer a tested pinch offset.
+[Offset diagnosis](evidence/r59-stretch-camera-2026-11-27/gui-offset-penetration-stop-2026-11-28.json) · [Completed trial](evidence/r59-stretch-camera-2026-11-27/gui-camera-pick-supported-release-2026-11-28.json).
 
 November 28 Codex: a PyBullet fixed-arm workcell can now publish the
 configured overhead RGB-D stream and the optical transform. The software

@@ -1,0 +1,356 @@
+{
+  "robot": "asset_elephant_myagv_pro_pro630_f100",
+  "map": "mobile_fetch_lab_f100",
+  "simulator": "isaac",
+  "mode": "display",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=display map_name:=mobile_fetch_lab_f100 robot_model:=asset_elephant_myagv_pro_pro630_f100 simulator:=isaac gui:=false perception:=none allow_experimental_assets:=true",
+  "page_selected": true,
+  "launch_profile_sha256": "b05944e033c50a77c5cb903413ee71c11c11ca75609c2a44cc0ce911fc7c8751",
+  "model_sha256": "bf9ef87b82586316cb4ff59956cd87179c1f681bd352f46777468aebd2bb082d",
+  "passed": false,
+  "launch_returncode": 0,
+  "date": "2026-11-28",
+  "raw_report": "/workspace/molar/robot_lab_runtime/pro630-gripper-20261120/isaac-clearance-tight-alignment-20261128-LA1EhP/gui/report.json",
+  "raw_sha256": "be7c4fc3e08d24dfee9bb1bc2f6f2a4e12bb4a801ff23dea755007397139b3e0",
+  "launch_profile": "/workspace/molar/robot_lab_runtime/pro630-gripper-20261120/isaac-clearance-tight-alignment-20261128-LA1EhP/gui/launch-profile.json",
+  "observed_stage_file": "/workspace/molar/robot_lab_runtime/pro630-gripper-20261120/isaac-clearance-tight-alignment-20261128-LA1EhP/gui/task-stages.jsonl",
+  "result": {
+    "outcome": "failed",
+    "passed": false,
+    "object": "fetch_block",
+    "support": "drop_table",
+    "pose_source": "truth",
+    "message": "align_grasp: measured TCP is outside the grasp alignment tolerance",
+    "phase": "pick",
+    "seconds": 314.98,
+    "plan": {
+      "transit": "straight",
+      "pick_base": [
+        0.89,
+        -0.0,
+        0.0
+      ],
+      "place_base": [
+        0.45,
+        1.515,
+        1.571
+      ],
+      "place_xy": [
+        0.45,
+        1.96
+      ],
+      "grasp_width_m": 0.04,
+      "pick_base_measured": [
+        0.8855,
+        0.0036,
+        -0.0035,
+        0.0267
+      ]
+    },
+    "stages": [
+      {
+        "phase": "to_object_arrived",
+        "final_pose": [
+          0.8866,
+          0.0005,
+          -0.0034,
+          0.0239
+        ]
+      },
+      {
+        "phase": "to_object",
+        "seconds": 254.62
+      },
+      {
+        "stage": "open",
+        "seconds": 7.21,
+        "object_truth": [
+          1.36,
+          0.0,
+          0.545
+        ],
+        "tcp_estimate": [
+          0.8798,
+          0.2857,
+          1.0714
+        ],
+        "passed": true
+      },
+      {
+        "stage": "above_object",
+        "seconds": 23.23,
+        "object_truth": [
+          1.36,
+          0.0,
+          0.545
+        ],
+        "tcp_estimate": [
+          1.3601,
+          -0.0,
+          0.6001
+        ],
+        "passed": true,
+        "replan": true,
+        "pregrasp_base": [
+          0.8854613600726434,
+          0.0036184088937464085,
+          -0.003530682793826345,
+          0.026653743612978946
+        ],
+        "projected_tool_drift_m": 0.00454,
+        "payload_drift_m": 0.0
+      },
+      {
+        "stage": "open",
+        "seconds": 0.14,
+        "object_truth": [
+          1.36,
+          -0.0,
+          0.545
+        ],
+        "tcp_estimate": [
+          1.3595,
+          0.004,
+          0.5979
+        ],
+        "passed": true
+      },
+      {
+        "stage": "above_object",
+        "seconds": 1.24,
+        "object_truth": [
+          1.36,
+          0.0,
+          0.545
+        ],
+        "tcp_estimate": [
+          1.3603,
+          -0.0011,
+          0.5999
+        ],
+        "passed": true,
+        "replan": false,
+        "pregrasp_base": [
+          0.8855867286457552,
+          0.003660525863919133,
+          -0.0034782481217117724,
+          0.02701709417337519
+        ],
+        "projected_tool_drift_m": 0.00025,
+        "payload_drift_m": 0.0
+      },
+      {
+        "stage": "down_to_grasp",
+        "seconds": 5.06,
+        "object_truth": [
+          1.3597,
+          0.0002,
+          0.545
+        ],
+        "tcp_estimate": [
+          1.3628,
+          -0.0002,
+          0.5752
+        ],
+        "passed": true,
+        "align": true,
+        "alignment_correction": 1,
+        "alignment_path": "raised",
+        "live_grasp_error_m": 0.00727,
+        "measured_tool_xyz_m": [
+          1.3669413930745007,
+          0.0002801154553633043,
+          0.5726407400396024
+        ],
+        "correction_xy_m": [
+          -0.007269139986666451,
+          -0.00010311127558021254
+        ],
+        "grasp_alignment_tolerance_m": 0.00125
+      },
+      {
+        "stage": "align_grasp",
+        "seconds": 7.98,
+        "object_truth": [
+          1.3586,
+          -0.0001,
+          0.5455
+        ],
+        "tcp_estimate": [
+          1.3622,
+          0.0001,
+          0.5753
+        ],
+        "passed": true,
+        "align": true,
+        "alignment_correction": 2,
+        "alignment_path": "raised",
+        "live_grasp_error_m": 0.00315,
+        "measured_tool_xyz_m": [
+          1.3616488772761002,
+          0.0002672954984896447,
+          0.5732657908063594
+        ],
+        "correction_xy_m": [
+          -0.0031330460381702174,
+          -0.00036254761732106494
+        ],
+        "grasp_alignment_tolerance_m": 0.00125
+      },
+      {
+        "stage": "align_grasp",
+        "seconds": 6.63,
+        "object_truth": [
+          1.3587,
+          -0.0001,
+          0.5455
+        ],
+        "tcp_estimate": [
+          1.3609,
+          -0.0003,
+          0.5753
+        ],
+        "passed": true,
+        "align": true,
+        "alignment_correction": 3,
+        "alignment_path": "raised",
+        "live_grasp_error_m": 0.00259,
+        "measured_tool_xyz_m": [
+          1.361170701938391,
+          -0.00023605001867521374,
+          0.5731956163445955
+        ],
+        "correction_xy_m": [
+          -0.0025861240597246926,
+          0.00014396407883763537
+        ],
+        "grasp_alignment_tolerance_m": 0.00125
+      },
+      {
+        "stage": "align_grasp",
+        "seconds": 6.63,
+        "object_truth": [
+          1.3587,
+          -0.0002,
+          0.5455
+        ],
+        "tcp_estimate": [
+          1.361,
+          -0.0004,
+          0.5753
+        ],
+        "passed": false,
+        "reason": "measured TCP is outside the grasp alignment tolerance",
+        "live_grasp_error_m": 0.00254,
+        "measured_tool_xyz_m": [
+          1.361210619902697,
+          -0.00036463801871334275,
+          0.5732149996896096
+        ],
+        "correction_xy_m": [
+          -0.002528702247682979,
+          0.0002091910550957646
+        ],
+        "grasp_alignment_tolerance_m": 0.00125
+      }
+    ]
+  },
+  "last_sample": {
+    "t": 314.98,
+    "stage": "align_grasp",
+    "object": [
+      1.3587,
+      -0.0002,
+      0.5455,
+      0.9999,
+      -0.0009,
+      -0.0145,
+      -0.004
+    ],
+    "fingers": [
+      0.9986,
+      0.9986,
+      0.9987,
+      0.9992,
+      0.9989,
+      0.999
+    ],
+    "finger_references": [
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0,
+      1.0
+    ],
+    "pad_normal_force_n": {
+      "left": 0.0,
+      "right": 0.0
+    },
+    "non_pad_jaw_normal_force_n": {
+      "left": 0.0,
+      "right": 0.0
+    },
+    "arm_joints": {
+      "pro630_joint1_to_base": -0.22495,
+      "pro630_joint2_to_joint1": 1.24543,
+      "pro630_joint3_to_joint2": -0.82477,
+      "pro630_joint4_to_joint3": 1.12615,
+      "pro630_joint5_to_joint4": -1.56843,
+      "pro630_joint6_to_joint5": 2.162
+    },
+    "tcp_truth": [
+      1.3612,
+      -0.0004,
+      0.5732
+    ],
+    "finger_links": {
+      "pro630_gripper_left3": [
+        1.3414,
+        0.001,
+        0.6637
+      ],
+      "pro630_gripper_left1": [
+        1.2971,
+        0.0008,
+        0.622
+      ],
+      "pro630_gripper_left2": [
+        1.3145,
+        0.001,
+        0.6832
+      ],
+      "pro630_gripper_right3": [
+        1.3773,
+        -0.0001,
+        0.6654
+      ],
+      "pro630_gripper_right1": [
+        1.424,
+        0.0008,
+        0.6248
+      ],
+      "pro630_gripper_right2": [
+        1.4032,
+        0.0011,
+        0.6849
+      ]
+    },
+    "tcp_estimate": [
+      1.361,
+      -0.0004,
+      0.5753
+    ],
+    "base": [
+      0.8863,
+      0.0038,
+      -0.0031,
+      0.0276
+    ],
+    "object_in_base": [
+      0.4721,
+      -0.017,
+      0.5486
+    ]
+  }
+}

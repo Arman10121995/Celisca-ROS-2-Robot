@@ -1,5 +1,21 @@
 # Agent Handoff Protocol
 
+November 28 manipulation: preserve the measured loaded PyBullet F100
+opt-in profile, including the single shaft effort, both pads, measured
+release and final clearance. Isaac's 1.25 mm alignment screen stopped at
+2.54 mm, and a subsequent candidate compensates PhysX joint gravity
+within the same effort budgets. The supported-release gate remains in force.
+[PyBullet receipt](status/evidence/r143-pro630-f100-2026-11-20/bullet-gui-full-fetch-2026-11-27.json) · [Isaac alignment receipt](status/evidence/r143-pro630-f100-2026-11-20/isaac-gui-alignment-plateau-2026-11-28.json).
+
+The original Stretch passed the camera-guided local cylinder pick and
+Pickup bench release. Preserve matched scene and source IDs, the stopped
+base gate, supported-release checks and the captured motor reference.
+The next Stretch workflow is loaded base transport with fresh custody and
+both navigation footprint acknowledgements. The Panda stepped-part
+placement in MuJoCo also passed. Preserve its full compound projection
+and measured upright, settled release.
+[Stretch receipt](status/evidence/r59-stretch-camera-2026-11-27/gui-camera-pick-supported-release-2026-11-28.json) · [Stepped part receipt](status/evidence/r57-urdf-arm-pick-place-2026-11-17/mujoco-gui-stepped-part-place-2026-11-28.json).
+
 November 22 F100 loaded pickup: PyBullet's fixed-base replay with added
 transmission inertia, 100 solver iterations, four non-contact iterations
 and gear ERP 0.35 produced 19/19 bilateral samples below 0.01 rad follower

@@ -1,0 +1,223 @@
+{
+  "robot": "asset_franka_panda_panda",
+  "map": "arm_pick_place_compound",
+  "simulator": "mujoco",
+  "mode": "display",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_franka_panda_panda simulator:=mujoco use_sim_time:=true map_name:=arm_pick_place_compound world_package:=robot_lab_maps world_name:=arm_pick_place_compound world_path:=maps/arm_pick_place_compound/worlds/arm_pick_place_compound.world map_yaml:=robot_lab_maps/maps/arm_pick_place_lab/maps/map.yaml mode:=display gui:=false perception:=none",
+  "page_selected": true,
+  "launch_profile_sha256": "eec515e9c5468f33e0de0a22cbf3f3ca36a810a7b30c9e7665cd55409fc8452d",
+  "model_sha256": "1685e99c9fa5ab60efe1b05d5b84ee2adacc7db7f2de83ca9aa976e00d8b8fc0",
+  "passed": true,
+  "launch_returncode": 0,
+  "date": "2026-11-28",
+  "raw_report": "/workspace/molar/robot_lab_runtime/pro630-gripper-20261120/panda-compound-supported-release-20261128-fcy2Ib/gui/report.json",
+  "raw_sha256": "d6b19aed75cc6b42c21e7826fc70febe441351f1ddab689490131e5361453067",
+  "launch_profile": "/workspace/molar/robot_lab_runtime/pro630-gripper-20261120/panda-compound-supported-release-20261128-fcy2Ib/gui/launch-profile.json",
+  "observed_stage_file": "/workspace/molar/robot_lab_runtime/pro630-gripper-20261120/panda-compound-supported-release-20261128-fcy2Ib/gui/task-stages.jsonl",
+  "result": {
+    "outcome": "succeeded",
+    "passed": true,
+    "object": "pickup_stepped",
+    "support": "place_table",
+    "pose_source": "truth",
+    "message": "Placed pickup_stepped on place_table",
+    "phase": "pick_place",
+    "seconds": 31.63,
+    "plan": {
+      "compound_obstacles": [],
+      "grasp_width_m": 0.04,
+      "place_centre": [
+        0.5,
+        0.25,
+        0.32200624679425977
+      ],
+      "place_orientation": [
+        0.9999999861567782,
+        8.060204651213961e-05,
+        -1.9555200669004513e-05,
+        0.00014424752187278784
+      ]
+    },
+    "stages": [
+      {
+        "stage": "open",
+        "seconds": 0.1,
+        "object_truth": [
+          0.5,
+          -0.25,
+          0.3219
+        ],
+        "tcp_estimate": [
+          0.3074,
+          -0.0,
+          0.4881
+        ],
+        "passed": true
+      },
+      {
+        "stage": "above_object",
+        "seconds": 8.47,
+        "object_truth": [
+          0.5,
+          -0.25,
+          0.3219
+        ],
+        "tcp_estimate": [
+          0.4984,
+          -0.2481,
+          0.4539
+        ],
+        "passed": true
+      },
+      {
+        "stage": "down_to_grasp",
+        "seconds": 1.32,
+        "object_truth": [
+          0.5,
+          -0.25,
+          0.3219
+        ],
+        "tcp_estimate": [
+          0.4994,
+          -0.2499,
+          0.3531
+        ],
+        "passed": true
+      },
+      {
+        "stage": "close",
+        "seconds": 2.24,
+        "object_truth": [
+          0.4999,
+          -0.2501,
+          0.3219
+        ],
+        "tcp_estimate": [
+          0.4998,
+          -0.2501,
+          0.3531
+        ],
+        "passed": true,
+        "finger_positions": [
+          0.0161,
+          0.0162
+        ],
+        "reason": ""
+      },
+      {
+        "stage": "lift",
+        "seconds": 8.74,
+        "object_truth": [
+          0.5003,
+          -0.25,
+          0.4214
+        ],
+        "tcp_estimate": [
+          0.4997,
+          -0.2498,
+          0.4527
+        ],
+        "passed": true,
+        "rise_m": 0.0995,
+        "hold_drift_m": 0.0008,
+        "reason": ""
+      },
+      {
+        "stage": "over_support",
+        "seconds": 4.9,
+        "object_truth": [
+          0.5008,
+          0.245,
+          0.4181
+        ],
+        "tcp_estimate": [
+          0.4998,
+          0.2498,
+          0.453
+        ],
+        "passed": true
+      },
+      {
+        "stage": "lower",
+        "seconds": 1.43,
+        "object_truth": [
+          0.4981,
+          0.2456,
+          0.3205
+        ],
+        "tcp_estimate": [
+          0.4999,
+          0.2495,
+          0.354
+        ],
+        "passed": true
+      },
+      {
+        "stage": "release",
+        "seconds": 1.74,
+        "object_truth": [
+          0.4994,
+          0.2471,
+          0.3219
+        ],
+        "tcp_estimate": [
+          0.4997,
+          0.2499,
+          0.3533
+        ],
+        "passed": true
+      },
+      {
+        "stage": "retreat",
+        "seconds": 2.26,
+        "object_truth": [
+          0.4994,
+          0.2471,
+          0.3219
+        ],
+        "tcp_estimate": [
+          0.4995,
+          0.2499,
+          0.453
+        ],
+        "passed": true,
+        "final_pose": [
+          0.4994,
+          0.2471,
+          0.3219
+        ],
+        "height_error_m": -0.0001,
+        "inside_support": true,
+        "orientation_aligned": true,
+        "moved_last_s_m": 0.0,
+        "reason": "",
+        "rotation_moved_last_s_rad": 0.0
+      },
+      {
+        "phase": "pick_place",
+        "seconds": 31.63
+      }
+    ]
+  },
+  "last_sample": {
+    "t": 31.52,
+    "stage": "retreat",
+    "object": [
+      0.4994,
+      0.2471,
+      0.3219,
+      0.9977,
+      0.0,
+      0.0,
+      -0.0683
+    ],
+    "fingers": [
+      0.04,
+      0.04
+    ],
+    "finger_references": [
+      0.04,
+      0.04
+    ]
+  }
+}

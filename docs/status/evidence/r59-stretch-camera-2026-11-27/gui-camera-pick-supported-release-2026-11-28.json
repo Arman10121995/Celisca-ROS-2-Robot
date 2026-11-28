@@ -1,0 +1,83 @@
+{
+  "robot": "menagerie_hello_robot_stretch",
+  "map": "mobile_manipulation_lab_cylinder",
+  "simulator": "mujoco",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=menagerie_hello_robot_stretch simulator:=mujoco use_sim_time:=true map_name:=mobile_manipulation_lab_cylinder world_package:=robot_lab_maps world_name:=mobile_manipulation_lab_cylinder world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/mobile_manipulation_lab_cylinder/a021c7de3b429c0d5d0679457b0b162a1e950ed64a88da47dfa50be051784623/worlds/mobile_manipulation_lab_cylinder.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/mobile_manipulation_lab_cylinder/a021c7de3b429c0d5d0679457b0b162a1e950ed64a88da47dfa50be051784623/maps/map.yaml mode:=display gui:=false perception:=none enable_native_mobile:=true native_task:=display",
+  "source_sha256": "4f33408242b90acbe4ca0f4b544ca5efae4f423c92ef71358f0977ec0b03a316",
+  "scene_id": "6b6c35e2c614f911f04dcc8d7599b0abcfb234c4bc149218e66576b3c69f81f0",
+  "passed": true,
+  "launch_returncode": 0,
+  "raw_report": "/workspace/molar/robot_lab_runtime/pro630-gripper-20261120/stretch-offset-reference-hold-20261128-RMjgpo/gui/report.json",
+  "raw_sha256": "b6390b6c1f7499e3908244b58c24be03743f5519363122942e460eeaa410ba72",
+  "journal": "/workspace/molar/robot_lab_runtime/pro630-gripper-20261120/stretch-offset-reference-hold-20261128-RMjgpo/runtime/mobile-tasks/20261128-085558-7b9bcacdc7104363a3ce82e8becfdf6d.jsonl",
+  "journal_sha256": "468a87d4370cbf913d9ccc36a6624f04be58de4bde325f85423ffe6b6df00df0",
+  "mode": "display",
+  "head_targets_rad": {
+    "head_pan": -1.576,
+    "head_tilt": -0.923
+  },
+  "pinch_offset_native_world_m": [
+    0.001,
+    -0.016,
+    -0.008
+  ],
+  "measured_steps": 13,
+  "camera_approach_reuse_age_s": 12.059999999998087,
+  "motor_captures": [
+    {
+      "sim_time": 34.05999999999566,
+      "grasp_hold_reference": 0.0033249999999982027,
+      "grip_capture_load_n": 0.42918750000000006,
+      "object_observation": {
+        "stamp": 34.05999999999566,
+        "relative": [
+          0.0009532922987443009,
+          -0.0013623367786799103,
+          0.03444087884000609
+        ],
+        "left_force": 1.1604016084077227,
+        "right_force": 1.1603122526175909,
+        "supported": false,
+        "speed": 0.009776730763228313
+      }
+    }
+  ],
+  "object_checks": [
+    {
+      "sim_time": 46.320000000010644,
+      "object_condition": "grasped",
+      "support_geometry": null,
+      "object_observation": {
+        "stamp": 46.320000000010644,
+        "relative": [
+          0.0020449724985074566,
+          -0.0015584396602511172,
+          0.034440721816587416
+        ],
+        "left_force": 0.9458823657748594,
+        "right_force": 0.9627306801653674,
+        "supported": false,
+        "speed": 5.251701708172536e-05
+      }
+    },
+    {
+      "sim_time": 85.37999999998242,
+      "object_condition": "released",
+      "support_geometry": "environment_pickup_bench_collision",
+      "object_observation": {
+        "stamp": 85.37999999998242,
+        "relative": [
+          -0.04029881995291823,
+          -0.00670564160599085,
+          0.08113151122387202
+        ],
+        "left_force": 0.0,
+        "right_force": 0.0,
+        "supported": true,
+        "speed": 0.0003612149508503038
+      }
+    }
+  ],
+  "message": "Measured steps reached; object outcome: released",
+  "scope": "Normal MuJoCo GUI local camera pick, unsupported grasp, arm retraction and named Pickup bench release. The base stayed stopped."
+}

@@ -72,6 +72,14 @@ def test_real_widget_builds_source_bound_recipe_without_dispatch():
         assert panel.steps[1]['offset'] == [.08, 0., .01]
         assert panel.steps[2]['offset'] == [0., 0., .01]
         assert panel.steps[4]['pose_source'] == 'native_truth'
+        preset = dict(source_sha256='source', scene_id='scene', object='cube', left_body='left', right_body='right',
+                      pose_source='rgbd_primitive_top', base_pose=[0., 0., 0.], offset=[.001, -.016, -.008])
+        app.robot_profiles = {'stretch': {'mobile_pick_presets': {'bench': preset}}}
+        panel.state['physical_pose'] = [.001, .001, -.02]
+        panel.apply_pick_preset()
+        assert [value.get() for value in panel.reach_offset] == preset['offset']
+        panel.state['physical_pose'][0] = .1
+        assert panel.pick_preset() is None
         panel.state['support_candidates'] = ['environment_delivery_bench_collision']
         panel.ready=lambda:True
         panel.update_support_selector()

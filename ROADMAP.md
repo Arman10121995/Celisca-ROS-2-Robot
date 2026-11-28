@@ -133,8 +133,8 @@ Work top to bottom. Each line links to its task.
 | I4a | [R14.5](#r145--robot-status-markers-in-the-gui-selectors) Robot status markers | Done 2026-11-13: ● measured / ◐ experimental / ○ display only / ✕ unavailable plus mode letters in both robot lists, from recorded evidence | implemented |
 | I4b | [R6.8](#r68--real-world-area-import-from-a-globe) Real-world area import | Done 2026-11-13: globe picker (CesiumJS + OSM), Terrain Tiles + OSM buildings/roads/trees/water, SUMO people/traffic; support and roof heights measured on four simulators | implemented |
 | I5 | [R5.11](#r511--drone-moving-obstacles-and-other-drone-backends) Drone moving obstacles | Done 2026-11-13: Kalman tracks, predicted sweeps, walkway look-both-ways and overflight, evasion, sensor-loss hold/land, EKF heading/height gate; 2 passing flights past walkers (Gazebo); PX4 + MuJoCo plant: takeoff, 5 m route and landing | implemented |
-| I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | TIAGo fetch, Nav2 transit and RGB-D grasp workflows measured on MuJoCo and PyBullet. Manual tool-pose planning measured in the MuJoCo GUI. Stretch reached an RGB-D cylinder through gripper occlusion and briefly obtained both pad contacts (11-27). Remaining: sustained Stretch grasp/lift/release and transport, Isaac fetch, general perception and additional backend planners | partial |
-| I7 | [R5.7](#r57--manipulators-and-motion-planning) Arms | Done-when met 11-17: URDF Panda GUI pick → place on PyBullet and MuJoCo (one run each). Native Panda box tasks on MuJoCo. 11-17: URDF Panda pick and place also passes on Isaac and Gazebo (all four backends); UR5/UR10/YuMi joint control on Gazebo. 11-18: upright-cylinder pick and place on MuJoCo, PyBullet and Gazebo. 11-27: planner and GUI fixture for a stepped rigid compound. Mesh payloads, compound perception and other coupled mechanisms remain | partial |
+| I6 | [R5.9](#r59--mobile-manipulators) Mobile manipulation | TIAGo fetch, Nav2 transit and RGB-D grasp workflows measured on MuJoCo and PyBullet. Stretch completed a local camera-guided cylinder pickup and supported release through the MuJoCo GUI on November 28. Loaded Stretch transport, Isaac fetch, general perception and additional backend planners remain | partial |
+| I7 | [R5.7](#r57--manipulators-and-motion-planning) Arms | URDF Panda cube pickup across all four backends, upright cylinders on MuJoCo/PyBullet/Gazebo, and stepped rigid compound pickup and release on MuJoCo (11-28). UR5/UR10/YuMi joint control runs on Gazebo. Mesh payloads, compound perception, additional camera backends and coupled mechanisms remain | partial |
 | I8 | [R5.8](#r58--robot-hands-and-grippers) Hands | Done-when met 11-19: normal GUI grasp → lift 5 cm → hold → return → supported release passes for Robotiq 2F-85 (both variants, support stage), UMI (source axis) and DEX-EE (synthesized tripod, 2/2); parallel-jaw measured in R5.7/R5.9. 11-20: new Wonik Allegro and Shadow Hand (coupled tendons) pass the same cycle (2/2 each). Arm transport and other backends remain | implemented |
 | I9 | [R10.2](#r102--fleet-management-and-open-rmf) Fleet / Open-RMF | Done 2026-11-14: shared-zone reservations (map passages, doors, docks), cycle breaker, recovery drive-out, RMF energy from a drivetrain calibration; two crossing runs pass (native and RMF). 11-18: doors, docks and energy without a lift (`fleet_ward`: door crossing, docking and charging pass). Larger fleets are V7 | implemented |
 | I10 | [R10.3](#r103--swarm-robotics) Swarms | Done 2026-11-14: ROS2swarm port of per-member scan-only behaviours, scan-sensed cooperative coverage, ground/air member-loss replanning; dispersion and coverage-with-loss measured; aggregation gathers three Bumperbots in `swarm_arena` (11-18); 3–4 drone flight is validation | implemented |
@@ -506,10 +506,12 @@ accounts for terrain fixtures without saved 2D maps. Details and evidence are in
     participates in collision checks and the supported-release check uses
     the measured body pose and all authored colliders. The compiled planner
     rejects a destination too narrow for the foot and detects non-grasp-part
-    collisions. The first normal MuJoCo GUI trial lifted 65.1 mm but stopped
-    after 24.9 mm of height drift during the lift/hold check. Supported
-    release, arbitrary mesh shapes and mobile transport remain.
-    [Physical trial](docs/status/evidence/r57-urdf-arm-pick-place-2026-11-17/mujoco-gui-stepped-part-lift-slip-2026-11-27.json).
+    collisions. The first normal MuJoCo GUI trial stopped on excessive
+    lift drift. On 2026-11-28 the NoSlip workcell and revised support check
+    completed the full GUI mission with a 99.5 mm lift, 0.8 mm hold drift
+    and a stationary, upright part within the destination. Arbitrary mesh
+    shapes, additional backends and mobile transport remain.
+    [Completed trial](docs/status/evidence/r57-urdf-arm-pick-place-2026-11-17/mujoco-gui-stepped-part-place-2026-11-28.json).
   - 2026-11-22: the MuJoCo fixed-arm workcell publishes a calibrated
     overhead RGB-D camera. The existing pick-and-place panel can plan a
     Panda cube grasp from three fresh camera estimates. The normal GUI

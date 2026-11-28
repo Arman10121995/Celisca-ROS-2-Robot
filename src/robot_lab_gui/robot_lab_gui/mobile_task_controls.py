@@ -104,6 +104,8 @@ class MobileTaskControls(ttk.LabelFrame):
                 entry.pack(side='left',expand=True,fill='x')
                 if values is self.place_target:
                     self.place_entries.append(entry)
+            if values is self.reach_offset:
+                self.pick_preset_button = ttk.Button(line, text='Use tested pinch offset', command=self.apply_pick_preset)
         self.place_support.trace_add('write', self.update_place_entries)
         self.approach_mode=tk.StringVar(value='Above +Z')
         self.approach_distance=tk.DoubleVar(value=.08)
@@ -202,6 +204,30 @@ class MobileTaskControls(ttk.LabelFrame):
             self.add_native_step('reach_object',offset=offset)
         except (ValueError,tk.TclError) as exc:
             self.status.set(str(exc))
+
+    def pick_preset(self):
+        if not self.editable():
+            return None
+        profiles = getattr(self.app, 'robot_profiles', {})
+        presets = profiles.get(self.app.robot_var.get(), {}).get('mobile_pick_presets', {})
+        preset = presets.get(self.app.map_var.get())
+        pose = self.state.get('physical_pose')
+        if (preset and all(preset[key] == self.state.get(key) for key in ('source_sha256', 'scene_id'))
+                and preset['pose_source'] == POSE_SOURCES.get(self.pose_source.get())
+                and all(preset[key] == value.get() for key, value in self.object_fields.items())
+                and pose and len(pose) == 3 and all(map(math.isfinite, pose))):
+            target = preset['base_pose']
+            yaw = math.remainder(pose[2] - target[2], math.tau)
+            if math.dist(pose[:2], target[:2]) > .03 or abs(yaw) > .03:
+                return None
+            return preset
+        return None
+
+    def apply_pick_preset(self):
+        preset = self.pick_preset()
+        if preset:
+            for variable, value in zip(self.reach_offset, preset['offset']):
+                variable.set(value)
 
     def add_pick(self):
         try:
@@ -458,9 +484,18 @@ class MobileTaskControls(ttk.LabelFrame):
                 from std_msgs.msg import String
                 self.heartbeat.publish(String(data=self.task_id))
             if self.state['state'] not in ('idle',):
+                measurement = self.state.get('object_measurement') or {}
+                loads = ''
+                if 'left_force' in measurement and 'right_force' in measurement:
+                    loads = ' · Pad loads %.2f / %.2f N' % (measurement['left_force'], measurement['right_force'])
                 self.status.set(self.state['state']+' · '+str(self.state.get('step', 0))+'/'+
                     str(self.state.get('total', 0))+' · '+self.state.get('reason', '')+
-                    (' · payload: '+self.state['payload_name'] if self.state.get('payload_name') else ''))
+                    (' · payload: '+self.state['payload_name'] if self.state.get('payload_name') else '')+loads)
+        if self.pick_preset():
+            if not self.pick_preset_button.winfo_manager():
+                self.pick_preset_button.pack(anchor='w', pady=(2, 0))
+        else:
+            self.pick_preset_button.pack_forget()
         for name, button in self.buttons.items():
             enabled = self.ready() if name in ('stop', 'current') else self.editable()
             if name.startswith(('check_','object_')):

@@ -1,5 +1,12 @@
 # Remaining work: agent execution guide
 
+November 28: start with the [current checkpoint](status/CURRENT_STATUS.md#november-28-checkpoint)
+and take the next open item from the [implementation queue](../ROADMAP.md#3-implementation-queue).
+The [handoff](AGENT_HANDOFF.md) covers the current F100, Stretch and Panda
+evidence. Use their resolved GUI settings and receipts when changing
+controllers or planning. Scope new outcomes to the tested robot, fixture,
+backend and execution path.
+
 November 3: [curved AUV planning, bounded terrain/backend adapters and concurrent fleet missions](status/curves-terrain-concurrency-2026-11-03.md) are implemented. Read the [source/measurement receipt](status/evidence/curves-terrain-concurrency-2026-11-03/README.md) and [native GUI guide](tutorials/curves-terrain-concurrency.md) before changing these paths. Continue the exact unresolved per-model/backend and floor/parking cases, preserving all historical certificates.
 
 Newest implementation: [facility queues/recovery, marine interruption and aerial formation routes](status/workflow-continuation-2026-11-02.md). Do not rebuild these workflows or infer their full acceptance from fixtures. Empty-car recovery and a single-member two-stop floor queue have real receipts; concurrent passenger missions, new aerial route flights, marine saved-map/obstacle/current/loss and terrain cases remain. Preserve exact source/runtime certificates and complete the remaining implementation before broad campaigns.
