@@ -38,7 +38,7 @@ python3 scripts/run_with_launch.py --log run.log --launch \
 
 ## Pick the cube with the workcell camera
 
-Select the URDF arm and hand variant of Franka Panda, **MuJoCo**,
+Select the URDF arm and hand variant of Franka Panda, **MuJoCo** or **PyBullet**,
 **Display**, and the **Cube** variant of the fixed-arm pick-and-place lab.
 Enable experimental robot workflows if the robot selector requires it.
 After Launch, select `pickup_cube` and `place_table` in the arm panel,
@@ -50,9 +50,12 @@ before it plans the grasp. It uses physical object feedback to judge lift
 and release. The fixture recognizes the authored red 40 mm cube.
 The normal GUI run on 2026-11-22 took 26.52 seconds, measured a 1.1 mm
 camera position error, lifted the cube 96.2 mm and left it stable on the
-destination table. [GUI receipt](../status/evidence/r57-urdf-arm-pick-place-2026-11-17/mujoco-gui-workcell-rgbd-2026-11-22.json).
+destination table. PyBullet uses a stationary camera with the same optical
+pose and mirrors the measured objects from its physics client. A physical
+PyBullet camera-guided mission remains pending.
+[MuJoCo GUI receipt](../status/evidence/r57-urdf-arm-pick-place-2026-11-17/mujoco-gui-workcell-rgbd-2026-11-22.json).
 
-To add a stationary camera to another MuJoCo fixed-arm workcell, set
+To add a stationary camera to another MuJoCo or PyBullet fixed-arm workcell, set
 `workcell_rgbd_pose` on the map entry in `sim_maps.yaml`. Give the camera's
 world XYZ position in metres and WXYZ orientation of its ROS optical frame.
 Add `rgbd_targets.yaml` alongside `worlds/` in the map directory with the
@@ -67,7 +70,8 @@ lab → Stepped part**. Select `pickup_stepped` as the object and
 experimental workflow. The planner pinches the cylindrical post and
 checks the attached post and box foot during the entire move. At release
 it checks the footprint and bottom height of the complete part against
-the table.
+the table. A circular grasp surface permits any settled heading. The
+executor checks uprightness and rotation over the same settling interval.
 
 For another reviewed rigid payload, author one loose SDF model with a
 single link and named box, sphere or cylinder collision elements. In the

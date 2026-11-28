@@ -78,7 +78,8 @@ def _apply_link_friction(robot_id, link_indices, friction):
 def _render_rgbd(position, orientation_xyzw, camera, client=0):
     """Render RGB and metric depth from a camera link frame.
 
-    The link looks along its +x axis with +z up, as the OAK-D link does.
+    Robot camera links look along +X with +Z up. A workcell optical frame
+    looks along +Z with -Y up.
     Returns ``(rgb, depth)``: uint8 HxWx3 and float32 HxW metres along the
     optical axis, ``inf`` where nothing is within the far clip.  The tiny
     software renderer needs no display or GPU.  ``client`` selects the
@@ -87,8 +88,8 @@ def _render_rgbd(position, orientation_xyzw, camera, client=0):
     """
     q = wxyz_from_xyzw(orientation_xyzw)
     eye = [float(v) for v in position]
-    forward = rotate((1.0, 0.0, 0.0), q)
-    up = rotate((0.0, 0.0, 1.0), q)
+    axes = ((0., 0., 1.), (0., -1., 0.)) if camera.get('workcell_pose') else ((1., 0., 0.), (0., 0., 1.))
+    forward, up = (rotate(axis, q) for axis in axes)
     width, height = int(camera["width"]), int(camera["height"])
     view = p.computeViewMatrix(
         eye, [e + f for e, f in zip(eye, forward)], list(up),
@@ -352,6 +353,7 @@ class PyBulletSpawner(Node):
         # RGB-D camera, rendered from the description's camera link with the
         # Gazebo sensor's intrinsics; 0 Hz disables it.
         self.declare_parameter("camera_rate", 5.0)
+        self.declare_parameter('workcell_rgbd_pose', '')
         self.declare_parameter("camera_link_name", camera_model.OAKD["link"])
         self.declare_parameter("camera_optical_frame",
                                camera_model.OAKD["optical_frame"])
@@ -1030,7 +1032,7 @@ class PyBulletSpawner(Node):
         # each render, so the image is geometrically faithful.
         self._render_client = -1
         self._camera_thread = None
-        self._cam_pose = None
+        self._cam_pose = self._camera.get('workcell_pose') if self._camera else None
         self._mirror_free_bodies, self._free_poses = {}, {}
         if self._camera is not None:
             try:
@@ -1469,12 +1471,10 @@ class PyBulletSpawner(Node):
                 s = p.getJointState(self._robot_id, self._joint_idx[jn])
                 self._jpos.append(s[0])
                 self._jvel.append(s[1])
-            if self._camera is not None and self._camera.get("link", -1) >= 0:
-                # Snapshot the camera link pose for the render thread; the
-                # tiny renderer itself runs on the mirror client (R8.1).
-                st = p.getLinkState(self._robot_id, self._camera["link"],
-                                    computeForwardKinematics=True)
-                self._cam_pose = (list(st[4]), list(st[5]))
+            if self._camera is not None:
+                if self._camera['link'] >= 0:
+                    state = p.getLinkState(self._robot_id, self._camera['link'], computeForwardKinematics=True)
+                    self._cam_pose = (list(state[4]), list(state[5]))
                 self._free_poses = {name: p.getBasePositionAndOrientation(uid)
                                     for name, uid in self._free_bodies.items()}
 
@@ -1744,14 +1744,15 @@ class PyBulletSpawner(Node):
         """Camera settings and publishers, or None when not applicable."""
         rate = float(self.get_parameter("camera_rate").value)
         link = self.get_parameter("camera_link_name").value
+        workcell = self.get_parameter('workcell_rgbd_pose').value
         if rate <= 0.0:
             return None
-        if link not in self._link_idx:
+        if not workcell and link not in self._link_idx:
             self.get_logger().info(
                 "Robot has no '%s' link; no RGB-D camera is published." % link)
             return None
         camera = {
-            "link": self._link_idx[link],
+            "link": -1 if workcell else self._link_idx[link],
             "rate": rate,
             "frame": self.get_parameter("camera_optical_frame").value,
             "width": int(self.get_parameter("camera_width").value),
@@ -1761,6 +1762,23 @@ class PyBulletSpawner(Node):
             "near": float(self.get_parameter("camera_near").value),
             "far": float(self.get_parameter("camera_far").value),
         }
+        if workcell:
+            from tf2_ros import StaticTransformBroadcaster
+
+            pose = np.asarray(json.loads(workcell), dtype=float)
+            if pose.shape != (7,) or not np.isfinite(pose).all() or not np.isclose(np.linalg.norm(pose[3:]), 1.):
+                raise ValueError('Workcell camera needs an XYZ position and a unit WXYZ optical quaternion')
+            px, py, pz, w, x, y, z = map(float, pose)
+            camera['frame'] = camera_model.WORKCELL_RGBD_FRAME
+            camera['workcell_pose'] = ((px, py, pz), (x, y, z, w))
+            optical = TransformStamped()
+            optical.header.frame_id = 'world'
+            optical.child_frame_id = camera['frame']
+            optical.transform.translation = Vector3(x=px, y=py, z=pz)
+            optical.transform.rotation = Quaternion(w=w, x=x, y=y, z=z)
+            self._workcell_camera_tf = StaticTransformBroadcaster(self)
+            self._workcell_camera_tf.sendTransform(optical)
+            link = camera['frame']
         self._rgb_pub = self.create_publisher(
             Image, camera_model.OAKD["rgb_topic"], 5)
         self._depth_pub = self.create_publisher(

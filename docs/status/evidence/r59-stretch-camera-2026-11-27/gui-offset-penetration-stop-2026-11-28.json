@@ -1,0 +1,42 @@
+{
+  "robot": "menagerie_hello_robot_stretch",
+  "simulator": "mujoco",
+  "map": "mobile_manipulation_lab_cylinder",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=menagerie_hello_robot_stretch simulator:=mujoco use_sim_time:=true map_name:=mobile_manipulation_lab_cylinder world_package:=robot_lab_maps world_name:=mobile_manipulation_lab_cylinder world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/mobile_manipulation_lab_cylinder/a021c7de3b429c0d5d0679457b0b162a1e950ed64a88da47dfa50be051784623/worlds/mobile_manipulation_lab_cylinder.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/mobile_manipulation_lab_cylinder/a021c7de3b429c0d5d0679457b0b162a1e950ed64a88da47dfa50be051784623/maps/map.yaml mode:=display gui:=false perception:=none enable_native_mobile:=true native_task:=display",
+  "source_sha256": "4f33408242b90acbe4ca0f4b544ca5efae4f423c92ef71358f0977ec0b03a316",
+  "scene_id": "6b6c35e2c614f911f04dcc8d7599b0abcfb234c4bc149218e66576b3c69f81f0",
+  "passed": false,
+  "launch_returncode": 0,
+  "raw_report": "/workspace/molar/robot_lab_runtime/pro630-gripper-20261120/stretch-offset-closed-midpoint-20261128-zgphUX/gui/report.json",
+  "raw_sha256": "584dcbc4d191a7edac5568e4bedc930d71ddca24dd8327dc75c767d41b956a01",
+  "journal": "/workspace/molar/robot_lab_runtime/pro630-gripper-20261120/stretch-offset-closed-midpoint-20261128-zgphUX/runtime/mobile-tasks/20261128-084739-22b41357ec2446dbb24b8ceeacbd7490.jsonl",
+  "journal_sha256": "ae11c37a4c8e0c96133d1ac759f7e6c9782921858ec6d8800c67cac897667347",
+  "pinch_offset_native_world_m": [
+    0.001,
+    -0.016,
+    -0.008
+  ],
+  "terminal_state": "failed",
+  "terminal_reason": "Gripper controller interrupted: environment penetration; holding measured position",
+  "measurement": {
+    "stamp": 32.03999999999319,
+    "relative": [
+      0.0029463311637152683,
+      -0.00024609699668745415,
+      0.03373897679263859
+    ],
+    "left_force": 1.0639290872318665,
+    "right_force": 1.4054534200047129,
+    "supported": false,
+    "speed": 0.0515765700746922
+  },
+  "gripper_feedback": {
+    "requested": -0.005,
+    "target": 0.004196349508814261,
+    "command": 0.004196349508814261,
+    "measured": 0.004783438912134734,
+    "rate": 0.01215781230058434,
+    "articulation_status": "environment penetration; holding measured position",
+    "operation": "close"
+  }
+}

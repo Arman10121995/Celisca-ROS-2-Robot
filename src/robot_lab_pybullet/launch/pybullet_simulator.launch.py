@@ -77,6 +77,8 @@ def _build_pybullet_actions(context):
         LaunchConfiguration("drive_config"), value_type=str)
     spawner_params['articulation_config'] = ParameterValue(
         LaunchConfiguration('articulation_config'), value_type=str)
+    spawner_params['workcell_rgbd_pose'] = ParameterValue(
+        LaunchConfiguration('workcell_rgbd_pose'), value_type=str)
     for key in ('joint_pd_config','gait_probe_config','gait_contact_config','gait_floor_reference','track_config','amphibious_config'):
         spawner_params[key]=ParameterValue(LaunchConfiguration(key),value_type=str)
     spawner_params['physics_rate']=ParameterValue(LaunchConfiguration('physics_rate'),value_type=float)
@@ -125,6 +127,7 @@ def generate_launch_description():
         DeclareLaunchArgument("wheel_separation", default_value="0.17"),
         DeclareLaunchArgument("drive_config", default_value=""),
         DeclareLaunchArgument('articulation_config', default_value=''),
+        DeclareLaunchArgument('workcell_rgbd_pose', default_value=''),
         DeclareLaunchArgument('sensor_config', default_value=''),
         DeclareLaunchArgument("world_name", default_value="empty"),
         DeclareLaunchArgument("world_package", default_value="robot_lab_maps"),

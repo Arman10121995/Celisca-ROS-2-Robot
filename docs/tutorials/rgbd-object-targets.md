@@ -27,6 +27,9 @@ run is pending. The GUI's **Object offset XYZ (m)** can shift the local
 pinch by up to 20 mm, for example to try a higher contact on the cylinder.
 The approach and descent keep the same shift. The close feedback reports
 the requested and measured gripper state alongside the two pad loads.
+The controlled close can retain its compressed motor reference when both
+pads produce enough normal load for the object's mass and nominal friction.
+The task still requires measured custody after raising the object.
 To install this variant on another checkout, run
 `python3 scripts/provision_mobile_manipulation_scene.py --cylinder` after
 sourcing the workspace and `scripts/ssd_env.sh`.

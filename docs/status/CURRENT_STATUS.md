@@ -36,9 +36,25 @@ November 27 Codex: the installed URDF Panda GUI offers the **Stepped
 part** workcell variant. A compiled pick/place plan used the declared
 post as the grasp surface and rejected a destination that would only
 support the post. A contact test detected the separate foot collider.
-The normal MuJoCo GUI lifted the part 65.1 mm, then stopped the task after
-24.9 mm of height drift during the lift/hold check.
-[Procedure](../tutorials/urdf-arm-pick-place.md#pick-a-stepped-part) · [Physical trial](evidence/r57-urdf-arm-pick-place-2026-11-17/mujoco-gui-stepped-part-lift-slip-2026-11-27.json).
+The November 27 trial lifted 65.1 mm and stopped during the hold. On
+November 28, with ten NoSlip iterations, the GUI lifted 99.6 mm with
+0.5 mm hold drift and reached the table inside its support. The then-current
+check rejected the part's stationary 17.8° heading change. The release
+checker now measures uprightness and rotation through the settling period.
+[Procedure](../tutorials/urdf-arm-pick-place.md#pick-a-stepped-part) · [NoSlip trial](evidence/r57-urdf-arm-pick-place-2026-11-17/mujoco-gui-stepped-part-settled-heading-2026-11-28.json).
+
+November 28 Codex: the Stretch camera trial with a 16 mm reach correction
+produced 1.06 N and 1.41 N at its pads before the environment penetration
+guard stopped it. The metered close now holds the attained reference once
+the measured loads meet the configured support margin. A supported pickup
+and release still require a terminal measurement.
+[Offset trial](evidence/r59-stretch-camera-2026-11-27/gui-offset-penetration-stop-2026-11-28.json).
+
+November 28 Codex: a PyBullet fixed-arm workcell can now publish the
+configured overhead RGB-D stream and the optical transform. The software
+render test checks metric depth and image orientation against a known
+scene. Full camera-guided pickup and release await their physical trial.
+[Procedure](../tutorials/urdf-arm-pick-place.md#pick-the-cube-with-the-workcell-camera).
 
 November 21 Codex: the F100 now offers Isaac Display. Its normal GUI
 reached both presets on `nav_empty`, with all five passive followers,

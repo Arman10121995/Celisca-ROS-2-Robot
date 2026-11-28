@@ -516,6 +516,28 @@ class PybulletCameraTests(unittest.TestCase):
         finally:
             p.disconnect(client)
 
+    def test_stationary_camera_uses_the_declared_optical_axes(self):
+        import numpy as np
+        import pybullet as p
+
+        camera = {'width': 160, 'height': 120, 'horizontal_fov': 1.25,
+                  'near': .1, 'far': 10.}
+        pose = ((0., 0., 1.), (1., 0., 0., 0.))  # optical +Z points down
+        camera['workcell_pose'] = pose
+        client = p.connect(p.DIRECT)
+        try:
+            box = p.createVisualShape(p.GEOM_BOX, halfExtents=[.06, .05, .25],
+                                      rgbaColor=[1., 0., 0., 1.], physicsClientId=client)
+            p.createMultiBody(baseMass=0, baseVisualShapeIndex=box, basePosition=[.25, .10, .25],
+                              physicsClientId=client)
+            _, depth = self.spawner._render_rgbd(*pose, camera, client=client)
+            rows, columns = np.where(np.isclose(depth, .5, atol=.002))
+            self.assertGreater(len(rows), 100)
+            self.assertLess(float(rows.mean()), 60.)
+            self.assertGreater(float(columns.mean()), 80.)
+        finally:
+            p.disconnect(client)
+
 
 @unittest.skipUnless(_mujoco_available(), "mujoco spawner unavailable")
 class MujocoCameraTests(unittest.TestCase):

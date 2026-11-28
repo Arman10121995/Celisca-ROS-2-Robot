@@ -31,6 +31,29 @@ def test_calibrated_close_meters_only_the_shaft_during_closure(pick_place):
     assert node._stage_fingers(release) == release['fingers']
 
 
+def test_compound_release_accepts_a_settled_heading_but_rejects_rotation(pick_place, monkeypatch):
+    from robot_lab_mujoco.arm_pick_place import Box, CompoundPayload
+
+    node = object.__new__(pick_place.PickPlace)
+    identity = (1., 0., 0., 0.)
+    part = Box('foot', (0., 0., -.012), identity, (.068, .061, .02))
+    payload = CompoundPayload('part', (.5, .25, .322), identity, part.size, 'compound', parts=(part,))
+    table = Box('table', (.5, .25, .15), identity, (.30, .30, .30))
+    node.supports = {'table': table}
+    heading = (math.cos(.155), 0., 0., math.sin(-.155))
+    node.truth = {'part': [*payload.position, *heading]}
+    node.truth_at = 2.
+    monkeypatch.setattr(pick_place, '_now', lambda: 2.)
+    task = dict(object='part', support='table', obj=payload, plan={'place_orientation': identity},
+                wait_until=2., rest_sample=payload.position, rest_orientation=heading)
+    assert node._check(task, 'retreat')['passed'] is True
+    task['rest_orientation'] = identity
+    assert node._check(task, 'retreat')['passed'] is False
+    node.truth['part'][3:] = (0., 1., 0., 0.)
+    task['rest_orientation'] = (0., 1., 0., 0.)
+    assert node._check(task, 'retreat')['passed'] is False
+
+
 def test_loaded_direct_drive_slows_and_ramps_without_delaying_stop(pick_place, monkeypatch):
     node = object.__new__(pick_place.PickPlace)
     node.mobile = {'carry_drive_speed_scale': .5, 'carry_drive_ramp_seconds': 2.}

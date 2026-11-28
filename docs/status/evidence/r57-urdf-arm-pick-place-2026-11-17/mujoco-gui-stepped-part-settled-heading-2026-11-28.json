@@ -1,0 +1,211 @@
+{
+  "robot": "asset_franka_panda_panda",
+  "simulator": "mujoco",
+  "map": "arm_pick_place_compound",
+  "mode": "display",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_franka_panda_panda simulator:=mujoco use_sim_time:=true map_name:=arm_pick_place_compound world_package:=robot_lab_maps world_name:=arm_pick_place_compound world_path:=maps/arm_pick_place_compound/worlds/arm_pick_place_compound.world map_yaml:=robot_lab_maps/maps/arm_pick_place_lab/maps/map.yaml mode:=display gui:=false perception:=none",
+  "model_sha256": "1685e99c9fa5ab60efe1b05d5b84ee2adacc7db7f2de83ca9aa976e00d8b8fc0",
+  "launch_profile_sha256": "eec515e9c5468f33e0de0a22cbf3f3ca36a810a7b30c9e7665cd55409fc8452d",
+  "passed": false,
+  "launch_returncode": 0,
+  "raw_report": "/workspace/molar/robot_lab_runtime/pro630-gripper-20261120/panda-compound-noslip-20261128-3nNNwO/gui/report.json",
+  "raw_sha256": "7f3e72518458036ac917733e40c1b26fed13553251feb1021b66627c802d1401",
+  "scope": "Normal GUI trial with 10 NoSlip iterations. The part was stationary and within the support, with yaw different from the planned pose. The then-current full-orientation check rejected it.",
+  "result": {
+    "outcome": "failed",
+    "passed": false,
+    "message": "retreat: object not resting on place_table",
+    "seconds": 31.81,
+    "stages": [
+      {
+        "stage": "open",
+        "seconds": 0.05,
+        "object_truth": [
+          0.5,
+          -0.25,
+          0.3219
+        ],
+        "tcp_estimate": [
+          0.3073,
+          -0.0,
+          0.4876
+        ],
+        "passed": true
+      },
+      {
+        "stage": "above_object",
+        "seconds": 8.55,
+        "object_truth": [
+          0.5,
+          -0.25,
+          0.3219
+        ],
+        "tcp_estimate": [
+          0.4984,
+          -0.2487,
+          0.4519
+        ],
+        "passed": true
+      },
+      {
+        "stage": "down_to_grasp",
+        "seconds": 1.22,
+        "object_truth": [
+          0.5,
+          -0.25,
+          0.3219
+        ],
+        "tcp_estimate": [
+          0.4991,
+          -0.2493,
+          0.3525
+        ],
+        "passed": true
+      },
+      {
+        "stage": "close",
+        "seconds": 2.13,
+        "object_truth": [
+          0.5,
+          -0.2501,
+          0.3219
+        ],
+        "tcp_estimate": [
+          0.4998,
+          -0.2501,
+          0.3531
+        ],
+        "passed": true,
+        "finger_positions": [
+          0.0161,
+          0.0162
+        ],
+        "reason": ""
+      },
+      {
+        "stage": "lift",
+        "seconds": 9.47,
+        "object_truth": [
+          0.5005,
+          -0.2499,
+          0.4214
+        ],
+        "tcp_estimate": [
+          0.4997,
+          -0.2499,
+          0.4527
+        ],
+        "passed": true,
+        "rise_m": 0.0996,
+        "hold_drift_m": 0.0005,
+        "reason": ""
+      },
+      {
+        "stage": "over_support",
+        "seconds": 4.61,
+        "object_truth": [
+          0.4992,
+          0.2492,
+          0.4156
+        ],
+        "tcp_estimate": [
+          0.4997,
+          0.2499,
+          0.4529
+        ],
+        "passed": true
+      },
+      {
+        "stage": "lower",
+        "seconds": 1.42,
+        "object_truth": [
+          0.498,
+          0.2499,
+          0.3206
+        ],
+        "tcp_estimate": [
+          0.4996,
+          0.2512,
+          0.3544
+        ],
+        "passed": true
+      },
+      {
+        "stage": "release",
+        "seconds": 1.73,
+        "object_truth": [
+          0.4993,
+          0.2473,
+          0.3219
+        ],
+        "tcp_estimate": [
+          0.4997,
+          0.2499,
+          0.3533
+        ],
+        "passed": true
+      },
+      {
+        "stage": "retreat",
+        "seconds": 2.23,
+        "object_truth": [
+          0.4993,
+          0.2473,
+          0.3219
+        ],
+        "tcp_estimate": [
+          0.4995,
+          0.2499,
+          0.453
+        ],
+        "passed": false,
+        "final_pose": [
+          0.4993,
+          0.2473,
+          0.3219
+        ],
+        "height_error_m": -0.0001,
+        "inside_support": true,
+        "orientation_aligned": false,
+        "moved_last_s_m": 0.0,
+        "reason": "object not resting on place_table"
+      }
+    ],
+    "plan": {
+      "compound_obstacles": [],
+      "grasp_width_m": 0.04,
+      "place_centre": [
+        0.5,
+        0.25,
+        0.32200623799635475
+      ],
+      "place_orientation": [
+        0.999999986219576,
+        8.036826707837308e-05,
+        -1.963557526065958e-05,
+        0.00014393135024762656
+      ]
+    }
+  },
+  "final_sample": {
+    "t": 31.6,
+    "stage": "retreat",
+    "object": [
+      0.4993,
+      0.2473,
+      0.3219,
+      0.988,
+      0.0,
+      0.0,
+      -0.1545
+    ],
+    "fingers": [
+      0.04,
+      0.04
+    ],
+    "finger_references": [
+      0.04,
+      0.04
+    ]
+  }
+}

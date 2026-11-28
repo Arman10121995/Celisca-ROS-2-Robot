@@ -284,6 +284,8 @@ class NativeArticulationControl:
             elif self.status == 'experimental Cartesian servo':
                 self.hold(self.servo.error or 'Servo command expired; holding measured position')
         rates = np.array([channel['max_rate'] for channel in self.channels])
+        if self.status == self.GRIPPER_TASK_STATUS and self.task_gripper_metered:
+            rates[self.task_gripper_index] *= .25
         if self.planning:
             self.planning.before_step()
         self.commanded += np.clip(self.target - self.commanded,

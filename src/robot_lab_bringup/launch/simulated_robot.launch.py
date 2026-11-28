@@ -1241,7 +1241,7 @@ def _build_simulation_actions(context):
             display_args["sensor_faults"] = _launch_value(context, "sensor_faults").strip()
         display_args.update(drive_args)
         workcell_pose = map_config.get('workcell_rgbd_pose') if (
-            simulator == 'mujoco' and not robot_free and robot_config.get('articulation')
+            simulator in ('mujoco', 'pybullet') and not robot_free and robot_config.get('articulation')
             and robot_config.get('pick_place') and not robot_config['pick_place'].get('mobile')) else None
         if workcell_pose:
             display_args['workcell_rgbd_pose'] = json.dumps(workcell_pose)

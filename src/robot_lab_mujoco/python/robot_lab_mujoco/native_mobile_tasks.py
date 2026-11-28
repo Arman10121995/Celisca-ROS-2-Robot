@@ -452,12 +452,51 @@ class NativeMobileTasks:
             self.gripped_body, self.custody, self.payload_confirmed, self.gripped_step = None, None, False, None
         self.grip_index = indices[0]
         channel = self.arm.channels[self.grip_index]
-        self.grip_requested = channel['limits'][1 if step['operation']=='open' else 0]
+        closing = step['operation'] == 'close'
+        self.grip_limit = channel['limits'][0 if closing else 1]
+        self.grip_requested = self.grip_limit
+        self.grip_weak_since = None
+        self.grip_load_n = self.grip_capture_load(step) if closing else 0.
+        self.arm.task_gripper_index = self.grip_index
+        self.arm.task_gripper_metered = closing
         self.arm.target = self.arm.target.copy()
         self.arm.target[self.grip_index] = self.grip_requested
         self.arm.status = self.arm.GRIPPER_TASK_STATUS
         self.grip_since = None
         self.enter('gripping','Waiting for measured source gripper opening/contact')
+
+    def grip_capture_load(self, step):
+        """Opposing pad load per side for twice the gravity load at nominal friction."""
+        obj, (left, right) = self.object_bodies(step)
+        model = self.node.model
+        friction = min((float(model.geom_friction[geom, 0]) for geom in range(model.ngeom)
+                        if model.geom_bodyid[geom] in left | right
+                        and (model.geom_contype[geom] or model.geom_conaffinity[geom])), default=0.)
+        if friction <= 0.:
+            return None
+        weight = float(model.body_subtreemass[obj] * np.linalg.norm(model.opt.gravity))
+        return max(.1, weight / friction)
+
+    def retain_grip(self, step, observation):
+        if step['operation'] != 'close' or self.grip_load_n is None:
+            return
+        load = min(observation['left_force'], observation['right_force'])
+        if load >= self.grip_load_n:
+            self.grip_weak_since = None
+            if self.grip_requested == self.grip_limit:
+                # Keep the current compressive motor reference. Resetting to
+                # the measured position would unload the contact.
+                self.grip_requested = float(self.arm.commanded[self.grip_index])
+                self.arm.target[self.grip_index] = self.grip_requested
+                self.record(grip_capture_load_n=self.grip_load_n, grasp_hold_reference=self.grip_requested,
+                            object_observation=observation)
+        elif self.grip_requested != self.grip_limit:
+            if self.grip_weak_since is None:
+                self.grip_weak_since = observation['stamp']
+            elif observation['stamp'] - self.grip_weak_since >= .25:
+                self.grip_requested = self.grip_limit
+                self.arm.target[self.grip_index] = self.grip_requested
+                self.grip_since = None
 
     def begin_navigation(self, step):
         if self.payload_body is not None and not self.payload_confirmed:
@@ -616,23 +655,28 @@ class NativeMobileTasks:
                     self.object_measurement = observation
                     control = self.grip_index
                     rate = abs(self.arm.measured_rates()[control])
+                    interrupted = (self.arm.status != self.arm.GRIPPER_TASK_STATUS
+                                   or abs(self.arm.target[control] - self.grip_requested) > 1e-5)
+                    if not interrupted and not self.mobile.moving():
+                        self.retain_grip(step, observation)
                     self.gripper_feedback = dict(requested=float(self.grip_requested),
                         target=float(self.arm.target[control]), command=float(self.arm.commanded[control]),
                         measured=float(self.arm.measured_controls()[control]), rate=float(rate),
-                        articulation_status=self.arm.status, operation=step['operation'])
+                        articulation_status=self.arm.status, operation=step['operation'],
+                        source_limit=float(self.grip_limit), capture_load_n=self.grip_load_n)
                     if step['operation']=='close':
                         # The pads can both touch while the close command is
                         # still ramping. Transfer ownership after source
                         # compression has actually reached its hold command.
-                        ready = (min(observation['left_force'], observation['right_force']) >= .1
+                        required = self.grip_load_n if self.grip_requested != self.grip_limit else .1
+                        ready = (min(observation['left_force'], observation['right_force']) >= required
                                  and abs(self.arm.commanded[control] - self.grip_requested) < 1e-5
                                  and rate <= .005)
                     else:
                         ready = (abs(self.arm.measured_controls()[control]-self.arm.target[control])<=.002
                                  and rate<=.005
                                  and max(observation['left_force'],observation['right_force'])<.1)
-                    if (self.arm.status != self.arm.GRIPPER_TASK_STATUS
-                            or abs(self.arm.target[control] - self.grip_requested) > 1e-5):
+                    if interrupted:
                         self.record(object_observation=observation, gripper_feedback=self.gripper_feedback)
                         self.cancel('Gripper controller interrupted: '+self.arm.status,failed=True)
                     elif self.mobile.moving():

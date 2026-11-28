@@ -1740,6 +1740,7 @@ class PickPlace(Node):
             if 'wait_until' not in task:
                 task['wait_until'] = _now() + 1.0
                 task['rest_sample'] = pose.tolist()
+                task['rest_orientation'] = self.truth[name][3:]
                 return None
             if _now() < task['wait_until']:
                 return None
@@ -1751,16 +1752,25 @@ class PickPlace(Node):
             on_top = abs(pose[2] - (support.top + half)) < 0.01
             inside = support.supports(actual, tolerance=.001)
             aligned = True
+            rotation_settled = True
+            orientation_receipt = {}
             if actual.shape == 'cylinder':
                 placed = actual.at_pose(pose, task['plan']['place_orientation'])
                 aligned = abs(float(placed.rotation()[:, 2] @ actual.rotation()[:, 2])) >= math.cos(math.radians(10.))
             elif actual.shape == 'compound':
                 placed = actual.at_pose(pose, task['plan']['place_orientation'])
-                aligned = float(np.trace(placed.rotation().T @ actual.rotation())) >= 1. + 2. * math.cos(math.radians(10.))
-            passed = on_top and inside and aligned and speed < 0.005
+                # The tested action places the whole part on the support.
+                # The cylindrical pinch provides no commanded heading.
+                aligned = float(placed.rotation()[:, 2] @ actual.rotation()[:, 2]) >= math.cos(math.radians(10.))
+                dot = abs(float(np.dot(task['rest_orientation'], actual.quaternion)))
+                rotation_change = 2. * math.acos(min(1., dot))
+                rotation_settled = rotation_change <= math.radians(3.)
+                orientation_receipt['rotation_moved_last_s_rad'] = round(rotation_change, 4)
+            passed = bool(on_top and inside and aligned and rotation_settled and speed < 0.005)
             return dict(passed=passed, final_pose=[round(v, 4) for v in pose], height_error_m=round(pose[2] - support.top - half, 4),
                         inside_support=inside, orientation_aligned=aligned, moved_last_s_m=round(speed, 4),
-                        reason='' if passed else 'object not resting on %s' % support.name)
+                        reason='' if passed else 'object not resting on %s' % support.name,
+                        **orientation_receipt)
         return dict(passed=True)
 
     def _finish(self, outcome, message):

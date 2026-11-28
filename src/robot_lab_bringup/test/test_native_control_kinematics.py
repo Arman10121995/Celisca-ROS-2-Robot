@@ -143,6 +143,30 @@ def test_rgbd_cylinder_uses_camera_position_and_checks_compiled_collision(monkey
         task.begin_reach(descent)
 
 
+def test_gripper_holds_a_loaded_motor_reference_and_resumes_after_weak_contact():
+    from types import SimpleNamespace
+    from robot_lab_mujoco.native_mobile_tasks import NativeMobileTasks
+
+    task = NativeMobileTasks.__new__(NativeMobileTasks)
+    task.grip_index = 0
+    task.grip_limit = task.grip_requested = -.005
+    task.grip_load_n = .45
+    task.grip_since = None
+    task.arm = SimpleNamespace(commanded=[.006], target=[-.005])
+    events = []
+    task.record = lambda **event: events.append(event)
+    close = {'operation': 'close'}
+    task.retain_grip(close, dict(stamp=1., left_force=.58, right_force=.2))
+    assert task.arm.target == [-.005] and not events
+    task.retain_grip(close, dict(stamp=1.1, left_force=.58, right_force=.49))
+    assert task.arm.target == [.006] and task.grip_requested == .006
+    assert events[-1]['grasp_hold_reference'] == .006
+    task.retain_grip(close, dict(stamp=1.21, left_force=.40, right_force=.49))
+    assert task.arm.target == [.006]
+    task.retain_grip(close, dict(stamp=1.5, left_force=.41, right_force=.49))
+    assert task.arm.target == [-.005] and task.grip_since is None
+
+
 def test_native_placement_uses_pad_offset_and_requires_contact_on_the_named_support():
     from types import SimpleNamespace
     from robot_lab_mujoco.native_mobile_tasks import NativeMobileTasks
