@@ -69,6 +69,7 @@ class NativeMobileTasks:
         self.reach_orientation = None
         self.camera_approach = None
         self.gripped_step, self.grip_lost_since = None, None
+        self.gripper_feedback = {}
         self.payload_body, self.gripped_body, self.payload_confirmed = None, None, False
         self.custody, self.object_outcome, self.object_measurement = None, 'unassessed', {}
         self.released_support = None
@@ -262,6 +263,7 @@ class NativeMobileTasks:
             if not isinstance(task_id, str) or not 1 <= len(task_id) <= 80:
                 raise ValueError('A unique operator task ID is required.')
             self.custody, self.object_outcome, self.object_measurement = None, 'unassessed', {}
+            self.gripper_feedback = {}
             self.released_support = None
             self.camera_approach = None
             steps = validate_task(request.get('task'), self.arm.source_sha256, self.scene_id,
@@ -450,9 +452,10 @@ class NativeMobileTasks:
             self.gripped_body, self.custody, self.payload_confirmed, self.gripped_step = None, None, False, None
         self.grip_index = indices[0]
         channel = self.arm.channels[self.grip_index]
-        self.arm.target = self.arm.measured_controls().copy()
-        self.arm.target[self.grip_index] = channel['limits'][1 if step['operation']=='open' else 0]
-        self.arm.status = 'jogging'
+        self.grip_requested = channel['limits'][1 if step['operation']=='open' else 0]
+        self.arm.target = self.arm.target.copy()
+        self.arm.target[self.grip_index] = self.grip_requested
+        self.arm.status = self.arm.GRIPPER_TASK_STATUS
         self.grip_since = None
         self.enter('gripping','Waiting for measured source gripper opening/contact')
 
@@ -613,18 +616,26 @@ class NativeMobileTasks:
                     self.object_measurement = observation
                     control = self.grip_index
                     rate = abs(self.arm.measured_rates()[control])
+                    self.gripper_feedback = dict(requested=float(self.grip_requested),
+                        target=float(self.arm.target[control]), command=float(self.arm.commanded[control]),
+                        measured=float(self.arm.measured_controls()[control]), rate=float(rate),
+                        articulation_status=self.arm.status, operation=step['operation'])
                     if step['operation']=='close':
                         # The pads can both touch while the close command is
                         # still ramping. Transfer ownership after source
                         # compression has actually reached its hold command.
                         ready = (min(observation['left_force'], observation['right_force']) >= .1
-                                 and abs(self.arm.commanded[control] - self.arm.target[control]) < 1e-5
+                                 and abs(self.arm.commanded[control] - self.grip_requested) < 1e-5
                                  and rate <= .005)
                     else:
                         ready = (abs(self.arm.measured_controls()[control]-self.arm.target[control])<=.002
                                  and rate<=.005
                                  and max(observation['left_force'],observation['right_force'])<.1)
-                    if self.mobile.moving():
+                    if (self.arm.status != self.arm.GRIPPER_TASK_STATUS
+                            or abs(self.arm.target[control] - self.grip_requested) > 1e-5):
+                        self.record(object_observation=observation, gripper_feedback=self.gripper_feedback)
+                        self.cancel('Gripper controller interrupted: '+self.arm.status,failed=True)
+                    elif self.mobile.moving():
                         self.cancel('Base moved during gripper operation',failed=True)
                     elif not ready:
                         self.grip_since = None
@@ -635,6 +646,7 @@ class NativeMobileTasks:
                             self.payload_body = self.gripped_body = self.object_bodies(step)[0]
                             self.gripped_step, self.grip_lost_since = dict(step), None
                             self.payload_confirmed = False
+                        self.arm.status = 'holding target; inspect measured joint feedback'
                         self.record(gripper_operation=step['operation'], object_observation=observation,
                                     grip_command=float(self.arm.commanded[control]),
                                     grip_target=float(self.arm.target[control]), grip_rate=rate)
@@ -726,4 +738,5 @@ class NativeMobileTasks:
             costmap_footprint_consumers=sorted(self.node.sensors.footprint_receipts.received),
             payload_body=self.payload_body, payload_confirmed=self.payload_confirmed, payload_footprint_ready=self.mobile.payload_footprint_ready(),
             journal=str(self.event_path) if self.event_path else '', object_outcome=self.object_outcome, object_measurement=self.object_measurement,
+            gripper_feedback=self.gripper_feedback,
             qualification='implemented candidate; physical task validation pending'))))

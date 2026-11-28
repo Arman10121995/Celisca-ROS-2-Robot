@@ -23,7 +23,11 @@ Upright RGB-D cylinder**. Select `environment_pickup_cylinder` and
 **RGB-D upright objects** in the task builder. The fixture uses the same
 benches and spawn, with a free 35 g cylinder, 35 mm across and 60 mm tall.
 Keep the full circular lid in view. A physical cylinder pick and transport
-run is pending. To install this variant on another checkout, run
+run is pending. The GUI's **Object offset XYZ (m)** can shift the local
+pinch by up to 20 mm, for example to try a higher contact on the cylinder.
+The approach and descent keep the same shift. The close feedback reports
+the requested and measured gripper state alongside the two pad loads.
+To install this variant on another checkout, run
 `python3 scripts/provision_mobile_manipulation_scene.py --cylinder` after
 sourcing the workspace and `scripts/ssd_env.sh`.
 

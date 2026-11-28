@@ -311,6 +311,7 @@ def test_live_task_orientation_guard_checks_held_paths_and_explicit_pose_endpoin
     task.object_candidates=[];task.finger_candidates=[];task.support_candidates={}
     task.payload_body=None;task.payload_confirmed=False
     task.event_path=None;task.object_outcome='not assessed';task.object_measurement={}
+    task.gripper_feedback={}
     def cancel(reason,failed=False):events.append(reason);task.steps=None
     task.cancel=cancel;task.tick()
     assert bool(events)==should_stop

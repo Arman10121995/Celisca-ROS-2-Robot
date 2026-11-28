@@ -1577,6 +1577,7 @@ class MuJoCoSpawner(Node):
         # OpenGL context (GLFW with a display here).
         self.declare_parameter("camera_rate", 5.0)
         self.declare_parameter('workcell_rgbd_pose', '')
+        self.declare_parameter('noslip_iterations', -1)
         self._workcell_camera = None
         if camera_pose := self.get_parameter('workcell_rgbd_pose').value:
             pose = np.asarray(json.loads(camera_pose), dtype=float)
@@ -1980,6 +1981,12 @@ class MuJoCoSpawner(Node):
                 handle.write(world_mjcf)
             self.get_logger().info("MuJoCo scene written to " + dump)
         self._model = mujoco.MjModel.from_xml_string(world_mjcf)
+        noslip_iterations = self.get_parameter('noslip_iterations').value
+        if not -1 <= noslip_iterations <= 100:
+            raise ValueError('noslip_iterations must be -1 (scene default) or between 0 and 100')
+        if noslip_iterations >= 0:
+            self._model.opt.noslip_iterations = noslip_iterations
+            self.get_logger().info(f'MuJoCo NoSlip iterations: {noslip_iterations}')
         implicit_wheels=parse_drive_config(self.get_parameter('drive_config').value).get('mujoco_implicit_wheel_control',False)
         if not isinstance(implicit_wheels,bool):raise ValueError('mujoco_implicit_wheel_control must be a boolean')
         if implicit_wheels:self._model.opt.integrator=int(mujoco.mjtIntegrator.mjINT_IMPLICITFAST)

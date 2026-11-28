@@ -65,6 +65,17 @@ robots:
     # The measured Display presets and MuJoCo fetch keep their own profiles.
     experimental_backend_options:
       pybullet:
+        runtime_screens:
+          - backend: pybullet
+            mode: display
+            maps: [nav_empty]
+            reports: [docs/status/evidence/r143-pro630-f100-2026-11-20/bullet-gui-gripper-confirmed.json]
+          - backend: pybullet
+            mode: display
+            maps: [mobile_fetch_lab_f100]
+            reports: [docs/status/evidence/r143-pro630-f100-2026-11-20/bullet-gui-full-fetch-2026-11-27.json]
+            model_sha256: bf9ef87b82586316cb4ff59956cd87179c1f681bd352f46777468aebd2bb082d
+            task: F100 pickup, carry, supported release and clearance
         drive:
           pybullet_solver_iterations: 100
           pybullet_noncontact_iterations: 4
@@ -92,6 +103,7 @@ robots:
           mobile:
             reanchor_before_descent: true
             align_live_grasp: true
+            grasp_alignment_tolerance_m: 0.00125
     articulation:
       planning:
         schema: robot_lab.articulation_plan.v1

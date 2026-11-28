@@ -18,6 +18,8 @@ from robot_lab_utils.native_actuation import position_channels
 
 
 class NativeArticulationControl:
+    GRIPPER_TASK_STATUS = 'mobile task gripper operation'
+
     def __init__(self, node, channels=None, enable_servo=True):
         self.node, self.model, self.data = node, node.model, node.data
         self.channels = channels if channels is not None else position_channels(
@@ -261,7 +263,7 @@ class NativeArticulationControl:
             self.cancel_sequence(self.fault)
             self.data.ctrl[self.indices] = 0
             return
-        if self.status == 'jogging' and any(contact.dist < -.002 and any(
+        if self.status in ('jogging', self.GRIPPER_TASK_STATUS) and any(contact.dist < -.002 and any(
                 int(self.model.geom_bodyid[geom]) == 0 or int(self.model.geom_bodyid[geom]) >= self.node.robot_bodies
                 for geom in contact.geom)
                 and any(int(self.model.geom_bodyid[geom]) in self.contact_bodies for geom in contact.geom)

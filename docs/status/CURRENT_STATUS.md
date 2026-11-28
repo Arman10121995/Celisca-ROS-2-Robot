@@ -1,6 +1,6 @@
 # Current Robot Lab status
 
-## November 27 checkpoint
+## November 28 checkpoint
 
 Robot Lab remains partial against the full roadmap. The results below refer
 to the maps, robots and simulator versions in their receipts.
@@ -10,25 +10,35 @@ to the maps, robots and simulator versions in their receipts.
 | Ground mobility | Bumperbot and Labbot 16/16 on the four-backend navigation repeat. Four-wheel steering and mecanum 20/20. Car matrix 11/12. | More maps and seeds, actor maps, SLAM and 3D SLAM repeats, and the Isaac Ackermann goal abort. |
 | Legged | A1 and the recovered G1 policy passed 6/6 apiece on the November navigation course. | Go2 forward-arc clearance and stairs, B2 mission reliability, BHL balance and walking, and unqualified backends. |
 | Aerial | The X500 passed the manual GUI screen in all eight sampled Gazebo worlds after the Terrain Heightfield rerun. The moving-walker screen passed 3/3. | Remaining installed worlds, additional flight backends and larger formations. |
-| Manipulation | Panda cube 4/4, can 3/3, Shadow Hand 2/2, and TIAGo RGB-D fetch 2/2. The F100 completed MuJoCo Display and Navigation fetches. In Isaac it entered the final back-away stage. In PyBullet it carried the block to the drop table. Stretch completed the camera-guided descent through gripper occlusion. | F100 final docking and release in PyBullet, terminal clearance in Isaac, Gazebo F100 linkage, Stretch sustained lift and transport, and physical qualification of the stepped compound. |
+| Manipulation | Panda cube 4/4, can 3/3, Shadow Hand 2/2, and TIAGo RGB-D fetch 2/2. The F100 completed MuJoCo Display and Navigation and PyBullet Display fetches. Stretch completed the camera-guided descent through gripper occlusion. | F100 Isaac grip repeatability and terminal clearance, Gazebo linkage, Stretch sustained grasp and lift, and steady lift of the stepped compound. |
 | Fleet, swarm and marine | Fleet Ward 3/3 and fleet-lift transports 3/3. Gazebo, MuJoCo and PyBullet concurrent Nav2 jobs 6/6. USV, AUV and ROV each passed the four-backend 8/8 round. | Open-RMF conflict/lift repeats, Isaac concurrency, swarm flocking and larger aerial formations, and broader marine and multi-leg missions. |
 | Release | Scoped runtime receipts and the current CI results are available. | Complete matrix, clean-host reproduction, comparison tutorials and optional hardware trials. |
 
 [Detailed implementation and validation queues](../../ROADMAP.md).
+
+November 27 Codex: the experimental PyBullet F100 profile completed its
+normal-GUI fetch in 265.22 s. The block lifted 44.3 mm, drifted at most
+8.5 mm during carry, was stable and inside the drop table after release,
+and the base backed away 0.571 m. This screen used the short-block fixture
+and the installed PyBullet profile with experimental workflows enabled.
+[PyBullet full-fetch receipt](evidence/r143-pro630-f100-2026-11-20/bullet-gui-full-fetch-2026-11-27.json).
 
 November 27 Codex: an experimental normal Isaac GUI F100 trial reached
 the final `clear` stage, after the carry and supported-release gates. The
 950 s wall budget stopped the qualifier before the back-away stage yielded
 a terminal result. The qualifier now records its resolved profile and
 observed stage transitions separately from mission acceptance.
-[Isaac terminal-timeout receipt](evidence/r143-pro630-f100-2026-11-20/isaac-gui-final-clearance-timeout-2026-11-27.json).
+The installed-profile repeat stopped at close with 5.998 N on the left and
+0 N on the right.
+[Isaac terminal-timeout receipt](evidence/r143-pro630-f100-2026-11-20/isaac-gui-final-clearance-timeout-2026-11-27.json) · [One-sided repeat](evidence/r143-pro630-f100-2026-11-20/isaac-gui-replayed-one-sided-close-2026-11-27.json).
 
 November 27 Codex: the installed URDF Panda GUI offers the **Stepped
 part** workcell variant. A compiled pick/place plan used the declared
 post as the grasp surface and rejected a destination that would only
 support the post. A contact test detected the separate foot collider.
-The first whole-robot GUI trial remains pending.
-[Procedure](../tutorials/urdf-arm-pick-place.md#pick-a-stepped-part).
+The normal MuJoCo GUI lifted the part 65.1 mm, then stopped the task after
+24.9 mm of height drift during the lift/hold check.
+[Procedure](../tutorials/urdf-arm-pick-place.md#pick-a-stepped-part) · [Physical trial](evidence/r57-urdf-arm-pick-place-2026-11-17/mujoco-gui-stepped-part-lift-slip-2026-11-27.json).
 
 November 21 Codex: the F100 now offers Isaac Display. Its normal GUI
 reached both presets on `nav_empty`, with all five passive followers,

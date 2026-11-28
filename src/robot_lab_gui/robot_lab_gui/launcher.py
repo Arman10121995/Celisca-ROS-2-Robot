@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -2828,9 +2829,15 @@ class SimulationLauncherGui(tk.Tk):
                          'Vendor docking/hazards remain pending.')
             screens = [screen for screen in config.get('runtime_screens', [])
                        if screen['backend'] == self.simulator_var.get()]
+            if any(screen.get('model_sha256') for screen in screens):
+                try:
+                    model_hash = hashlib.sha256(Path(config['xacro']).read_bytes()).hexdigest()
+                except (KeyError, OSError):
+                    model_hash = ''
+                screens = [screen for screen in screens if screen.get('model_sha256', model_hash) == model_hash]
             if screens:
                 lines.append('Recorded in this backend: '+ '; '.join(
-                    MODE_LABELS.get(screen['mode'], screen['mode'])+' on '+', '.join(screen['maps'])
+                    (screen.get('task') or MODE_LABELS.get(screen['mode'], screen['mode'])) + ' on ' + ', '.join(screen['maps'])
                     for screen in screens)+'. Other maps are experiments.')
             else:
                 lines.append('Mapping/navigation acceptance is specific to robot, map, backend and revision. '

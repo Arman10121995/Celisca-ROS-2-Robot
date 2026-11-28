@@ -1245,6 +1245,8 @@ def _build_simulation_actions(context):
             and robot_config.get('pick_place') and not robot_config['pick_place'].get('mobile')) else None
         if workcell_pose:
             display_args['workcell_rgbd_pose'] = json.dumps(workcell_pose)
+        if simulator == 'mujoco' and 'noslip_iterations' in map_config.get('mujoco', {}):
+            display_args['noslip_iterations'] = str(map_config['mujoco']['noslip_iterations'])
         planning = _launch_value(context, 'arm_planning').strip().lower()
         if planning == 'auto':
             planning = robot_config.get('arm_planning', 'none')

@@ -1,0 +1,32 @@
+{
+  "robot": "menagerie_hello_robot_stretch",
+  "map": "mobile_manipulation_lab_cylinder",
+  "simulator": "mujoco",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=menagerie_hello_robot_stretch simulator:=mujoco use_sim_time:=true map_name:=mobile_manipulation_lab_cylinder world_package:=robot_lab_maps world_name:=mobile_manipulation_lab_cylinder world_path:=/workspace/molar/robot_lab_runtime/external_assets/worlds/mobile_manipulation_lab_cylinder/a021c7de3b429c0d5d0679457b0b162a1e950ed64a88da47dfa50be051784623/worlds/mobile_manipulation_lab_cylinder.world map_yaml:=/workspace/molar/robot_lab_runtime/external_assets/worlds/mobile_manipulation_lab_cylinder/a021c7de3b429c0d5d0679457b0b162a1e950ed64a88da47dfa50be051784623/maps/map.yaml mode:=display gui:=false perception:=none enable_native_mobile:=true native_task:=display",
+  "passed": false,
+  "source_sha256": "4f33408242b90acbe4ca0f4b544ca5efae4f423c92ef71358f0977ec0b03a316",
+  "scene_id": "6b6c35e2c614f911f04dcc8d7599b0abcfb234c4bc149218e66576b3c69f81f0",
+  "launch_returncode": 0,
+  "date": "2026-11-27",
+  "source_revision_at_start": "4ea40551",
+  "raw_report": "/workspace/molar/robot_lab_runtime/pro630-gripper-20261120/stretch-grip-settle-installed-20261127-tTLNEx/gui/report.json",
+  "raw_sha256": "0eb00f01b9ed1c413d124c8dfa9a211dd77770c249e649fc1ff6a7e8d5e7b6f6",
+  "journal": "/workspace/molar/robot_lab_runtime/pro630-gripper-20261120/stretch-grip-settle-installed-20261127-tTLNEx/runtime/mobile-tasks/20261127-153625-abfa1b9f02164e2cad992b311733fee6.jsonl",
+  "journal_sha256": "6de475d17fcf41a75eb0aa0890774d6f25d62407065b2ae699b4957515f693e3",
+  "last_measurement": {
+    "stamp": 90.17999999997123,
+    "relative": [
+      0.03748987881038459,
+      0.006994057680356759,
+      0.016004225995730828
+    ],
+    "left_force": 0.13137619074065693,
+    "right_force": 0.06470800545969971,
+    "supported": true,
+    "speed": 2.1989263156984623e-05
+  },
+  "terminal_state": "failed",
+  "terminal_reason": "Task/step wall-clock deadline exceeded",
+  "step": 4,
+  "camera_descent_reuse_s": 11.319999999998386
+}

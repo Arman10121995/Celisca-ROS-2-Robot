@@ -237,6 +237,9 @@ class PickPlace(Node):
         if not .005 <= self.dock_tolerance <= POSITION_TOLERANCE:
             raise ValueError('Docking position tolerance must be between 5 and 30 mm')
         if self.mobile:
+            alignment_tolerance = float(self.mobile.get('grasp_alignment_tolerance_m', GRASP_ALIGN_TOLERANCE_M))
+            if not GRASP_ALIGN_MIN_IMPROVEMENT_M <= alignment_tolerance <= GRASP_ALIGN_TOLERANCE_M:
+                raise ValueError('Live grasp alignment tolerance must be between 0.5 and 2 mm')
             speed_scale = float(self.mobile.get('carry_drive_speed_scale', 1.0))
             ramp_seconds = float(self.mobile.get('carry_drive_ramp_seconds', 0.0))
             dock_speed_floor = float(self.mobile.get('dock_linear_speed_floor_mps', 0.0))
@@ -245,7 +248,8 @@ class PickPlace(Node):
             if not 0.0 <= dock_speed_floor <= HOLONOMIC_DOCK_SPEED_MPS:
                 raise ValueError('Precision docking speed floor must be within the holonomic docking speed cap')
             self.mobile.update(carry_drive_speed_scale=speed_scale, carry_drive_ramp_seconds=ramp_seconds,
-                               dock_linear_speed_floor_mps=dock_speed_floor)
+                               dock_linear_speed_floor_mps=dock_speed_floor,
+                               grasp_alignment_tolerance_m=alignment_tolerance)
         self.base_pose, self.base_twist, self.base_at = None, (0.0, 0.0), -math.inf
         if self.mobile:
             self.create_subscription(Odometry, '/odom/ground_truth', self._on_odom, 10)
@@ -992,9 +996,10 @@ class PickPlace(Node):
                     if elapsed > GRASP_ALIGN_TIMEOUT_S else None)
         shift = np.median([offset for _, offset in samples], axis=0)
         error = float(np.linalg.norm(shift))
+        tolerance = self.mobile.get('grasp_alignment_tolerance_m', GRASP_ALIGN_TOLERANCE_M)
         checks = dict(live_grasp_error_m=round(error, 5), measured_tool_xyz_m=actual_tcp.tolist(),
-                      correction_xy_m=shift.tolist())
-        if error <= GRASP_ALIGN_TOLERANCE_M:
+                      correction_xy_m=shift.tolist(), grasp_alignment_tolerance_m=tolerance)
+        if error <= tolerance:
             return dict(passed=True, **checks)
         corrections = task.get('grasp_alignment_corrections', 0)
         previous_error = task.get('grasp_alignment_previous_error', math.inf)

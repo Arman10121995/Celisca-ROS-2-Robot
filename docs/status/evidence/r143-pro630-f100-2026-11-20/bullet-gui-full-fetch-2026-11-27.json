@@ -1,0 +1,441 @@
+{
+  "robot": "asset_elephant_myagv_pro_pro630_f100",
+  "simulator": "pybullet",
+  "mode": "display",
+  "map": "mobile_fetch_lab_f100",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py mode:=display map_name:=mobile_fetch_lab_f100 robot_model:=asset_elephant_myagv_pro_pro630_f100 simulator:=pybullet gui:=false perception:=none allow_experimental_assets:=true",
+  "model_sha256": "bf9ef87b82586316cb4ff59956cd87179c1f681bd352f46777468aebd2bb082d",
+  "launch_profile_sha256": "0db1f12a5e51c8e8fef47ad7263c29ef8df158d5f4df601140ca0571fbd39cf0",
+  "page_selected": true,
+  "passed": true,
+  "launch_returncode": 0,
+  "date": "2026-11-27",
+  "raw_report": "/workspace/molar/robot_lab_runtime/pro630-gripper-20261120/bullet-dock-installed-replay-20261127-NHHcU1/gui/report.json",
+  "raw_sha256": "b970eb7acd70b03c9d17aebe80279906b8105103e58c2488632e298984aa4960",
+  "launch_profile": "/workspace/molar/robot_lab_runtime/pro630-gripper-20261120/bullet-dock-installed-replay-20261127-NHHcU1/gui/launch-profile.json",
+  "observed_stage_file": "/workspace/molar/robot_lab_runtime/pro630-gripper-20261120/bullet-dock-installed-replay-20261127-NHHcU1/gui/task-stages.jsonl",
+  "result": {
+    "outcome": "succeeded",
+    "passed": true,
+    "object": "fetch_block",
+    "support": "drop_table",
+    "transit": "straight",
+    "message": "Placed fetch_block on drop_table",
+    "phase": "clear",
+    "seconds": 265.22,
+    "plan": {
+      "transit": "straight",
+      "pick_base": [
+        0.89,
+        -0.0,
+        0.0
+      ],
+      "place_base": [
+        0.45,
+        1.515,
+        1.571
+      ],
+      "place_xy": [
+        0.45,
+        1.96
+      ],
+      "grasp_width_m": 0.04,
+      "pick_base_measured": [
+        0.9076,
+        0.0042,
+        -0.0019,
+        0.0409
+      ],
+      "carry_direct_drive": {
+        "speed_scale": 0.5,
+        "ramp_seconds": 2.0
+      },
+      "place_base_measured": [
+        0.451,
+        1.5126,
+        -0.0019,
+        1.5951
+      ],
+      "place_centre": [
+        0.45,
+        1.96,
+        0.5454286381095013
+      ],
+      "place_orientation": [
+        0.7130297040538951,
+        -0.007671980104831691,
+        -6.015736213937269e-05,
+        0.7010918472205889
+      ]
+    },
+    "stages": [
+      {
+        "phase": "to_object_arrived",
+        "final_pose": [
+          0.8881,
+          -0.0025,
+          -0.0019,
+          0.0251
+        ],
+        "dock_recaptures": 3
+      },
+      {
+        "phase": "to_object",
+        "seconds": 41.6
+      },
+      {
+        "stage": "open",
+        "seconds": 4.32,
+        "object_truth": [
+          1.36,
+          -0.0,
+          0.545
+        ],
+        "tcp_estimate": [
+          0.8811,
+          0.2827,
+          1.0729
+        ],
+        "passed": true
+      },
+      {
+        "stage": "above_object",
+        "seconds": 16.21,
+        "object_truth": [
+          1.36,
+          -0.0,
+          0.545
+        ],
+        "tcp_estimate": [
+          1.3589,
+          0.0,
+          0.604
+        ],
+        "passed": true,
+        "replan": true,
+        "pregrasp_base": [
+          0.9148433804512024,
+          0.0026335089933127165,
+          -0.0018010592320933938,
+          0.029720170564600034
+        ],
+        "projected_tool_drift_m": 0.02768,
+        "payload_drift_m": 1e-05
+      },
+      {
+        "stage": "open",
+        "seconds": 0.09,
+        "object_truth": [
+          1.36,
+          -0.0,
+          0.545
+        ],
+        "tcp_estimate": [
+          1.3856,
+          0.0073,
+          0.6041
+        ],
+        "passed": true
+      },
+      {
+        "stage": "above_object",
+        "seconds": 5.38,
+        "object_truth": [
+          1.36,
+          -0.0,
+          0.545
+        ],
+        "tcp_estimate": [
+          1.3614,
+          0.0009,
+          0.6053
+        ],
+        "passed": true,
+        "replan": true,
+        "pregrasp_base": [
+          0.9075629711151123,
+          0.004151972942054272,
+          -0.0018840666161850095,
+          0.040875658128386776
+        ],
+        "projected_tool_drift_m": 0.00977,
+        "payload_drift_m": 0.0
+      },
+      {
+        "stage": "open",
+        "seconds": 0.09,
+        "object_truth": [
+          1.36,
+          -0.0,
+          0.545
+        ],
+        "tcp_estimate": [
+          1.3541,
+          0.0074,
+          0.6052
+        ],
+        "passed": true
+      },
+      {
+        "stage": "above_object",
+        "seconds": 4.93,
+        "object_truth": [
+          1.36,
+          -0.0,
+          0.545
+        ],
+        "tcp_estimate": [
+          1.3595,
+          -0.0,
+          0.6046
+        ],
+        "passed": true,
+        "replan": false,
+        "pregrasp_base": [
+          0.9091039896011353,
+          0.007955463603138924,
+          -0.0019679791294038296,
+          0.03824570608675916
+        ],
+        "projected_tool_drift_m": 0.00303,
+        "payload_drift_m": 0.0
+      },
+      {
+        "stage": "down_to_grasp",
+        "seconds": 1.89,
+        "object_truth": [
+          1.36,
+          -0.0,
+          0.545
+        ],
+        "tcp_estimate": [
+          1.3603,
+          0.0001,
+          0.5767
+        ],
+        "passed": true
+      },
+      {
+        "stage": "close",
+        "seconds": 15.64,
+        "object_truth": [
+          1.3658,
+          0.0016,
+          0.5457
+        ],
+        "tcp_estimate": [
+          1.3603,
+          0.0,
+          0.5755
+        ],
+        "finger_positions": [
+          0.37475669022757985,
+          0.37460314952525875,
+          0.3726192731353093,
+          0.3725399474946545,
+          0.3742896926629053,
+          0.37305701880327685
+        ],
+        "passed": true,
+        "pad_normal_force_n": {
+          "left": 9.920987008794993,
+          "right": 1.9290404656083877
+        },
+        "reason": ""
+      },
+      {
+        "stage": "lift",
+        "seconds": 5.56,
+        "object_truth": [
+          1.3637,
+          0.0069,
+          0.5893
+        ],
+        "tcp_estimate": [
+          1.3586,
+          0.0001,
+          0.6236
+        ],
+        "passed": true,
+        "rise_m": 0.0443,
+        "hold_drift_m": 0.003,
+        "reason": "",
+        "pad_normal_force_n": {
+          "left": 4.9426968727882645,
+          "right": 4.976422088999571
+        }
+      },
+      {
+        "phase": "pick",
+        "seconds": 56.99
+      },
+      {
+        "phase": "carry_arrived",
+        "final_pose": [
+          0.451,
+          1.5126,
+          -0.0019,
+          1.5951
+        ],
+        "dock_recaptures": 0,
+        "max_carry_drift_m": 0.0085
+      },
+      {
+        "phase": "carry",
+        "seconds": 139.25
+      },
+      {
+        "stage": "over_support",
+        "seconds": 1.18,
+        "object_truth": [
+          0.4492,
+          1.9615,
+          0.5954
+        ],
+        "tcp_estimate": [
+          0.4454,
+          1.9542,
+          0.6295
+        ],
+        "passed": true
+      },
+      {
+        "stage": "lower",
+        "seconds": 4.47,
+        "object_truth": [
+          0.4417,
+          1.9529,
+          0.5466
+        ],
+        "tcp_estimate": [
+          0.4449,
+          1.9544,
+          0.5797
+        ],
+        "passed": true
+      },
+      {
+        "stage": "release",
+        "seconds": 3.46,
+        "object_truth": [
+          0.4423,
+          1.9509,
+          0.545
+        ],
+        "tcp_estimate": [
+          0.4449,
+          1.9544,
+          0.5797
+        ],
+        "passed": true
+      },
+      {
+        "stage": "retreat",
+        "seconds": 5.07,
+        "object_truth": [
+          0.4423,
+          1.9509,
+          0.545
+        ],
+        "tcp_estimate": [
+          0.4449,
+          1.9538,
+          0.6389
+        ],
+        "passed": true,
+        "final_pose": [
+          0.4423,
+          1.9509,
+          0.545
+        ],
+        "height_error_m": -0.0,
+        "inside_support": true,
+        "orientation_aligned": true,
+        "moved_last_s_m": 0.0,
+        "reason": ""
+      },
+      {
+        "phase": "place",
+        "seconds": 15.21
+      },
+      {
+        "phase": "clear_arrived",
+        "final_pose": [
+          0.4608,
+          0.9414,
+          -0.002,
+          1.6641
+        ]
+      },
+      {
+        "phase": "clear",
+        "seconds": 12.17
+      }
+    ],
+    "interlock": {
+      "max_base_speed_in_arm_phases": 0.015415752159331072,
+      "max_base_turn_in_arm_phases": 0.03378118680686027,
+      "drive_ticks_with_articulation_active": 0,
+      "drive_ticks": 800
+    },
+    "model_sha256": "bf9ef87b82586316cb4ff59956cd87179c1f681bd352f46777468aebd2bb082d",
+    "trace_samples": 420,
+    "last_sample": {
+      "t": 265.05,
+      "stage": "clear",
+      "object": [
+        0.4423,
+        1.9509,
+        0.545,
+        0.7109,
+        0.0001,
+        -0.0001,
+        0.7033
+      ],
+      "fingers": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "finger_references": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "pad_normal_force_n": {
+        "left": 0.0,
+        "right": 0.0
+      },
+      "non_pad_jaw_normal_force_n": {
+        "left": 0.0,
+        "right": 0.0
+      },
+      "arm_joints": {
+        "pro630_joint1_to_base": -0.21095,
+        "pro630_joint2_to_joint1": 0.96144,
+        "pro630_joint3_to_joint2": -0.50744,
+        "pro630_joint4_to_joint3": 1.11666,
+        "pro630_joint5_to_joint4": -1.57061,
+        "pro630_joint6_to_joint5": 2.13368
+      },
+      "base": [
+        0.4607,
+        0.9416,
+        -0.002,
+        1.6639
+      ],
+      "object_in_base": [
+        1.0066,
+        -0.0755,
+        0.547
+      ]
+    },
+    "backaway_m": 0.5713
+  }
+}

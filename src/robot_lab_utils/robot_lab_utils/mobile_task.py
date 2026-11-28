@@ -82,8 +82,9 @@ def validate_task(document, source_sha256, scene_id, channels, allow_navigation)
                 if 'reuse_camera_on_occlusion' in step:
                     previous = output[-1] if output else {}
                     if (step['reuse_camera_on_occlusion'] is not True
-                            or step.get('pose_source') not in CAMERA_POSE_SOURCES or any(offset)
-                            or previous.get('kind') != 'reach_object' or not any(previous['offset'])
+                            or step.get('pose_source') not in CAMERA_POSE_SOURCES or math.hypot(*offset) > .02
+                            or previous.get('kind') != 'reach_object' or previous.get('reuse_camera_on_occlusion')
+                            or not .03 - 1e-9 <= math.dist(previous['offset'], offset) <= .25 + 1e-9
                             or any(previous.get(key) != step.get(key) for key in
                                    ('object', 'left_body', 'right_body', 'pose_source'))):
                         raise ValueError('Occlusion reuse requires the preceding camera approach for the same object and fingers.')

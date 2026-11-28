@@ -1,0 +1,151 @@
+{
+  "robot": "asset_franka_panda_panda",
+  "simulator": "mujoco",
+  "mode": "display",
+  "map": "arm_pick_place_compound",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=asset_franka_panda_panda simulator:=mujoco use_sim_time:=true map_name:=arm_pick_place_compound world_package:=robot_lab_maps world_name:=arm_pick_place_compound world_path:=maps/arm_pick_place_compound/worlds/arm_pick_place_compound.world map_yaml:=robot_lab_maps/maps/arm_pick_place_lab/maps/map.yaml mode:=display gui:=false perception:=none",
+  "model_sha256": "1685e99c9fa5ab60efe1b05d5b84ee2adacc7db7f2de83ca9aa976e00d8b8fc0",
+  "launch_profile_sha256": "ab0bfabc2b79cc3db6f9d19a2926010959e33a440be86b5752cbdfb7f2194520",
+  "page_selected": true,
+  "passed": false,
+  "launch_returncode": 0,
+  "date": "2026-11-27",
+  "raw_report": "/workspace/molar/robot_lab_runtime/pro630-gripper-20261120/panda-compound-installed-replay-20261127-KKbXXl/gui/report.json",
+  "raw_sha256": "b3f4e6c73da0184f65dfed1dc1558def78d3fd21a58630d9657bc451141cf25b",
+  "launch_profile": "/workspace/molar/robot_lab_runtime/pro630-gripper-20261120/panda-compound-installed-replay-20261127-KKbXXl/gui/launch-profile.json",
+  "observed_stage_file": "/workspace/molar/robot_lab_runtime/pro630-gripper-20261120/panda-compound-installed-replay-20261127-KKbXXl/gui/task-stages.jsonl",
+  "result": {
+    "outcome": "failed",
+    "passed": false,
+    "object": "pickup_stepped",
+    "support": "place_table",
+    "transit": null,
+    "message": "lift: object did not rise with the tool",
+    "phase": "pick_place",
+    "seconds": 22.8,
+    "plan": {
+      "compound_obstacles": [],
+      "grasp_width_m": 0.04,
+      "place_centre": [
+        0.5,
+        0.25,
+        0.3220062231094706
+      ],
+      "place_orientation": [
+        0.9999999863251106,
+        7.997398033418284e-05,
+        -1.9770418751363448e-05,
+        0.00014339829672026407
+      ]
+    },
+    "stages": [
+      {
+        "stage": "open",
+        "seconds": 0.02,
+        "object_truth": [
+          0.5,
+          -0.25,
+          0.3219
+        ],
+        "tcp_estimate": [
+          0.307,
+          0.0,
+          0.4869
+        ],
+        "passed": true
+      },
+      {
+        "stage": "above_object",
+        "seconds": 8.5,
+        "object_truth": [
+          0.5,
+          -0.25,
+          0.3219
+        ],
+        "tcp_estimate": [
+          0.4984,
+          -0.2481,
+          0.4538
+        ],
+        "passed": true
+      },
+      {
+        "stage": "down_to_grasp",
+        "seconds": 1.23,
+        "object_truth": [
+          0.5,
+          -0.25,
+          0.3219
+        ],
+        "tcp_estimate": [
+          0.4994,
+          -0.2498,
+          0.353
+        ],
+        "passed": true
+      },
+      {
+        "stage": "close",
+        "seconds": 2.05,
+        "object_truth": [
+          0.4997,
+          -0.25,
+          0.322
+        ],
+        "tcp_estimate": [
+          0.4998,
+          -0.25,
+          0.3531
+        ],
+        "passed": true,
+        "finger_positions": [
+          0.0164,
+          0.0164
+        ],
+        "reason": ""
+      },
+      {
+        "stage": "lift",
+        "seconds": 10.58,
+        "object_truth": [
+          0.4997,
+          -0.2502,
+          0.387
+        ],
+        "tcp_estimate": [
+          0.4997,
+          -0.2499,
+          0.4527
+        ],
+        "passed": false,
+        "rise_m": 0.0651,
+        "hold_drift_m": 0.0249,
+        "reason": "object did not rise with the tool"
+      }
+    ],
+    "interlock": null,
+    "model_sha256": "1685e99c9fa5ab60efe1b05d5b84ee2adacc7db7f2de83ca9aa976e00d8b8fc0",
+    "trace_samples": 44,
+    "last_sample": {
+      "t": 22.5,
+      "stage": "lift",
+      "object": [
+        0.4997,
+        -0.2498,
+        0.3876,
+        0.9982,
+        0.0019,
+        0.0007,
+        -0.0597
+      ],
+      "fingers": [
+        0.0178,
+        0.0178
+      ],
+      "finger_references": [
+        0.0,
+        0.0
+      ]
+    }
+  }
+}

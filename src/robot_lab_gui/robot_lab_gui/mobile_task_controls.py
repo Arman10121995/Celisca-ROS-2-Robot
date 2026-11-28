@@ -205,10 +205,13 @@ class MobileTaskControls(ttk.LabelFrame):
 
     def add_pick(self):
         try:
-            offset=self.approach_offset()
-            approach=self.object_step('reach_object',offset=offset)
+            grasp_offset = [float(value.get()) for value in self.reach_offset]
+            if not all(map(math.isfinite, grasp_offset)) or math.hypot(*grasp_offset) > .02:
+                raise ValueError('Local pick offset must be finite and within 20 mm of the object centre.')
+            approach_offset = [delta + origin for delta, origin in zip(self.approach_offset(), grasp_offset)]
+            approach=self.object_step('reach_object',offset=approach_offset)
             approach['name']='Approach '+self.approach_mode.get()
-            descent = self.object_step('reach_object', offset=[0., 0., 0.])
+            descent = self.object_step('reach_object', offset=grasp_offset)
             if approach['pose_source'] != 'native_truth':
                 descent['reuse_camera_on_occlusion'] = True
             self.add_native_steps([
