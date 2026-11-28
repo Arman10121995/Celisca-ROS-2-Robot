@@ -1191,6 +1191,7 @@ priority_patches:
     state: active
     title: Model-specific humanoid/quadruped policies and truthful GUI modes
   P8:
+    validation_20261128: 'Claude V5: X500 manual GUI flight in 12 more installed worlds, 11 passed (residential_demo and terrain_stairs after X500 flight_spawns clear of a table and a stair platform); small_warehouse arms but does not lift from two spots, physics-step substitution ruled out and reverted, cause open. docs/status/evidence/v5-px4-more-worlds-2026-11-28/README.md'
     evidence: docs/status/continuation-2026-10-05.md
     owner: cline-agent
     result: Native PX4 v1.16.2 X500 Flight and GUI controls are measured. Actual Altitude

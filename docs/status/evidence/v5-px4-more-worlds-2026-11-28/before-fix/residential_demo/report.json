@@ -1,0 +1,22 @@
+{
+  "robot": "px4_x500",
+  "backend": "gazebo",
+  "map": "residential_demo",
+  "mode": "flight",
+  "passed": false,
+  "scope": "Normal owned Tk Run/Takeoff/seven direction buttons/altitude/release/Stop/publisher loss/Land. Native X500/PX4 and independent Gazebo body; one open static map, no obstacle planner.",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=px4_x500 simulator:=gazebo use_sim_time:=false map_name:=residential_demo world_package:=robot_lab_maps world_name:=residential_demo world_path:=maps/residential_demo/worlds/residential_demo.world map_yaml:=maps/residential_demo/maps/map.yaml mode:=flight gui:=false aerial_obstacles:=none",
+  "owned_pid": 785399,
+  "neutral": {
+    "commands": 0,
+    "displacement_m": 6.851008102416674e-05,
+    "armed": false
+  },
+  "takeoff_check_replies": [],
+  "takeoff_check": {
+    "state": "failed",
+    "error": "Selected world blocks the minimum 0.8 m takeoff corridor; choose a different spawn."
+  },
+  "error": "AssertionError(('Takeoff check', {'state': 'failed', 'error': 'Selected world blocks the minimum 0.8 m takeoff corridor; choose a different spawn.'}))",
+  "launch_returncode": 0
+}

@@ -1,0 +1,26 @@
+{
+  "robot": "px4_x500",
+  "backend": "gazebo",
+  "map": "small_warehouse",
+  "mode": "flight",
+  "passed": false,
+  "scope": "Normal owned Tk Run/Takeoff/seven direction buttons/altitude/release/Stop/publisher loss/Land. Native X500/PX4 and independent Gazebo body; one open static map, no obstacle planner.",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=px4_x500 simulator:=gazebo use_sim_time:=false map_name:=small_warehouse world_package:=robot_lab_maps world_name:=small_warehouse world_path:=maps/small_warehouse/worlds/small_warehouse.world map_yaml:=maps/small_warehouse/maps/map.yaml mode:=flight gui:=false aerial_obstacles:=none",
+  "owned_pid": 793002,
+  "neutral": {
+    "commands": 0,
+    "displacement_m": 0.0,
+    "armed": false
+  },
+  "takeoff_check_replies": [
+    ""
+  ],
+  "takeoff_check": {
+    "state": "clear",
+    "rise_m": 3.0,
+    "ceiling_limited": false,
+    "error": ""
+  },
+  "error": "AssertionError(('Flight timeout', 'flying after Takeoff', {'phase': 'ascending', 'armed': True, 'position_ready': True, 'landed_state': 2, 'flight_enabled': True, 'position_enu': [0.011622859514318407, -0.028882790356874466, 0.2274155819416046], 'target_enu': [0.0, 0.0, 3.24], 'takeoff_ready': False, 'takeoff_target_z': 3.24, 'control_clock': 'wall', 'estimator_parameters': {'COM_OBL_RC_ACT': 4.0, 'COM_OF_LOSS_T': 0.5, 'MPC_XY_VEL_MAX': 1.0, 'MPC_XY_CRUISE': 1.0, 'MPC_Z_VEL_MAX_UP': 1.0, 'MPC_Z_VEL_MAX_DN': 1.0, 'MPC_ACC_HOR': 1.0, 'MPC_VEL_MANUAL': 1.0, 'MPC_Z_V_AUTO_DN': 1.0, 'MPC_Z_V_AUTO_UP': 1.0}, 'range_sensor': None, 'global_altitude_m': 0.249, 'relative_altitude_m': 0.018000000000000002, 'preflight_remaining_fcu_s': 0.0, 'heading_drift_deg_s': None, 'estimator_restarts': 0, 'resting_height_moving': False, 'route_waypoints_remaining': 0, 'route_status': 'idle'}))",
+  "launch_returncode": 0
+}

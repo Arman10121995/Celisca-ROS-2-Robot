@@ -1,0 +1,105 @@
+{
+  "robot": "px4_x500",
+  "backend": "gazebo",
+  "map": "warehouse_demo",
+  "mode": "flight",
+  "passed": true,
+  "scope": "Normal owned Tk Run/Takeoff/seven direction buttons/altitude/release/Stop/publisher loss/Land. Native X500/PX4 and independent Gazebo body; one open static map, no obstacle planner.",
+  "command": "ros2 launch robot_lab_bringup simulated_robot.launch.py robot_model:=px4_x500 simulator:=gazebo use_sim_time:=false map_name:=warehouse_demo world_package:=robot_lab_maps world_name:=warehouse_demo world_path:=maps/warehouse_demo/worlds/warehouse_demo.world map_yaml:=maps/warehouse_demo/maps/map.yaml mode:=flight gui:=false aerial_obstacles:=none",
+  "owned_pid": 783067,
+  "neutral": {
+    "commands": 0,
+    "displacement_m": 0.0,
+    "armed": false
+  },
+  "takeoff_check_replies": [
+    ""
+  ],
+  "takeoff_check": {
+    "state": "clear",
+    "rise_m": 3.0,
+    "ceiling_limited": false,
+    "error": ""
+  },
+  "takeoff_height_m": 2.9245719521821334,
+  "directions": {
+    "Turn Left": {
+      "yaw_rad": 0.6405471559068107,
+      "net_xy_m": 0.041114774333424094,
+      "command_max_yaw_rad_s": 0.3,
+      "stop": {
+        "drift_m": 0.024812549800254362,
+        "yaw_drift_rad": 1.4353681629941661e-06
+      }
+    },
+    "Turn Right": {
+      "yaw_rad": -0.6102339426450475,
+      "net_xy_m": 0.017873771612872316,
+      "command_max_yaw_rad_s": 0.3,
+      "stop": {
+        "drift_m": 0.030300790912549523,
+        "yaw_drift_rad": 0.0014316779648797205
+      }
+    },
+    "Forward": {
+      "body_frame_travel_m": [
+        0.7347196462863469,
+        -0.0738042832587944
+      ],
+      "stop": {
+        "drift_m": 0.02505417827694955,
+        "yaw_drift_rad": 0.00015514779855616175
+      }
+    },
+    "Reverse": {
+      "body_frame_travel_m": [
+        -0.6797782657119626,
+        0.07596715695692148
+      ],
+      "stop": {
+        "drift_m": 0.02738989716138987,
+        "yaw_drift_rad": 0.0002957524437952278
+      }
+    },
+    "Strafe L": {
+      "body_frame_travel_m": [
+        0.09564880432931555,
+        0.6479836342511736
+      ],
+      "stop": {
+        "drift_m": 0.047738100105923754,
+        "yaw_drift_rad": 0.0003335956865625363
+      }
+    },
+    "Strafe R": {
+      "body_frame_travel_m": [
+        -0.05070760503574842,
+        -0.741890633360725
+      ],
+      "stop": {
+        "drift_m": 0.06116318048911046,
+        "yaw_drift_rad": 0.0010707403011164776
+      }
+    }
+  },
+  "altitude": {
+    "up": {
+      "height_change_m": 0.635292043443052,
+      "stop": {
+        "drift_m": 0.005574521917226862,
+        "yaw_drift_rad": 0.00026396527240189717
+      }
+    },
+    "down": {
+      "height_change_m": -0.6545227279781649,
+      "stop": {
+        "drift_m": 0.013951358517270227,
+        "yaw_drift_rad": 0.00028614463400459096
+      }
+    }
+  },
+  "publisher_loss_drift_m": 0.042675399519763194,
+  "landing_height_error_m": 0.002364944176642958,
+  "rotor_max_rad_s": 86.51379418870272,
+  "launch_returncode": 0
+}

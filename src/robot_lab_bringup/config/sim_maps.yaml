@@ -602,6 +602,12 @@ maps:
       y: '0.0'
       yaw: '0.0'
       z: '0.5'
+    # X500 only: the origin lies inside the living-room table (0.32 m high),
+    # so the takeoff check refused it (2026-11-28). Checked clear for 3 m.
+    flight_spawn:
+      x: -1.5
+      y: -1.5
+      z: 0.0
   simple_box:
     gazebo:
       world_name: simple_box
@@ -736,6 +742,12 @@ maps:
       y: '-5.0'
       yaw: '0.0'
       z: '0.1'
+    # X500 only: its rotor envelope overlaps platform_04's 18 cm edge at the
+    # ground spawn, so the takeoff check refused it (2026-11-28). Checked clear for 3 m.
+    flight_spawn:
+      x: -7.0
+      y: -5.6
+      z: 0.0
   terrain_stairs_flight:
     gazebo:
       world_name: terrain_stairs_flight

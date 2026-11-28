@@ -1,0 +1,21 @@
+nav_empty exit=0
+nav_obstacle exit=0
+nav_dynamic exit=0
+nav_narrow_passage exit=0
+nav_sensor_degraded exit=0
+simple_office exit=0
+small_warehouse exit=1
+bigger_warehouse exit=0
+warehouse_demo exit=0
+residential_demo exit=1
+celisca_floor_2 exit=0
+terrain_stairs exit=1
+ALLDONE
+rerun after PX4 physics + flight spawns:
+small_warehouse exit=1
+residential_demo exit=0
+terrain_stairs exit=0
+ALLDONE
+small_warehouse probe at flight_spawn (-3,-5):
+small_warehouse exit=1
+ALLDONE
