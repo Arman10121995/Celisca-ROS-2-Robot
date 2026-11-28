@@ -1,0 +1,23 @@
+{
+  "phases": {
+    "local_flocking": {
+      "samples": 450,
+      "mean_start_m": 2.491281228956606,
+      "mean_end_m": 4.322109825141388,
+      "min_pair_m": 0.3207413690156169,
+      "end_pairs": {
+        "alpha-beta": 6.372390047874008,
+        "alpha-gamma": 1.5880096481950996,
+        "beta-gamma": 5.005929779355056
+      },
+      "duration_s": 119.7320935089956,
+      "states": [
+        "Waiting for measured feedback",
+        "predicted member separation: beta",
+        "swarm command active",
+        "swarm member turning from a peer its scan does not show"
+      ]
+    }
+  },
+  "ready_s": 15.98315566900419
+}

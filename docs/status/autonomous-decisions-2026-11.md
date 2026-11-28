@@ -247,3 +247,4 @@ choices.
 | 11-28 | V11 | Raised only the Isaac job's CPU budget to 1200 % after it stopped at 800 %, and kept the first pass | Isaac's process tree needs about 1000 % on this 12-core host; the budget mechanism worked and the other job passed |
 | 11-28 | V5 | Added X500-only `flight_spawn`s for residential_demo and terrain_stairs instead of moving their ground spawns | The takeoff check refused correctly (table, stair edge); ground robots keep their measured spawns |
 | 11-28 | V5 | Reverted the PX4 physics-step substitution after it did not change the small_warehouse result | A change that does not fix the measured failure would only alter other worlds' physics |
+| 11-28 | V7 | Kept the flocking peer search and reverted the steer-while-moving variant | The search alone kept 2/2 groups together; steering made one of two runs travel but lose cohesion |

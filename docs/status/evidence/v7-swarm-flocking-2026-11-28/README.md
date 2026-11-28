@@ -33,6 +33,18 @@ existing tests that expected `forward` with no peer now expect `search`.
   flock. A migration term, or alignment from sensed peer motion, is still
   needed. This remains open.
 
+**Tried and reverted: steering while moving.** Separation and cohesion
+turns were given half the cruise speed forward, so that members drift
+while correcting (`steer-*-reverted-result.json`):
+
+| Run | Mean pair distance end | Median / max | Within sensing range | Centroid travel |
+|---|---|---|---|---|
+| steer 1 | 2.20 m | 2.07 / 2.49 m | 100 % | 0.40 m |
+| steer 2 | 4.32 m | 1.99 / 4.32 m | 79 % | 3.82 m |
+
+Only one run travelled, and that run lost cohesion. The change is
+reverted; the peer search alone stays.
+
 Metrics are from `flock_metrics.py` (`flock-metrics.jsonl`). Traces are on
 SSD under `robot_lab_runtime/v7-swarm-flocking-20261128`. Their hashes are
 in `runtime-sha256.txt`.
