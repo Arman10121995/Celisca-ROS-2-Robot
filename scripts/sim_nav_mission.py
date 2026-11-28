@@ -75,6 +75,25 @@ def path_lengths(passable, start_cell, resolution):
     return distance
 
 
+def along_obstacle_heading(grid, goal, approach_yaw):
+    """Heading at goal B parallel to the nearest obstacle edge, the side nearer
+    the approach bearing. For robots whose final heading is not scored (cars,
+    forward-arc legged robots): the bearing from the robot often points into
+    the obstacle beside the goal, where their footprint does not fit and
+    Hybrid-A* found no path (Isaac Ackermann, Go2, B2; 2026-11-22)."""
+    data, resolution, ox, oy = grid_arrays(grid)
+    clearance = clearance_map(data, resolution)
+    gy, gx = np.gradient(clearance)
+    col, row = int((goal['x']-ox)/resolution), int((goal['y']-oy)/resolution)
+    if not (0 <= row < data.shape[0] and 0 <= col < data.shape[1]) or math.hypot(gx[row, col], gy[row, col]) < 1e-9:
+        return approach_yaw
+    away = math.atan2(gy[row, col], gx[row, col])          # direction of increasing clearance
+    options = (away+math.pi/2, away-math.pi/2)
+    def turn(a):
+        return abs(math.atan2(math.sin(a-approach_yaw), math.cos(a-approach_yaw)))
+    return min(options, key=turn)
+
+
 def choose_goals(grid, start, robot_radius, rng):
     data, resolution, ox, oy = grid_arrays(grid)
     clearance = clearance_map(data, resolution)
@@ -265,6 +284,10 @@ def main(argv=None):
     if goal_b is not None:
         here = node.pose(args.base) or (goal_a['x'], goal_a['y'])
         yaw_b = math.atan2(goal_b['y']-here[1], goal_b['x']-here[0])
+        if args.max_yaw_error_deg <= 0:
+            # Heading not scored: arrive parallel to the obstacle edge.
+            yaw_b = along_obstacle_heading(node.map, goal_b, yaw_b)
+            report['goal_b']['heading'] = 'along obstacle edge'
         report['steps']['near_obstacle_b'] = accept(
             run_goal(node, goal_b, yaw_b, args.timeout, args.base), goal_b, yaw_b)
     else:
